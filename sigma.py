@@ -12,6 +12,7 @@ def main():
 		name = os.path.splitext(source)[0]
 		try:
 			imp.load_source(name, "./tasks/" + source)
+			sys.modules[name].task_init()
 			log("TASK", "Task [" + sys.modules[name].task_info()[0] + "] loaded successfully")
 		except:
 			log("ERROR", "Task [" + source + "] broken, change .py extention to disable")

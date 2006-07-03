@@ -1,5 +1,5 @@
 import asyncore, glob, os.path, imp, sys
-import network
+import network, command
 from common import *
 
 def main():
@@ -25,8 +25,9 @@ def main():
 	while True:
 		try:
 			asyncore.loop(timeout=0.1, count=1)
+			command.process_commands()
 		except KeyboardInterrupt:
-			log("INPUT", "Interrupt detected")
+			log("INPUT", "Keyboard interrupt detected")
 			break
 
 	log("SYSTEM", "Shutdown in progress")

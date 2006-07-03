@@ -1,4 +1,5 @@
 import asyncore, asynchat, socket, sys
+import structs, command
 from common import *
 
 class client_socket(asynchat.async_chat):
@@ -6,6 +7,7 @@ class client_socket(asynchat.async_chat):
 		asynchat.async_chat.__init__(self, connection)
 		self.buffer = ''
 		self.set_terminator('\n')
+		self.parent = structs.player()
 
 	def collect_incoming_data(self, data):
 		self.buffer += data.replace('\r', '')
@@ -13,7 +15,7 @@ class client_socket(asynchat.async_chat):
 	def found_terminator(self):
 		data = self.buffer
 		self.buffer = ''
-		self.push(data + '\r\n')
+		command.accept_command(self.parent, data)
 
 	def handle_close(self):
 		log("NETWORK", "Client closed connection")

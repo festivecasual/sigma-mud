@@ -1,7 +1,7 @@
 from common import *
 
 def task_info():
-	return ('Server Status Update', 'Sigma Internal', 1, 1)
+	return ('Server Status Update', 'Sigma Internal', "1.0", 120)
 
 def task_init():
 	pass

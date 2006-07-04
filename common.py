@@ -1,6 +1,10 @@
+import time
 
 def log(label, text):
 	print "%10s | %s" % (label, text)
+
+def time_string():
+	return time.strftime("%H:%M:%S")
 
 # Play state constants
 STATE_NULL       = 0
@@ -15,4 +19,10 @@ prompts =	{
 		 STATE_NAME : "Please enter your name: ",
 		 STATE_PASSWORD : "Your password: ",
 		 STATE_PLAYING : "> "
+		}
+
+# Basic options (and default values)
+options =	{
+		 "remote_address" : "",  # Special system identifier for 127.0.0.1
+		 "tasks_root" : "./tasks"  # Root directory for task modules
 		}

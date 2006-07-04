@@ -31,7 +31,7 @@ class server_socket(asyncore.dispatcher):
 
 		try:
 			self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-			self.bind(('', 4000))
+			self.bind((options["remote_address"], 4000))
 			self.listen(5)
 		except:
 			log("FATAL", "Error initializing socket")

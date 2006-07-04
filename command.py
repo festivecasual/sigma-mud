@@ -14,6 +14,7 @@ def process_commands():
 			name = message.strip()
 			player_file = archive.player_load(name)
 			if player_file:
+				speaker.name = name
 				speaker.proto = player_file
 				speaker.state = STATE_PASSWORD
 			else:
@@ -26,7 +27,7 @@ def process_commands():
 			password = crypter.digest()
 
 			if password == speaker.proto[0]:
-				speaker.send_line("YES!")
+				log("LOGIN", "User <" + speaker.name + "> logged in at " + time_string())
 				speaker.state = STATE_PLAYING
 			else:
 				speaker.send_line("NO!")

@@ -1,21 +1,12 @@
-import asyncore, glob, os.path, imp, sys
-import network, command
+import asyncore
+import network, command, task
 from common import *
 
 def main():
 	log("SYSTEM", "Startup in progress")
 
 	log("MODULES", "Loading task modules")
-	task_modules = glob.glob("./tasks/*.py")
-	for task_file in task_modules:
-		source = os.path.basename(task_file)
-		name = os.path.splitext(source)[0]
-		try:
-			imp.load_source(name, "./tasks/" + source)
-			sys.modules[name].task_init()
-			log("TASK", "Task [" + sys.modules[name].task_info()[0] + "] loaded successfully")
-		except:
-			log("ERROR", "Task [" + source + "] broken, change .py extention to disable")
+	task.load_tasks()
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()
@@ -26,13 +17,15 @@ def main():
 		try:
 			asyncore.loop(timeout=0.1, count=1)
 			command.process_commands()
+			task.run_tasks()
 		except KeyboardInterrupt:
-			log("INPUT", "Keyboard interrupt detected")
+			log("CONSOLE", "Keyboard interrupt detected")
 			break
 
 	log("SYSTEM", "Shutdown in progress")
 
-	# ...
+	log("MODULES", "Deinitializing task modules")
+	task.deinit_tasks()
 
 	log("SYSTEM", "Shutdown complete")
 

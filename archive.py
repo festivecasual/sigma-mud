@@ -15,6 +15,6 @@ def player_load(name):
 def player_save(player):
 	player_db = bsddb.hashopen("data/players.db")
 
-	player_db[player.name] = pickle.dumps((player.password,))
+	player_db[player.name] = pickle.dumps((player.password, player.contents))
 	
 	player_db.close()

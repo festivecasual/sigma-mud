@@ -19,6 +19,7 @@ class client_socket(asynchat.async_chat):
 
 	def handle_close(self):
 		log("NETWORK", "Client at " + self.addr[0] + " closed connection")
+		archive.player_save(self.parent)
 		self.close()
 
 	def handle_accept(self):

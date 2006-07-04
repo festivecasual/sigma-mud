@@ -1,4 +1,4 @@
-import archive, sha, pickle
+import archive, sha, pickle, world
 from common import *
 
 command_queue = []
@@ -18,8 +18,7 @@ def process_commands():
 				speaker.proto = player_file
 				speaker.state = STATE_PASSWORD
 			else:
-				speaker.send_line("I do not know that name.")
-				speaker.send_line()
+				speaker.send_line("I do not know that name.", 2)
 
 		elif speaker.state == STATE_PASSWORD:
 			crypter = sha.new()
@@ -27,13 +26,27 @@ def process_commands():
 			password = crypter.digest()
 
 			if password == speaker.proto[0]:
-				log("LOGIN", "User <" + speaker.name + "> logged in at " + time_string())
-				speaker.state = STATE_PLAYING
-			else:
-				speaker.send_line("NO!")
-				speaker.send_line()
-				speaker.state = STATE_NAME
+				# Do a dupe check to ensure no double logins before entering STATE_PLAYING
+				if True in [(check_player.name == speaker.name) for check_player in world.players]:
+					speaker.send_line("This name is already active.", 2)
+					speaker.name = None
+					speaker.proto = None
+					speaker.state = STATE_NAME
+				else:
+					log("LOGIN", "User <" + speaker.name + "> logged in at " + time_string())
 
-			speaker.proto = None
+					# Copy proto contents to main player class
+					speaker.password = speaker.proto[0]
+					speaker.contents = speaker.proto[1]
+
+					# Add player to master players list
+					world.players.append(speaker)
+
+					speaker.state = STATE_PLAYING
+			else:
+				speaker.send_line("Incorrect password.", 2)
+				speaker.name = None
+				speaker.proto = None
+				speaker.state = STATE_NAME
 
 		speaker.send_prompt()

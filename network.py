@@ -18,9 +18,12 @@ class client_socket(asynchat.async_chat):
 		command.accept_command(self.parent, data)
 
 	def handle_close(self):
-		log("NETWORK", "Client at " + self.addr[0] + " closed connection")
-		archive.player_save(self.parent)
+		if self.parent in world.players:
+			archive.player_save(self.parent)
+			world.players.remove(self.parent)
+
 		self.close()
+		log("NETWORK", "Client at " + self.addr[0] + " closed connection")
 
 	def handle_accept(self):
 		pass

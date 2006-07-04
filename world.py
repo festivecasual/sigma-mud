@@ -1,5 +1,7 @@
 from common import *
 
+players = []
+
 class entity:
 	def __init__(self):
 		self.name = ''
@@ -18,7 +20,7 @@ class character(entity):
 
 	def send(self, s = ""): pass
 
-	def send_line(self, s = ""): pass
+	def send_line(self, s = "", breaks = 1): pass
 
 class denizen(character):
 	def __init__(self):
@@ -33,20 +35,20 @@ class player(character):
 		self.proto = None
 		self.password = None
 		self.socket = s
-		self.state = STATE_INIT_NAME
+		self.state = STATE_INIT
 
 		self.send_prompt()
 
 	def send_prompt(self):
 		self.socket.push(prompts[self.state])
 
-		if (self.state == STATE_INIT_NAME):
+		if (self.state == STATE_INIT):
 			self.state = STATE_NAME
 			self.send_prompt()
 
 	def send(self, s = ""):
 		self.socket.push(s)
 
-	def send_line(self, s = ""):
+	def send_line(self, s = "", breaks = 1):
 		self.send(s)
-		self.send("\r\n")
+		self.send("\r\n" * breaks)

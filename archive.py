@@ -1,4 +1,5 @@
 import pickle, bsddb
+from common import *
 
 def player_load(name):
 	player_db = bsddb.hashopen("data/players.db")
@@ -16,5 +17,6 @@ def player_save(player):
 	player_db = bsddb.hashopen("data/players.db")
 
 	player_db[player.name] = pickle.dumps((player.password, player.contents))
+	log("SAVE", "User <" + player.name + "> saved successfully at " + time_string(), True)
 	
 	player_db.close()

@@ -1,4 +1,4 @@
-import time
+import time, sha
 
 def log(label, text, trivial = False):
 	if not (trivial and (options["verbose"] == "no")):
@@ -6,6 +6,12 @@ def log(label, text, trivial = False):
 
 def time_string():
 	return time.strftime("%H:%M:%S")
+
+def encrypt_password(password):
+	crypter = sha.new()
+	crypter.update(password)
+	return crypter.digest()
+
 
 # Play state constants
 STATE_NULL       = 0
@@ -24,7 +30,8 @@ prompts =	{
 
 # Basic options (and default values)
 options =	{
-		 "remote_address" : "",     # Special system identifier for *
-		 "tasks_root" : "./tasks",  # Root directory for task modules
-		 "verbose" : "yes"          # Display "trivial" log entries?
+		 "remote_address" : "",			# Special system identifier for *
+		 "tasks_root" : "./tasks",		# Root directory for task modules
+		 "handlers_root": "./handlers",		# Root directory for handler modules
+		 "verbose" : "yes"			# Display "trivial" log entries?
 		}

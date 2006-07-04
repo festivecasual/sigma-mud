@@ -20,7 +20,7 @@ def load_tasks():
 			tasks.append([task, time.time(), task.task_info()[3]])
 			tasks[-1][0].task_init()
 		except:
-			log("ERROR", "Task [" + source + "] broken, change .py extension to disable")
+			log("ERROR", "Task module [" + source + "] broken, change .py extension to disable")
 
 def run_tasks():
 	for task in tasks:
@@ -28,7 +28,7 @@ def run_tasks():
 			try:
 				task[0].task_execute()
 			except:
-				log("ERROR", "Exception thrown in task_execute() for " + task[0].task_info()[0])
+				log("ERROR", "Exception thrown in task_execute() for [" + task[0].task_info()[0] + "]")
 
 			task[1] = time.time()
 

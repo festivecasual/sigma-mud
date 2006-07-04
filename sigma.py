@@ -1,12 +1,15 @@
 import asyncore
-import network, command, task
+import network, command, task, handler
 from common import *
 
 def main():
 	log("SYSTEM", "Startup in progress")
 
-	log("MODULES", "Loading task modules")
+	log("MODULES", "Inspecting task modules")
 	task.load_tasks()
+
+	log("MODULES", "Inspecting handler modules")
+	handler.load_handlers()
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()

@@ -22,9 +22,7 @@ def process_commands():
 				speaker.send_line("I do not know that name.", 2)
 
 		elif speaker.state == STATE_PASSWORD:
-			crypter = sha.new()
-			crypter.update(message)
-			password = crypter.digest()
+			password = encrypt_password(message)
 
 			if password == speaker.proto[0]:
 				# Do a dupe check to ensure no double logins before entering STATE_PLAYING

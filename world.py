@@ -6,6 +6,8 @@ class entity:
 		self.desc_short = ''
 		self.desc_long = ''
 
+		self.contents = []
+
 class character(entity):
 	def __init__(self):
 		entity.__init__(self)
@@ -25,7 +27,7 @@ class denizen(character):
 		self.state = STATE_PLAYING
 
 class player(character):
-	def __init__(self, s = None):
+	def __init__(self, s):
 		character.__init__(self)
 
 		self.proto = None

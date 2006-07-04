@@ -1,7 +1,7 @@
 import time
 
 def log(label, text):
-	print "%10s | %s" % (label, text)
+	print "%-10s | %s" % (label, text)
 
 def time_string():
 	return time.strftime("%H:%M:%S")

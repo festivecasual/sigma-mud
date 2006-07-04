@@ -1,5 +1,5 @@
 import asyncore, asynchat, socket, sys
-import world, command
+import world, command, archive
 from common import *
 
 class client_socket(asynchat.async_chat):

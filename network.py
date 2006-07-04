@@ -22,8 +22,8 @@ class client_socket(asynchat.async_chat):
 			archive.player_save(self.parent)
 			world.players.remove(self.parent)
 
-		self.close()
 		log("NETWORK", "Client at " + self.addr[0] + " closed connection")
+		self.close()
 
 	def handle_accept(self):
 		pass
@@ -35,6 +35,7 @@ class server_socket(asyncore.dispatcher):
 
 		try:
 			self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+			self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			self.bind((options["remote_address"], 4000))
 			self.listen(5)
 		except:

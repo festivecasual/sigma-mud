@@ -24,7 +24,7 @@ prompts =	{
 
 # Basic options (and default values)
 options =	{
-		 "remote_address" : "",     # Special system identifier for 127.0.0.1
+		 "remote_address" : "",     # Special system identifier for *
 		 "tasks_root" : "./tasks",  # Root directory for task modules
 		 "verbose" : "yes"          # Display "trivial" log entries?
 		}

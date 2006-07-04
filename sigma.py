@@ -24,6 +24,9 @@ def main():
 
 	log("SYSTEM", "Shutdown in progress")
 
+	log("NETWORK", "Shutting down master socket")
+	listener.close()
+
 	log("MODULES", "Deinitializing task modules")
 	task.deinit_tasks()
 

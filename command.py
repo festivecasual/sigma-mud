@@ -1,4 +1,5 @@
-import archive, sha, pickle, world
+import sha, pickle, shlex
+import archive, world
 from common import *
 
 command_queue = []
@@ -48,5 +49,13 @@ def process_commands():
 				speaker.name = None
 				speaker.proto = None
 				speaker.state = STATE_NAME
+
+		elif speaker.state == STATE_PLAYING:
+			tokens = shlex.split(message)
+
+			if len(tokens) and tokens[0] == 'quit':
+				import asyncore
+				speaker.socket.handle_close()
+				continue;
 
 		speaker.send_prompt()

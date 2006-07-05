@@ -52,7 +52,6 @@ def process_commands():
 			tokens = shlex.split(message)
 
 			if len(tokens) and tokens[0] == 'quit':
-				import asyncore
 				speaker.socket.handle_close()
 				continue;
 

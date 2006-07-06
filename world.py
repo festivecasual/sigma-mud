@@ -2,19 +2,25 @@ from common import *
 
 players = []
 
-class entity:
-	def __init__(self):
-		self.name = ''
-		self.desc_short = ''
-		self.desc_long = ''
+rooms = {}
 
-		self.contents = []
+class entity:
+	def __init__(self): pass
+
+	name = ''
+	keywords = ['']
+	description = ''
+	contents = []
+
+class room(entity):
+	def __init__(self):
+		entity.__init__(self)
+
+	keywords = ['room']
 
 class character(entity):
 	def __init__(self):
 		entity.__init__(self)
-
-		self.state = STATE_NULL
 
 	def send_prompt(self): pass
 
@@ -22,21 +28,23 @@ class character(entity):
 
 	def send_line(self, s = "", breaks = 1): pass
 
+	def get_keywords(self):
+		return [self.name.lower()]
+
+	state = STATE_NULL
+	keywords = property(get_keywords)
+
 class denizen(character):
 	def __init__(self):
 		character.__init__(self)
 
-		self.state = STATE_PLAYING
+	state = STATE_PLAYING
 
 class player(character):
 	def __init__(self, s):
 		character.__init__(self)
 
-		self.proto = None
-		self.password = None
 		self.socket = s
-		self.state = STATE_INIT
-
 		self.send_prompt()
 
 	def send_prompt(self):
@@ -52,3 +60,8 @@ class player(character):
 	def send_line(self, s = "", breaks = 1):
 		self.send(s)
 		self.send("\r\n" * breaks)
+
+	state = STATE_INIT
+	proto = None
+	password = None
+	socket = None

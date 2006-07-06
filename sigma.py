@@ -5,6 +5,8 @@ from common import *
 def main():
 	log("SYSTEM", "Startup in progress")
 
+	log("SYSTEM", "Processing server.xml")
+
 	log("MODULES", "Inspecting task modules")
 	task.load_tasks()
 
@@ -15,7 +17,6 @@ def main():
 	listener = network.server_socket()
 
 	log("SYSTEM", "Startup complete, entering main loop")
-
 	while True:
 		try:
 			asyncore.loop(timeout=0.1, count=1)

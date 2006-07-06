@@ -6,8 +6,8 @@ def register_handlers():
 		 "save" : save
 		}
 
-def quit():
+def quit(data):
 	log("EVENT", "quit()")
 
-def save():
+def save(data):
 	log("EVENT", "save()")

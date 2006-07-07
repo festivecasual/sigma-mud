@@ -8,8 +8,7 @@ def time_string():
 	return time.strftime("%H:%M:%S")
 
 def encrypt_password(password):
-	crypter = sha.new()
-	crypter.update(password)
+	crypter = sha.new(password)
 	return crypter.digest()
 
 # Play state constants

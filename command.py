@@ -1,4 +1,4 @@
-import sha, pickle, shlex
+import shlex
 import archive, world
 from common import *
 

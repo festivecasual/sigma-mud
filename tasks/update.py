@@ -3,7 +3,7 @@ import world
 from common import *
 
 def task_info():
-	return ('Server Status Update', 'Sigma Internal', "1.0", 300)
+	return ('Server Status Update', 'Sigma Internal', "1.0", 3)
 
 def task_init():
 	pass
@@ -13,4 +13,3 @@ def task_execute():
 
 def task_deinit():
 	pass
-

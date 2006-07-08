@@ -26,12 +26,17 @@ def process_commands():
 
 			if password == speaker.proto[0]:
 				# Do a dupe check to ensure no double logins before entering STATE_PLAYING
-				if True in [(check_player.name == speaker.name) for check_player in world.players]:
-					speaker.send_line("This name is already active.", 2)
-					speaker.name = None
-					speaker.proto = None
-					speaker.state = STATE_NAME
-				else:
+				dupe = False
+				for check_player in world.players:
+					if check_player.name == speaker.name:
+						dupe = True
+						speaker.send_line("This name is already active.", 2)
+						speaker.name = None
+						speaker.proto = None
+						speaker.state = STATE_NAME
+						break
+
+				if not dupe:
 					log("LOGIN", "User <" + speaker.name + "> logged in at " + time_string())
 
 					# Copy proto contents to main player class
@@ -53,6 +58,6 @@ def process_commands():
 
 			if len(tokens) and tokens[0] == 'quit':
 				speaker.socket.handle_close()
-				continue;
+				continue
 
 		speaker.send_prompt()

@@ -12,11 +12,10 @@ def load_handlers():
 
 		try:
 			imp.load_source(name, options["handlers_root"] + "/" + source)
+			new_handlers = libsigma.safe_mode(sys.modules[name].register_handlers)
+			if new_handlers:
+				handlers.update(new_handlers)
+				log("HANDLERS", "Loading " + str(len(new_handlers)) + " handler(s) from [" + source + "]")
 		except:
 			log("  *  ERROR", "Handler module [" + source + "] is not functional")
 			continue
-
-		new_handlers = libsigma.safe_mode(sys.modules[name].register_handlers)
-		if new_handlers:
-			handlers.update(new_handlers)
-			log("HANDLERS", "Loading " + str(len(new_handlers)) + " handler(s) from [" + source + "]")

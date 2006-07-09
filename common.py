@@ -26,12 +26,17 @@ prompts =	{
 		 STATE_PLAYING : "> "
 		}
 
-# Basic options (and default values)
+# Basic configurable options (and default values)
 options =	{
-		 "remote_address" : "",			# Special system identifier for *
-		 "xml_root" : "./data",			# XML root directory and location of server.xml
-		 "tasks_root" : "./tasks",		# Root directory for task modules
-		 "handlers_root": "./handlers",		# Root directory for handler modules
-		 "players_db" : "./data/players.db",	# Location of players database
-		 "verbose" : "yes"			# Display "trivial" log entries?
+		 "bind_address" : "",				# "" is a special system identifier for * (all)
+		 "bind_port" : "4000",				# The server's listening port
+		 "players_db" : "./data/players.db",		# Location of players database
+		 "verbose" : "yes"				# Display "trivial" log entries?
+		}
+
+root_dir = "."
+directories =	{
+		 "xml_root" : root_dir + "/data",		# XML root directory and location of server.xml
+		 "tasks_root" : root_dir + "/tasks",		# Root directory for task modules
+		 "handlers_root" : root_dir + "/handlers"	# Root directory for handler modules
 		}

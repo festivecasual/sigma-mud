@@ -1,5 +1,6 @@
 <server>
-  <option name="remote_address" value="" />
+  <option name="bind_address" value="" />
+  <option name="bind_port" value="4000" />
 
   <world>
     <location name="default_start" value="ravren@100" />

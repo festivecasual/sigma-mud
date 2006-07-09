@@ -3,6 +3,7 @@ from common import *
 players = []
 
 rooms = {}
+locations = {}
 
 class entity:
 	def __init__(self): pass

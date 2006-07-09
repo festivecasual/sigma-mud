@@ -5,14 +5,15 @@ from common import *
 def main():
 	log("SYSTEM", "Startup in progress")
 
-	log("SYSTEM", "Processing server.xml")
-	importer.process_xml()
-
 	log("MODULES", "Inspecting task modules")
 	task.load_tasks()
 
 	log("MODULES", "Inspecting handler modules")
 	handler.load_handlers()
+
+	log("XML", "Processing server.xml")
+	importer.process_xml()
+	log("XML", "Finished processing server.xml")
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()

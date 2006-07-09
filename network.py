@@ -23,6 +23,7 @@ class client_socket(asynchat.async_chat):
 			world.players.remove(self.parent)
 
 		log("NETWORK", "Client at " + self.addr[0] + " closed connection")
+		self.parent.socket = None
 		self.close()
 
 	def handle_accept(self):
@@ -36,7 +37,7 @@ class server_socket(asyncore.dispatcher):
 		try:
 			self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			self.bind((options["remote_address"], 4000))
+			self.bind((options["bind_address"], int(options["bind_port"])))
 			self.listen(5)
 		except:
 			log("FATAL", "Error initializing socket")

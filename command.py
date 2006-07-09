@@ -1,5 +1,5 @@
 import shlex
-import archive, world
+import archive, world, handler, libsigma
 from common import *
 
 command_queue = []
@@ -56,8 +56,15 @@ def process_commands():
 		elif speaker.state == STATE_PLAYING:
 			tokens = shlex.split(message)
 
-			if len(tokens) and tokens[0] == 'quit':
-				speaker.socket.handle_close()
-				continue
+			if len(tokens):
+				not_found = True
+				for (command, function) in handler.mappings.items():
+					if command.startswith(tokens[0]):
+						libsigma.safe_mode(function, {"speaker" : speaker, "args" : tokens})
+						not_found = False
+						break
+				if not_found:
+					speaker.send_line("What?", 2)
 
-		speaker.send_prompt()
+		if speaker.socket:
+			speaker.send_prompt()

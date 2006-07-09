@@ -7,7 +7,8 @@ def register_handlers():
 		}
 
 def quit(data):
-	log("EVENT", "quit()")
+	# TODO: Add a library function to check if this is a player...
+	data["speaker"].socket.handle_close()
 
 def save(data):
-	log("EVENT", "save()")
+	pass

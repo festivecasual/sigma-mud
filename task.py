@@ -5,13 +5,13 @@ from common import *
 tasks = []
 
 def load_tasks():
-	task_modules = glob.glob(options["tasks_root"] + "/*.py")
+	task_modules = glob.glob(directories["tasks_root"] + "/*.py")
 	for task_file in task_modules:
 		source = os.path.basename(task_file)
 		name = "task_" + os.path.splitext(source)[0]
 
 		try:
-			imp.load_source(name, options["tasks_root"] + "/" + source)
+			imp.load_source(name, directories["tasks_root"] + "/" + source)
 
 			f_info = sys.modules[name].task_info
 			f_init = sys.modules[name].task_init

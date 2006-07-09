@@ -1,3 +1,14 @@
 <handlers>
-</handlers>
 
+  <handler command="emote" function="emote" />
+  <handler command="exit" function="quit" />
+
+  <handler command="logoff" function="quit" />
+
+  <handler command="quit" function="quit" />
+
+  <handler command="save" function="save" />
+  <handler command="say" function="say" />
+  <handler command="shutdown" function="quit" />
+
+</handlers>

@@ -12,15 +12,22 @@ def load_tasks():
 
 		try:
 			imp.load_source(name, options["tasks_root"] + "/" + source)
-			ret = libsigma.safe_mode(sys.modules[name].task_info)
-			if ret:
-				task_name, task_author, task_version, task_interval = ret
-				log("TASK", "Loading [" + task_name + "] (" + task_author + ", " + task_version + ")")
-				tasks.append([sys.modules[name], time.time(), task_interval])
-				libsigma.safe_mode(tasks[-1][0].task_init)
+
+			f_info = sys.modules[name].task_info
+			f_init = sys.modules[name].task_init
+			f_execute = sys.modules[name].task_execute
+			f_deinit = sys.modules[name].task_deinit
 		except:
 			log("  *  ERROR", "Task module [" + source + "] is not functional")
 			continue
+
+		ret = libsigma.safe_mode(f_info)
+		if ret:
+			task_name, task_author, task_version, task_interval = ret
+			libsigma.safe_mode(f_init)
+
+		log("TASK", "Loading [" + task_name + "] (" + task_author + ", " + task_version + ")")
+		tasks.append([sys.modules[name], time.time(), task_interval])
 
 def run_tasks():
 	for task in tasks:

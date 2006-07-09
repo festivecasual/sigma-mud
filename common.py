@@ -29,6 +29,7 @@ prompts =	{
 # Basic options (and default values)
 options =	{
 		 "remote_address" : "",			# Special system identifier for *
+		 "xml_root" : "./data",			# XML root directory and location of server.xml
 		 "tasks_root" : "./tasks",		# Root directory for task modules
 		 "handlers_root": "./handlers",		# Root directory for handler modules
 		 "players_db" : "./data/players.db",	# Location of players database

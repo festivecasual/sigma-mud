@@ -1,11 +1,12 @@
 import asyncore
-import network, command, task, handler
+import network, command, task, handler, importer
 from common import *
 
 def main():
 	log("SYSTEM", "Startup in progress")
 
 	log("SYSTEM", "Processing server.xml")
+	importer.process_xml()
 
 	log("MODULES", "Inspecting task modules")
 	task.load_tasks()

@@ -1,0 +1,11 @@
+<server>
+  <option name="remote_address" value="" />
+
+  <world>
+    <location name="default_start" value="ravren@100" />
+
+    <area name="ravren" file="areas/ravren.xml" />
+  </world>
+
+  <handlers file="handlers-map.xml" />
+</server>

@@ -64,7 +64,7 @@ def process_commands():
 						not_found = False
 						break
 				if not_found:
-					speaker.send_line("What?", 2)
+					speaker.send_line("What?")
 
 		if speaker.socket:
 			speaker.send_prompt()

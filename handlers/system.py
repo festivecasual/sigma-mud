@@ -1,3 +1,5 @@
+import archive
+import libsigma
 from common import *
 
 def register_handlers():
@@ -7,8 +9,10 @@ def register_handlers():
 		}
 
 def quit(data):
-	# TODO: Add a library function to check if this is a player...
+	# TODO: Add a library function to check if this is a player
+	data["speaker"].send_line("Goodbye.")
 	data["speaker"].socket.handle_close()
 
 def save(data):
-	pass
+	archive.player_save(data["speaker"])
+	data["speaker"].send_line("Game saved.")

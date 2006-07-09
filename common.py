@@ -23,7 +23,7 @@ prompts =	{
 		 STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",
 		 STATE_NAME : "Please enter your name: ",
 		 STATE_PASSWORD : "Your password: ",
-		 STATE_PLAYING : "> "
+		 STATE_PLAYING : "\r\n> "
 		}
 
 # Basic configurable options (and default values)

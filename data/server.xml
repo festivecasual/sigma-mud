@@ -1,6 +1,7 @@
 <server>
   <option name="bind_address" value="" />
   <option name="bind_port" value="4000" />
+  <option name="verbose" value="yes" />
 
   <world>
     <location name="default_start" value="ravren@100" />

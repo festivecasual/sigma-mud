@@ -10,7 +10,12 @@ class client_socket(asynchat.async_chat):
 		self.parent = world.player(self)
 
 	def collect_incoming_data(self, data):
-		self.buffer += data.replace('\r', '')
+		for char in data:
+			if char == '\b' and len(self.buffer) > 0:
+				self.buffer = self.buffer[:-1]
+			elif char == '\b' or char == '\r': pass
+			else:
+				self.buffer += char
 
 	def found_terminator(self):
 		data = self.buffer

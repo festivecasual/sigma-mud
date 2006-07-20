@@ -1,7 +1,7 @@
 import sys
 from xml.dom import pulldom
 from xml.sax import SAXParseException
-import handler
+import handler, world
 from common import *
 
 def process_xml():
@@ -24,9 +24,17 @@ def process_xml():
 						sys.exit(1)
 					options[node.attributes["name"].value] = node.attributes["value"].value
 					log("CONFIG", "Option [" + node.attributes["name"].value + "] set to '" + node.attributes["value"].value + "'")
-				elif node.tagName == "world":
-					events.expandNode(node)
-					process_world(node)
+				elif node.tagName == "area":
+					if (not node.attributes.has_key("file")) or (not node.attributes.has_key("name")):
+						log("FATAL", "Error in <area /> tag")
+						sys.exit(1)
+					try:
+						area_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
+					except IOError:
+						log("FATAL", "Unable to open area XML source [" + node.attributes["file"].value)
+						sys.exit(1)
+					log("XML", "Processing area file at [" + node.attributes["file"].value + "]")
+					process_area(area_xml, node.attributes["name"].value)
 				elif node.tagName == "handlers":
 					if not node.attributes.has_key("file"):
 						log("FATAL", "Error in <handlers /> tag")
@@ -46,8 +54,20 @@ def process_xml():
 
 	server_xml.close()
 
-def process_world(node):
-	pass
+def process_area(f, name):
+	try:
+		events = pulldom.parse(f)
+		for (event, node) in events:
+			if event == pulldom.START_ELEMENT:
+				if node.tagName == "room":
+					if not node.attributes.has_key("id"):
+						log("FATAL", "Error in <room> tag")
+						sys.exit(1)
+					ref = name + ":" + node.attributes["id"].value
+					world.rooms[ref] = world.room()
+	except SAXParseException, msg:
+		log("FATAL", "XML Error: " + str(msg))
+		sys.exit(1)
 
 def process_handlers(f):
 	try:

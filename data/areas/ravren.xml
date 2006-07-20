@@ -1,3 +1,11 @@
 <area>
+  <room id="100">
+    <name>The Beginning Room</name>
+    <desc>
+      You are in a dark room.  It seems like it is the beginning of the universe!
+        There are    				pointless
+   instances of whitespace  here, like primordial	goo.
+    </desc>
+  </room>
 </area>
 

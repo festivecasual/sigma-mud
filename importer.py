@@ -35,6 +35,7 @@ def process_xml():
 						sys.exit(1)
 					log("XML", "Processing area file at [" + node.attributes["file"].value + "]")
 					process_area(area_xml, node.attributes["name"].value)
+					area_xml.close()
 				elif node.tagName == "handlers":
 					if not node.attributes.has_key("file"):
 						log("FATAL", "Error in <handlers /> tag")

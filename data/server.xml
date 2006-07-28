@@ -2,8 +2,8 @@
   <option name="bind_address" value="" />
   <option name="bind_port" value="4000" />
   <option name="verbose" value="yes" />
+  <option name="default_start" value="ravren:100" />
 
-  <location name="default_start" value="ravren:100" />
   <area name="ravren" file="areas/ravren.xml" />
 
   <handlers file="handlers-map.xml" />

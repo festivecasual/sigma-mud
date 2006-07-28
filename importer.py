@@ -65,7 +65,8 @@ def process_area(f, name):
 						log("FATAL", "Error in <room> tag")
 						sys.exit(1)
 					ref = name + ":" + node.attributes["id"].value
-					world.rooms[ref] = world.room()
+					events.expandNode(node)
+					world.rooms[ref] = world.room(ref, node)
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))
 		sys.exit(1)

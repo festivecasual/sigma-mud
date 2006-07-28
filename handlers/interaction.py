@@ -3,11 +3,19 @@ from common import *
 def register_handlers():
 	return	{
 		 "say" : say,
-		 "emote" : emote
+		 "emote" : emote,
+		 "look" : look
 		}
 
 def say(data):
-	log("EVENT", "say()")
+	pass
 
 def emote(data):
-	log("EVENT", "emote()")
+	pass
+
+def look(data):
+	speaker = data["speaker"]
+
+	import world
+	speaker.send_line(world.rooms[options["default_start"]].name)
+	speaker.send_line(world.rooms[options["default_start"]].desc)

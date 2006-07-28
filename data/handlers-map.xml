@@ -3,6 +3,7 @@
   <handler command="emote" function="emote" />
   <handler command="exit" function="quit" />
 
+  <handler command="look" function="look" />
   <handler command="logoff" function="quit" />
 
   <handler command="quit" function="quit" />

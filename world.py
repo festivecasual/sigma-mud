@@ -12,10 +12,19 @@ class entity:
 	keywords = ['']
 	description = ''
 	contents = []
+	location = ''
 
 class room(entity):
-	def __init__(self):
+	def __init__(self, ref, node):
 		entity.__init__(self)
+		location = ref
+
+		node.normalize()
+		for info_node in node.childNodes:
+			if info_node.nodeName == "name":
+				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			elif info_node.nodeName == "desc":
+				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 
 	keywords = ['room']
 

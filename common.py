@@ -11,6 +11,24 @@ def encrypt_password(password):
 	crypter = sha.new(password)
 	return crypter.digest()
 
+def strip_whitespace(text):
+	new = text
+	old = ""
+
+	while new != old:
+		old = new
+		for c in whitespace:
+			new = new.replace(c, " ")
+
+	return new.strip()
+
+def wordwrap(text, width):
+	return text
+
+# Ignorable whitespace (used by strip_whitespace)
+# Double-space should go last for the sake of efficiency
+whitespace = ["\t", "\n", "\f", "\r", "\v", "  "]
+
 # Play state constants
 STATE_NULL       = 0
 STATE_INIT       = 1
@@ -31,6 +49,8 @@ options =	{
 		 "bind_address" : "",				# "" is a special system identifier for * (all)
 		 "bind_port" : "4000",				# The server's listening port
 		 "players_db" : "./data/players.db",		# Location of players database
+		 "default_start" : "ravren:100",		# Default starting room
+		 "wrap_size" : "40",				# Default word-wrap line length
 		 "verbose" : "yes"				# Display "trivial" log entries?
 		}
 

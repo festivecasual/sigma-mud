@@ -20,6 +20,22 @@ def txt2dir(text):
 
 	return -1
 
+def dir2txt(dir):
+	for i in range(len(dir_match_dir)):
+		if dir_match_dir[i] == dir:
+			return dir_match_txt[i]
+	
+	return ''
+
+def exits(room):
+	result = []
+
+	for i in range(NUM_DIRS):
+		if room.exits[i]:
+			result.append(i)
+	
+	return result
+
 def enter_room(character, room):
 	if character.location:
 		character.location.characters.remove(character)

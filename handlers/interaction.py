@@ -1,3 +1,5 @@
+from libsigma import *
+
 def register_handlers():
 	return	{
 		 "say" : say,
@@ -17,3 +19,8 @@ def look(data):
 	import world
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)
+	
+	speaker.send("Exits: ")
+	for dir in exits(speaker.location):
+		speaker.send(dir2txt(dir) + " ")
+	speaker.send_line("")

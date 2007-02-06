@@ -22,8 +22,24 @@ def strip_whitespace(text):
 
 	return new.strip()
 
-def wordwrap(text, width):
-	return text
+def wordwrap(text, width = -1):
+	working = text
+	wrapped = ""
+	
+	if width == -1:
+		width = options["wrap-size"]
+	
+	while len(working) > width:
+		pos = working.rfind(" ", 0, width)
+		
+		if pos > -1:
+			wrapped += working[:pos] + "\r\n"
+			working = working[pos:].lstrip()
+		else:
+			wrapped += working[:(width - 1)] + "-\r\n"
+			working = working[(width - 1):]
+	
+	return wrapped + working
 
 # Ignorable whitespace (used by strip_whitespace)
 # Double-space should go last for the sake of efficiency
@@ -50,13 +66,13 @@ options =	{
 		 "bind_port" : "4000",				# The server's listening port
 		 "players_db" : "./data/players.db",		# Location of players database
 		 "default_start" : "ravren:100",		# Default starting room
-		 "wrap_size" : "40",				# Default word-wrap line length
+		 "wrap_size" : "60",				# Default word-wrap line length
 		 "verbose" : "yes"				# Display "trivial" log entries?
 		}
 
 root_dir = "."
 directories =	{
-		 "xml_root" : root_dir + "/data",		# XML root directory and location of server.xml
+		 "xml_root" : root_dir + "/config",		# XML root directory and location of server.xml
 		 "tasks_root" : root_dir + "/tasks",		# Root directory for task modules
 		 "handlers_root" : root_dir + "/handlers"	# Root directory for handler modules
 		}

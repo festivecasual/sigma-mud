@@ -3,8 +3,27 @@
     <name>The Beginning Room</name>
     <desc>
       You are in a dark room.  It seems like it is the beginning of the universe!
-        There are    	thisisacrazyamountofasinglewordthatisjustaskingtobewrappedinabigwaysopleasewrapit			pointless
+        There are    				pointless
    instances of whitespace  here, like primordial	goo.
     </desc>
+    <exit dir="e" target="101" />
+  </room>
+  
+  <room id="101">
+    <name>The Second Room</name>
+    <desc>
+      Things look a bit better here.  You see a waterfall ahead in the distance,
+      but the developers will have to decide if you can get to it or not.
+    </desc>
+    <exit dir="w" target="100" />
+    <exit dir="enter" target="103" />
+  </room>
+  
+  <room id="103">
+    <name>Waterfall</name>
+    <desc>
+      You are inside a waterfall!
+    </desc>
+    <exit dir="leave" target="101" />
   </room>
 </area>

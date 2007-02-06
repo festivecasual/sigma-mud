@@ -13,6 +13,13 @@ def safe_mode(function, *args):
 
 	return ret
 
+def txt2dir(text):
+	for i in range(len(dir_match_dir)):
+		if dir_match_txt[i].startswith(text):
+			return dir_match_dir[i]
+
+	return -1
+
 def enter_room(character, room):
 	if character.location:
 		character.location.characters.remove(character)

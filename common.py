@@ -64,7 +64,7 @@ prompts =	{
 options =	{
 		 "bind_address" : "",				# "" is a special system identifier for * (all)
 		 "bind_port" : "4000",				# The server's listening port
-		 "players_db" : "./data/players.db",		# Location of players database
+		 "players_db" : "./config/players.db",		# Location of players database
 		 "default_start" : "ravren:100",		# Default starting room
 		 "wrap_size" : "60",				# Default word-wrap line length
 		 "verbose" : "yes"				# Display "trivial" log entries?

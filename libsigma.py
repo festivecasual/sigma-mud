@@ -12,3 +12,10 @@ def safe_mode(function, *args):
 		log("  *  ERROR", last[0] + ":" + str(last[1]) + " (" + last[2] + ")")
 
 	return ret
+
+def enter_room(character, room):
+	if character.location:
+		character.location.characters.remove(character)
+
+	room.characters.append(character)
+	character.location = room

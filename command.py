@@ -10,6 +10,7 @@ def accept_command(speaker, message):
 def process_commands():
 	while len(command_queue) > 0:
 		speaker, message = command_queue.pop(0)
+		prompt = True
 
 		if speaker.state == STATE_NAME:
 			name = message.strip()
@@ -45,6 +46,12 @@ def process_commands():
 
 					# Add player to master players list
 					world.players.append(speaker)
+					
+					# Insert player into default start room and "look"
+					libsigma.enter_room(speaker, world.rooms[options["default_start"]])
+					speaker.send_line("", 2)
+					accept_command(speaker, "look")
+					prompt = False
 
 					speaker.state = STATE_PLAYING
 			else:
@@ -66,5 +73,5 @@ def process_commands():
 				if not_found:
 					speaker.send_line("What?")
 
-		if speaker.socket:
+		if speaker.socket and prompt:
 			speaker.send_prompt()

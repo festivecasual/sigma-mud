@@ -1,5 +1,3 @@
-from common import *
-
 def register_handlers():
 	return	{
 		 "say" : say,
@@ -17,5 +15,5 @@ def look(data):
 	speaker = data["speaker"]
 
 	import world
-	speaker.send_line(world.rooms[options["default_start"]].name)
-	speaker.send_line(world.rooms[options["default_start"]].desc)
+	speaker.send_line(speaker.location.name)
+	speaker.send_line(speaker.location.desc)

@@ -27,6 +27,7 @@ class room(entity):
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 
 	keywords = ['room']
+	characters = []
 
 class character(entity):
 	def __init__(self):

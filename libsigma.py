@@ -1,4 +1,5 @@
 import traceback, sys, command
+from string import Template
 from common import *
 
 def safe_mode(function, *args):
@@ -49,3 +50,25 @@ def queue_command(character, text):
 def run_command(character, text):
 	if not command.run_command(character, text):
 		log("  *  ERROR", "Command <" + text + "> unsuccessful")
+
+SELF = 1
+ROOM = 2
+AREA = 4
+GAME = 8
+
+def report(recipients, template, actor, direct = None, indirect = None):
+	s = Template(template)
+	mapping = {
+		"actor" : actor.name
+		}
+
+	if direct:
+		mapping["direct"] = direct.name
+	
+	if indirect:
+		mapping["indirect"] = indirect.name
+
+	if SELF & recipients:
+		out = s.safe_substitute(mapping, actor = "you")
+		out = out[0].upper() + out[1:]
+		actor.send_line(out)

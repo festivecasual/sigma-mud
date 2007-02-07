@@ -8,12 +8,35 @@ def accept_command(speaker, message):
 	command_queue.append((speaker, message))
 
 def run_command(speaker, message):
-	tokens = shlex.split(message)
+	reduced = message.lstrip()
+	if reduced:
+		if reduced[0] == "'" and handler.specials["apostrophe"]:
+			message = handler.specials["apostrophe"] + " " + reduced[1:]
+		elif reduced[0] == ',' and handler.specials["comma"]:
+			message = handler.specials["comma"] + " " + reduced[1:]
+		elif reduced[0] == ':' and handler.specials["colon"]:
+			message = handler.specials["colon"] + " " + reduced[1:]
+		elif reduced[0] == '.' and handler.specials["period"]:
+			message = handler.specials["period"] + " " + reduced[1:]
+	else:
+		return True
+
+	try:
+		tokens = shlex.split(message)
+	except:
+		return False
+
+	tail = message[(message.find(tokens[0]) + len(tokens[0])):].lstrip()
 
 	if len(tokens):
 		for (command, function) in handler.mappings:
 			if command.startswith(tokens[0]):
-				libsigma.safe_mode(function, {"speaker" : speaker, "args" : tokens})
+				libsigma.safe_mode(function, {
+					"speaker" : speaker,
+					"args" : tokens,
+					"message" : message,
+					"tail" : tail
+					})
 				return True
 		return False
 	else:

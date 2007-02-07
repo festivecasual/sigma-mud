@@ -9,7 +9,10 @@ def register_handlers():
 		}
 
 def say(data):
-	pass
+	speaker = data["speaker"]
+	tail = data["tail"]
+	
+	report(SELF, "$actor say, '" + tail + "'", speaker)
 
 def emote(data):
 	pass

@@ -86,6 +86,16 @@ def process_handlers(f):
 						log("FATAL", "Handler maps non-existent function to command <" + command + ">")
 						sys.exit(1)
 					handler.mappings.append((command, handler.functions[function]))
+				if node.tagName == "special":
+					if (not node.attributes.has_key("type")) or (not node.attributes.has_key("rewrite")):
+						log("FATAL", "Error in <special /> tag")
+						sys.exit(1)
+					type = node.attributes["type"].value
+					rewrite = node.attributes["rewrite"].value
+					if not type in handler.specials.keys():
+						log("FATAL", "Special handler tag references unsupported type <" + type + ">")
+						sys.exit(1)
+					handler.specials[type] = rewrite.encode('ascii')
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))
 		sys.exit(1)

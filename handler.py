@@ -4,6 +4,12 @@ from common import *
 
 functions = {}
 mappings = []
+specials = {
+	"apostrophe" : None,
+	"comma" : None,
+	"colon" : None,
+	"period" : None
+	}
 
 def load_handlers():
 	handler_modules = glob.glob(directories["handlers_root"] + "/*.py")

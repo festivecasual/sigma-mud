@@ -1,4 +1,4 @@
-import traceback, sys
+import traceback, sys, command
 from common import *
 
 def safe_mode(function, *args):
@@ -42,3 +42,10 @@ def enter_room(character, room):
 
 	room.characters.append(character)
 	character.location = room
+
+def queue_command(character, text):
+	command.accept_command(character, text)
+
+def run_command(character, text):
+	if not command.run_command(character, text):
+		log("  *  ERROR", "Command <" + text + "> unsuccessful")

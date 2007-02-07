@@ -40,5 +40,6 @@ def go(data):
 		speaker.send_line("Where do you want to go?")
 	elif speaker.location.exits[dir]:
 		enter_room(speaker, speaker.location.exits[dir])
+		run_command(speaker, "look")
 	else:
 		speaker.send_line("There is no exit in that direction.")

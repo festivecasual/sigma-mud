@@ -7,6 +7,18 @@ command_queue = []
 def accept_command(speaker, message):
 	command_queue.append((speaker, message))
 
+def run_command(speaker, message):
+	tokens = shlex.split(message)
+
+	if len(tokens):
+		for (command, function) in handler.mappings:
+			if command.startswith(tokens[0]):
+				libsigma.safe_mode(function, {"speaker" : speaker, "args" : tokens})
+				return True
+		return False
+	else:
+		return True
+
 def process_commands():
 	while len(command_queue) > 0:
 		speaker, message = command_queue.pop(0)
@@ -50,7 +62,7 @@ def process_commands():
 					# Insert player into default start room and "look"
 					libsigma.enter_room(speaker, world.rooms[options["default_start"]])
 					speaker.send_line("", 2)
-					accept_command(speaker, "look")
+					libsigma.queue_command(speaker, "look")
 					prompt = False
 
 					speaker.state = STATE_PLAYING
@@ -61,17 +73,8 @@ def process_commands():
 				speaker.state = STATE_NAME
 
 		elif speaker.state == STATE_PLAYING:
-			tokens = shlex.split(message)
-
-			if len(tokens):
-				not_found = True
-				for (command, function) in handler.mappings:
-					if command.startswith(tokens[0]):
-						libsigma.safe_mode(function, {"speaker" : speaker, "args" : tokens})
-						not_found = False
-						break
-				if not_found:
-					speaker.send_line("What?")
+			if not run_command(speaker, message):
+				speaker.send_line("What?")
 
 		if speaker.socket and prompt:
 			speaker.send_prompt()

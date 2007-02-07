@@ -1,15 +1,31 @@
 <handlers>
 
+  <handler command="east" function="go" />
   <handler command="emote" function="emote" />
+  <handler command="enter" function="go" />
   <handler command="exit" function="quit" />
 
   <handler command="look" function="look" />
+  <handler command="leave" function="go" />
   <handler command="logoff" function="quit" />
+
+  <handler command="north" function="go" />
+  <handler command="ne" function="go" />
+  <handler command="northeast" function="go" />
+  <handler command="northwest" function="go" />
+  <handler command="nw" function="go" />
 
   <handler command="quit" function="quit" />
 
+  <handler command="south" function="go" />
   <handler command="save" function="save" />
   <handler command="say" function="say" />
+  <handler command="se" function="go" />
   <handler command="shutdown" function="quit" />
+  <handler command="southeast" function="go" />
+  <handler command="southwest" function="go" />
+  <handler command="sw" function="go" />
+
+  <handler command="west" function="go" />
 
 </handlers>

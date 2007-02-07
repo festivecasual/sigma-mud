@@ -4,7 +4,8 @@ def register_handlers():
 	return	{
 		 "say" : say,
 		 "emote" : emote,
-		 "look" : look
+		 "look" : look,
+		 "go" : go
 		}
 
 def say(data):
@@ -24,3 +25,6 @@ def look(data):
 	for dir in exits(speaker.location):
 		speaker.send(dir2txt(dir) + " ")
 	speaker.send_line("")
+
+def go(data):
+	log("GO", "GO")

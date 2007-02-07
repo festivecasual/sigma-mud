@@ -65,7 +65,7 @@ def process_commands():
 
 			if len(tokens):
 				not_found = True
-				for (command, function) in handler.mappings.items():
+				for (command, function) in handler.mappings:
 					if command.startswith(tokens[0]):
 						libsigma.safe_mode(function, {"speaker" : speaker, "args" : tokens})
 						not_found = False

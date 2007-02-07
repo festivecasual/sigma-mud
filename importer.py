@@ -85,7 +85,7 @@ def process_handlers(f):
 					if not handler.functions.has_key(function):
 						log("FATAL", "Handler maps non-existent function to command <" + command + ">")
 						sys.exit(1)
-					handler.mappings[command] = handler.functions[function]
+					handler.mappings.append((command, handler.functions[function]))
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))
 		sys.exit(1)

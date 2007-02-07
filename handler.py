@@ -3,7 +3,7 @@ import libsigma
 from common import *
 
 functions = {}
-mappings = {}
+mappings = []
 
 def load_handlers():
 	handler_modules = glob.glob(directories["handlers_root"] + "/*.py")

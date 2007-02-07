@@ -20,8 +20,8 @@
   <handler command="quit" function="quit" />
 
   <handler command="south" function="go" />
-  <handler command="save" function="save" />
   <handler command="say" function="say" />
+  <handler command="save" function="save" />
   <handler command="se" function="go" />
   <handler command="shutdown" function="quit" />
   <handler command="southeast" function="go" />

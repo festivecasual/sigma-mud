@@ -13,11 +13,9 @@ def main():
 
 	log("XML", "Processing server.xml")
 	importer.process_xml()
-	log("XML", "Finished processing server.xml")
 
 	log("WORLD", "Resolving location linkages")
 	world.resolve_links()
-	log("WORLD", "Finished resolving linkages")
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()

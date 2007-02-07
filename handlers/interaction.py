@@ -27,6 +27,10 @@ def look(data):
 	for dir in exits(speaker.location):
 		speaker.send(dir2txt(dir) + " ")
 	speaker.send_line("")
+	
+	for character in speaker.location.characters:
+		if character != speaker:
+			speaker.send_line(character.name + " is here.")
 
 def go(data):
 	speaker = data["speaker"]
@@ -42,7 +46,9 @@ def go(data):
 	if dir == -1:
 		speaker.send_line("Where do you want to go?")
 	elif speaker.location.exits[dir]:
+		report(ROOM, "$actor has left the room.", speaker)
 		enter_room(speaker, speaker.location.exits[dir])
+		report(ROOM, "$actor has entered the room.", speaker)
 		run_command(speaker, "look")
 	else:
 		speaker.send_line("There is no exit in that direction.")

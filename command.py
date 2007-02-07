@@ -84,6 +84,7 @@ def process_commands():
 					
 					# Insert player into default start room and "look"
 					libsigma.enter_room(speaker, world.rooms[options["default_start"]])
+					libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
 					speaker.send_line("", 2)
 					libsigma.queue_command(speaker, "look")
 					prompt = False

@@ -51,16 +51,20 @@ def run_command(character, text):
 	if not command.run_command(character, text):
 		log("  *  ERROR", "Command <" + text + "> unsuccessful")
 
-SELF = 1
-ROOM = 2
-AREA = 4
-GAME = 8
+SELF =  1
+ROOM =  2
+NEAR =  4 # TODO
+AREA =  8 # TODO
+GAME = 16 # TODO
 
-def report(recipients, template, actor, direct = None, indirect = None):
+def report(recipients, template, actor, verbs = None, direct = None, indirect = None):
 	s = Template(template)
 	mapping = {
 		"actor" : actor.name
 		}
+	
+	if verbs:
+		mapping["verb"] = verbs[1]
 
 	if direct:
 		mapping["direct"] = direct.name
@@ -69,6 +73,17 @@ def report(recipients, template, actor, direct = None, indirect = None):
 		mapping["indirect"] = indirect.name
 
 	if SELF & recipients:
-		out = s.safe_substitute(mapping, actor = "you")
+		if verbs:
+			out = s.safe_substitute(mapping, actor = "you", verb = verbs[0])
+		else:
+			out = s.safe_substitute(mapping, actor = "you")
 		out = out[0].upper() + out[1:]
 		actor.send_line(out)
+
+	if ROOM & recipients:
+		for character in actor.location.characters:
+			if character != actor:
+				out = s.safe_substitute(mapping)
+				out = out[0].upper() + out[1:]
+				character.send_line("")
+				character.send_line(out)

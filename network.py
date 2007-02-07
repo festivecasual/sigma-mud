@@ -1,5 +1,5 @@
 import asyncore, asynchat, socket, sys
-import world, command, archive
+import world, command, archive, libsigma
 from common import *
 
 class client_socket(asynchat.async_chat):
@@ -23,6 +23,10 @@ class client_socket(asynchat.async_chat):
 		command.accept_command(self.parent, data)
 
 	def handle_close(self):
+		if self.parent.location:
+			libsigma.report(libsigma.ROOM, "$actor has left the game.", self.parent)
+			self.parent.location.characters.remove(self.parent)
+
 		if self.parent in world.players:
 			archive.player_save(self.parent)
 			world.players.remove(self.parent)

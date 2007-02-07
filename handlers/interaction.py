@@ -12,7 +12,7 @@ def say(data):
 	speaker = data["speaker"]
 	tail = data["tail"]
 	
-	report(SELF, "$actor say, '" + tail + "'", speaker)
+	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
 
 def emote(data):
 	pass

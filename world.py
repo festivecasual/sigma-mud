@@ -20,19 +20,19 @@ def resolve_links():
 				current.exits[i] = None
 
 class entity:
-	def __init__(self): pass
-
-	name = ''
-	keywords = ['']
-	description = ''
-	contents = []
-	location = ''
+	def __init__(self):
+		self.name = ''
+		self.keywords = ['']
+		self.description = ''
+		self.contents = []
+		self.location = ''
 
 class room(entity):
 	def __init__(self, ref, node):
 		entity.__init__(self)
 		self.location = ref
 
+		self.characters = []
 		self.keywords = ['room']
 		self.exits = [None, None, None, None, None, None, None, None, None, None, None, None]
 
@@ -55,8 +55,6 @@ class room(entity):
 	def get_area(self):
 		return self.location[:self.location.find(":")]
 
-	characters = []
-	exits = []
 	area = property(get_area)
 
 class character(entity):
@@ -73,8 +71,7 @@ class character(entity):
 
 	def get_keywords(self):
 		return [self.name.lower()]
-	
-	state = None
+
 	keywords = property(get_keywords)
 
 class denizen(character):
@@ -86,7 +83,10 @@ class denizen(character):
 class player(character):
 	def __init__(self, s):
 		character.__init__(self)
-		
+
+		self.proto = None
+		self.password = None
+		self.socket = None		
 		self.state = STATE_INIT
 
 		self.socket = s
@@ -105,7 +105,3 @@ class player(character):
 	def send_line(self, s = "", breaks = 1):
 		self.send(s)
 		self.send("\r\n" * breaks)
-
-	proto = None
-	password = None
-	socket = None

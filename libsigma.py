@@ -58,6 +58,7 @@ AREA =  8 # TODO
 GAME = 16 # TODO
 
 def report(recipients, template, actor, verbs = None, direct = None, indirect = None):
+	out = ""
 	s = Template(template)
 	mapping = {
 		"actor" : actor.name
@@ -80,10 +81,13 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 		out = out[0].upper() + out[1:]
 		actor.send_line(out)
 
+	out = s.safe_substitute(mapping)
+	out = out[0].upper() + out[1:]
+
 	if ROOM & recipients:
 		for character in actor.location.characters:
 			if character != actor:
-				out = s.safe_substitute(mapping)
-				out = out[0].upper() + out[1:]
 				character.send_line("")
 				character.send_line(out)
+
+	return out

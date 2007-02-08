@@ -1,6 +1,7 @@
 <handlers>
 
   <special type="apostrophe" rewrite="say" />
+  <special type="comma" rewrite="emote" />
 
   <handler command="east" function="go" />
   <handler command="emote" function="emote" />

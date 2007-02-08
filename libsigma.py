@@ -14,6 +14,9 @@ def safe_mode(function, *args):
 
 	return ret
 
+def alert(text):
+	log("  *  ALERT", text)
+
 def txt2dir(text):
 	for i in range(len(dir_match_dir)):
 		if dir_match_txt[i].startswith(text):
@@ -44,6 +47,16 @@ def enter_room(character, room):
 	room.characters.append(character)
 	character.location = room
 
+def character_in_room(character, name):
+	for search in character.location.characters:
+		if search.name.lower().startswith(name.lower()):
+			return search
+
+	if "self".startswith(name):
+		return character
+	
+	return None
+
 def queue_command(character, text):
 	command.accept_command(character, text)
 
@@ -60,24 +73,36 @@ GAME = 16 # TODO
 def report(recipients, template, actor, verbs = None, direct = None, indirect = None):
 	out = ""
 	s = Template(template)
+	
 	mapping = {
 		"actor" : actor.name
+		}
+	self_mapping = {
+		"actor" : "you"
 		}
 	
 	if verbs:
 		mapping["verb"] = verbs[1]
+		self_mapping["verb"] = verbs[0]
 
 	if direct:
-		mapping["direct"] = direct.name
+		if direct != actor:
+			mapping["direct"] = direct.name
+			self_mapping["direct"] = direct.name
+		else:
+			mapping["direct"] = "itself" # TODO
+			self_mapping["direct"] = "yourself"
 	
 	if indirect:
-		mapping["indirect"] = indirect.name
+		if indirect != actor:
+			mapping["indirect"] = indirect.name
+			self_mapping["indirect"] = indirect.name
+		else:
+			mapping["indirect"] = "itself" # TODO
+			self_mapping["indirect"] = "yourself"
 
 	if SELF & recipients:
-		if verbs:
-			out = s.safe_substitute(mapping, actor = "you", verb = verbs[0])
-		else:
-			out = s.safe_substitute(mapping, actor = "you")
+		out = s.safe_substitute(self_mapping)
 		out = out[0].upper() + out[1:]
 		actor.send_line(out)
 
@@ -88,6 +113,15 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 		for character in actor.location.characters:
 			if character != actor:
 				character.send_line("")
-				character.send_line(out)
+				if character == direct:
+					out_special = s.safe_substitute(mapping, direct = "you")
+					out_special = out_special[0].upper() + out_special[1:]
+					character.send_line(out_special)
+				elif character == indirect:
+					out_special = s.safe_substitute(mapping, indirect = "you")
+					out_special = out_special[0].upper() + out_special[1:]
+					character.send_line(out_special)
+				else:
+					character.send_line(out)
 
 	return out

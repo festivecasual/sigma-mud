@@ -32,5 +32,6 @@
   <handler command="sw" function="go" />
 
   <handler command="west" function="go" />
+  <handler command="wave" function="emote" />
 
 </handlers>

@@ -35,7 +35,8 @@ def run_command(speaker, message):
 					"speaker" : speaker,
 					"args" : tokens,
 					"message" : message,
-					"tail" : tail
+					"tail" : tail,
+					"mapped" : command
 					})
 				return True
 		return False

@@ -1,4 +1,3 @@
-import shlex
 import archive, world, handler, libsigma
 from common import *
 
@@ -22,7 +21,7 @@ def run_command(speaker, message):
 		return True
 
 	try:
-		tokens = shlex.split(message)
+		tokens = message.split()
 	except:
 		return False
 

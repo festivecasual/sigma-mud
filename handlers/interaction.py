@@ -15,7 +15,10 @@ def say(data):
 	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
 
 emote_mappings = {
-	"wave" : ("$actor $verb.", "$actor $verb at $direct.", ("wave", "waves"))
+	"laugh" : ("$actor $verb.", "$actor $verb at $direct.", ("laugh", "laughs")),
+	"slap" : ("", "$actor $verb $direct.", ("slap", "slaps")),
+	"wave" : ("$actor $verb.", "$actor $verb at $direct.", ("wave", "waves")),
+	"wink" : ("$actor $verb.", "$actor $verb at $direct.", ("wink", "winks"))
 	}
 
 def emote(data):
@@ -41,19 +44,22 @@ def emote(data):
 				report(SELF | ROOM, direct, speaker, verbs, target)
 				return
 			else:
-				report(SELF, "$verb at whom?", speaker, verbs)
+				report(SELF, "They are not here.", speaker)
 				return
 		else:
 			if nodirect:
 				report(SELF | ROOM, nodirect, speaker, verbs)
 				return
 			else:
-				alert("Emote command " + mapped + " does not have a usable form")
+				report(SELF, "You must specify a target to $verb.", speaker, verbs)
 				return
+
+			alert("Emote command <" + mapped + "> does not have a usable form")
+			return
 
 	else:
 		speaker.send_line("I don't understand.")
-		alert("Emote command " + mapped + " references an unknown emote_mapping")
+		alert("Emote command <" + mapped + "> references an unknown emote_mapping")
 
 def look(data):
 	speaker = data["speaker"]

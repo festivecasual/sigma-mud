@@ -11,6 +11,7 @@
   <handler command="go" function="go" />
 
   <handler command="look" function="look" />
+  <handler command="laugh" function="emote" />
   <handler command="leave" function="go" />
   <handler command="logoff" function="quit" />
 
@@ -27,11 +28,13 @@
   <handler command="save" function="save" />
   <handler command="se" function="go" />
   <handler command="shutdown" function="quit" />
+  <handler command="slap" function="emote" />
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
   <handler command="sw" function="go" />
 
   <handler command="west" function="go" />
   <handler command="wave" function="emote" />
+  <handler command="wink" function="emote" />
 
 </handlers>

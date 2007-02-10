@@ -22,11 +22,10 @@ def resolve_links():
 
 class entity:
 	def __init__(self):
-		self.name = ''
-		self.keywords = ['']
-		self.description = ''
+		self.name = ""
+		self.description = ""
 		self.contents = []
-		self.location = ''
+		self.location = ""
 
 class room(entity):
 	def __init__(self, ref, node):
@@ -34,7 +33,7 @@ class room(entity):
 		self.location = ref
 
 		self.characters = []
-		self.keywords = ['room']
+		self.keywords = ["room"]
 		self.exits = [None, None, None, None, None, None, None, None, None, None, None, None]
 
 		node.normalize()
@@ -63,13 +62,17 @@ class character(entity):
 		entity.__init__(self)
 
 		self.state = STATE_NULL
-		self.keywords = [self.name.lower()]
 
 	def send_prompt(self): pass
 
 	def send(self, s = ""): pass
 
 	def send_line(self, s = "", breaks = 1): pass
+	
+	def get_keywords(self):
+		return [self.name.lower()]
+	
+	keywords = property(get_keywords)
 
 class denizen(character):
 	def __init__(self, node):
@@ -100,6 +103,9 @@ class player(character):
 
 		self.socket = s
 		self.send_prompt()
+		
+		import pickle
+		rooms["ravren:beginning"].characters.append(pickle.loads(denizens["ravren:penguin"]))
 
 	def send_prompt(self):
 		self.socket.push(prompts[self.state])

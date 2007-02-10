@@ -49,8 +49,9 @@ def enter_room(character, room):
 
 def character_in_room(character, name):
 	for search in character.location.characters:
-		if search.name.lower().startswith(name.lower()):
-			return search
+		for keyword in search.keywords:
+			if keyword.lower().startswith(name.lower()):
+				return search
 
 	if "self".startswith(name):
 		return character

@@ -4,6 +4,7 @@ from common import *
 players = []
 
 rooms = {}
+denizens = {}
 
 def resolve_links():
 	for current in rooms.values():		
@@ -62,6 +63,7 @@ class character(entity):
 		entity.__init__(self)
 
 		self.state = STATE_NULL
+		self.keywords = [self.name.lower()]
 
 	def send_prompt(self): pass
 
@@ -69,16 +71,23 @@ class character(entity):
 
 	def send_line(self, s = "", breaks = 1): pass
 
-	def get_keywords(self):
-		return [self.name.lower()]
-
-	keywords = property(get_keywords)
-
 class denizen(character):
-	def __init__(self):
+	def __init__(self, node):
 		character.__init__(self)
 
 		self.state = STATE_PLAYING
+		self.keywords = []
+		
+		node.normalize()
+		for info_node in node.childNodes:
+			if info_node.nodeName == "name":
+				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			elif info_node.nodeName == "keywords":
+				self.keywords.extend(strip_whitespace(info_node.firstChild.data).split())
+			elif info_node.nodeName == "short":
+				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			elif info_node.nodeName == "desc":
+				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 
 class player(character):
 	def __init__(self, s):
@@ -86,7 +95,7 @@ class player(character):
 
 		self.proto = None
 		self.password = None
-		self.socket = None		
+		self.socket = None
 		self.state = STATE_INIT
 
 		self.socket = s
@@ -105,3 +114,8 @@ class player(character):
 	def send_line(self, s = "", breaks = 1):
 		self.send(s)
 		self.send("\r\n" * breaks)
+	
+	def get_short(self):
+		return self.name + " is here."
+
+	short = property(get_short)

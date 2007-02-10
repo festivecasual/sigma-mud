@@ -1,4 +1,4 @@
-import sys
+import sys, pickle
 from xml.dom import pulldom
 from xml.sax import SAXParseException
 import handler, world
@@ -64,9 +64,22 @@ def process_area(f, name):
 					if not node.attributes.has_key("id"):
 						log("FATAL", "Error in <room> tag")
 						sys.exit(1)
+
 					ref = name + ":" + node.attributes["id"].value
+
 					events.expandNode(node)
 					world.rooms[ref] = world.room(ref, node)
+
+				elif node.tagName == "denizen":
+					if not node.attributes.has_key("id"):
+						log("FATAL", "Error in <denizen> tag")
+						sys.exit(1)
+
+					ref = name + ":" + node.attributes["id"].value
+
+					events.expandNode(node)
+					world.denizens[ref] = pickle.dumps(world.denizen(node))
+
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))
 		sys.exit(1)

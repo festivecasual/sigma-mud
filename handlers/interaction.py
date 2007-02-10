@@ -74,7 +74,7 @@ def look(data):
 	
 	for character in speaker.location.characters:
 		if character != speaker:
-			speaker.send_line(character.name + " is here.")
+			speaker.send_line(character.short)
 
 def go(data):
 	speaker = data["speaker"]

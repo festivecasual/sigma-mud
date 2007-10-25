@@ -1,0 +1,39 @@
+<area>
+  <room id="beginning">
+    <name>The Beginning Room</name>
+    <desc>
+      You are in a dark room.  It seems like it is the beginning of the universe!
+        There are    				pointless
+   instances of whitespace  here, like primordial	goo.
+    </desc>
+    <exit dir="e" target="second" />
+  </room>
+  
+  <room id="second">
+    <name>The Second Room</name>
+    <desc>
+      Things look a bit better here.  You see a waterfall ahead in the distance,
+      but the developers will have to decide if you can get to it or not.
+    </desc>
+    <exit dir="w" target="beginning" />
+    <exit dir="enter" target="waterfall" />
+  </room>
+  
+  <room id="waterfall">
+    <name>Waterfall</name>
+    <desc>
+      You are inside a waterfall!
+    </desc>
+    <exit dir="leave" target="second" />
+  </room>
+  
+  <denizen id="penguin">
+    <name>a penguin</name>
+    <keywords>penguin</keywords>
+    <short>A penguin waddles around your feet.</short>
+    <desc>
+      The penguin is waddling about, looking for attention from wherever
+      it may come.  He also appears hungry, perhaps for herring.
+    </desc>
+  </denizen>
+</area>

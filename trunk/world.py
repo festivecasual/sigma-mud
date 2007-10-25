@@ -34,7 +34,7 @@ class room(entity):
 
 		self.characters = []
 		self.keywords = ["room"]
-		self.exits = [None, None, None, None, None, None, None, None, None, None, None, None]
+		self.exits = [None] * NUM_DIRS
 
 		node.normalize()
 		for info_node in node.childNodes:

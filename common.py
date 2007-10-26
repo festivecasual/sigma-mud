@@ -118,17 +118,17 @@ prompts = {
 
 # Basic configurable options (and default values)
 options = {
-	"bind_address" : "",					# "" is a special system identifier for * (all)
-	"bind_port" : "4000",					# The server's listening port
-	"players_db" : "./config/players.db",	# Location of players database
-	"default_start" : "ravren:100",			# Default starting room
-	"wrap_size" : "60",						# Default word-wrap line length
-	"verbose" : "yes"						# Display "trivial" log entries?
+	"bind_address" : "",  # "" is a special system identifier for * (all)
+	"bind_port" : "4000",  # The server's listening port
+	"players_db" : "./config/players.db",  # Location of players database
+	"default_start" : "ravren:100",  # Default starting room
+	"wrap_size" : "60",  # Default word-wrap line length
+	"verbose" : "yes"  # Display "trivial" log entries?
 	}
 
 root_dir = "."
 directories = {
-	"xml_root" : root_dir + "/config",			# XML root directory and location of server.xml
-	"tasks_root" : root_dir + "/tasks",			# Root directory for task modules
-	"handlers_root" : root_dir + "/handlers"	# Root directory for handler modules
+	"xml_root" : root_dir + "/config",  # XML root directory and location of server.xml
+	"tasks_root" : root_dir + "/tasks",  # Root directory for task modules
+	"handlers_root" : root_dir + "/handlers"  # Root directory for handler modules
 	}

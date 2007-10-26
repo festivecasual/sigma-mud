@@ -63,6 +63,19 @@ def emote(data):
 
 def look(data):
 	speaker = data["speaker"]
+	args = data["args"]
+
+	if len(args) > 1:
+		objective = args[1]
+		
+		if objective == "self":
+			speaker.send_line("You see yourself.")  # TODO
+			return
+
+		direction = txt2dir(objective)
+		if direction >= 0 and speaker.location.exits[direction]:
+			speaker.send_line("You see " + speaker.location.exits[direction].name + " in that direction.")
+			return
 
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)

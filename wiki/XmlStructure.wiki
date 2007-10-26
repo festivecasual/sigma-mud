@@ -2,7 +2,7 @@
 
 = Basic Server Definition, server.xml =
 
-The file @server.xml@ describes the basic structure of the server and provides for modification to various options.
+The file `server.xml` describes the basic structure of the server and provides for modification to various options.
 
 == Example ==
 
@@ -19,4 +19,4 @@ The file @server.xml@ describes the basic structure of the server and provides f
 
 == Features ==
 
-Use @<option />@ elements to override options otherwise set to defaults at run-time.  The full dictionary object of available options (and defaults) is contained in @options@ within @common.py@.  The only two available arguments are @name@ and @value@.
+Use `<option />` elements to override options otherwise set to defaults at run-time.  The full dictionary object of available options (and defaults) is contained in `options` within `common.py`.  The only two available arguments are `name` and `value`.

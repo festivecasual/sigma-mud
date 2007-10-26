@@ -24,8 +24,13 @@ class entity:
 	def __init__(self):
 		self.name = ""
 		self.description = ""
+		self.keywords = []
 		self.contents = []
 		self.location = ""
+
+class item(entity):
+  def __init__(self, node):
+    entity.__init__(self)
 
 class room(entity):
 	def __init__(self, ref, node):
@@ -79,7 +84,6 @@ class denizen(character):
 		character.__init__(self)
 
 		self.state = STATE_PLAYING
-		self.keywords = []
 		
 		node.normalize()
 		for info_node in node.childNodes:
@@ -104,9 +108,6 @@ class player(character):
 		self.socket = s
 		self.send_prompt()
 		
-		import pickle
-		rooms["ravren:beginning"].characters.append(pickle.loads(denizens["ravren:penguin"]))
-
 	def send_prompt(self):
 		self.socket.push(prompts[self.state])
 

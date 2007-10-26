@@ -1,0 +1,22 @@
+#summary Brief specification for Sigma's XML formats
+
+= Basic Server Definition, server.xml =
+
+The file @server.xml@ describes the basic structure of the server and provides for modification to various options.
+
+== Example ==
+
+{{{
+<server>
+  <option name="bind_port" value="4000" />
+  <option name="default_start" value="ravren:beginning" />
+
+  <area name="ravren" file="areas/ravren.xml" />
+
+  <handlers file="handlers-map.xml" />
+</server>
+}}}
+
+== Features ==
+
+Use @<option />@ elements to override options otherwise set to defaults at run-time.  The full dictionary object of available options (and defaults) is contained in @options@ within @common.py@.  The only two available arguments are @name@ and @value@.

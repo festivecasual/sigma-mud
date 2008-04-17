@@ -49,7 +49,7 @@ def enter_room(character, room):
 
 def character_in_room(character, name):
 	for search in character.location.characters:
-		for keyword in search.keywords:
+		for keyword in search.get_keywords():
 			if keyword.lower().startswith(name.lower()):
 				return search
 

@@ -20,7 +20,7 @@ def resolve_links():
 				log("  *  ERROR", "Unresolved room exit linkage: " + current.exits[i] + " (" + current.location + ")")
 				current.exits[i] = None
 
-class entity:
+class entity(object):
 	def __init__(self):
 		self.name = ""
 		self.description = ""
@@ -77,7 +77,10 @@ class character(entity):
 	def get_keywords(self):
 		return [self.name.lower()]
 	
-	keywords = property(get_keywords)
+	def set_keywords(self, new_keywords):
+		pass
+	
+	keywords = property(get_keywords, set_keywords)
 
 class denizen(character):
 	def __init__(self, node):

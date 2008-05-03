@@ -1,4 +1,4 @@
-import pickle, bsddb
+import pickle
 from sys import argv, exit
 import world, importer, handler
 from common import *
@@ -15,13 +15,18 @@ print
 if len(argv) == 4:
 	if argv[1] == "update_player" or argv[1] == "add_player":
 		try:
-			player_db = bsddb.hashopen(options["players_db"])
+			player_file = open(options["players_db"], "rb")
+			player_db = pickle.load(player_file)
+			player_file.close()
 		except:
-			log("FAILURE", "Unable to open the player database")
-			exit(1)
+			log("WARNING", "Unable to open the player database")
+			player_db = {}
 			
 		player_db[argv[2]] = pickle.dumps((encrypt_password(argv[3]), []))
-		player_db.close()
+		
+		player_file = open(options["players_db"], "wb")
+		pickle.dump(player_db, player_file)
+		player_file.close()
 		
 		log("SUCCESS", "Player created successfully")
 		exit(0)
@@ -29,7 +34,9 @@ if len(argv) == 4:
 if len(argv) == 3:
 	if argv[1] == "delete_player":
 		try:
-			player_db = bsddb.hashopen(options["players_db"])
+			player_file = open(options["players_db"], "rb")
+			player_db = pickle.load(player_file)
+			player_file.close()
 		except:
 			log("FAILURE", "Unable to open the player database")
 			exit(1)
@@ -40,7 +47,9 @@ if len(argv) == 3:
 			log("FAILURE", "Unable to delete player from database")
 			exit(1)
 
-		player_db.close()
+		player_file = open(options["players_db"], "wb")
+		pickle.dump(player_db, player_file)
+		player_file.close()
 		
 		log("SUCCESS", "Player <" + argv[2] + "> deleted successfully")
 		exit(0)

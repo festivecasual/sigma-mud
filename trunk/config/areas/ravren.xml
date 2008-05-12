@@ -36,4 +36,6 @@
       it may come.  He also appears hungry, perhaps for herring.
     </desc>
   </denizen>
+  
+  <populator denizen="penguin" target="waterfall"></populator>
 </area>

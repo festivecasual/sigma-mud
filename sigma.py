@@ -16,9 +16,15 @@ def main():
 
 	log("WORLD", "Resolving location linkages")
 	world.resolve_links()
+	
+	log("WORLD", "Resolving populator objects")
+	world.resolve_populators()
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()
+	
+	log("TASK", "Initializing task modules")
+	task.init_tasks()
 
 	log("SYSTEM", "Startup complete, entering main loop")
 	while True:

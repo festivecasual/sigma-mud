@@ -79,6 +79,14 @@ def process_area(f, name):
 
 					events.expandNode(node)
 					world.denizens[ref] = pickle.dumps(world.denizen(node))
+				
+				elif node.tagName == "populator":
+					if not node.attributes.has_key("denizen") or not node.attributes.has_key("target"):
+						log("FATAL", "Error in <populator> tag")
+						sys.exit(1)
+					
+					events.expandNode(node)
+					world.populators.append(world.populator(node, name))
 
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))

@@ -6,6 +6,8 @@ players = []
 rooms = {}
 denizens = {}
 
+populators = []
+
 def resolve_links():
 	for current in rooms.values():		
 		for i in range(NUM_DIRS):
@@ -19,6 +21,36 @@ def resolve_links():
 			else:
 				log("  *  ERROR", "Unresolved room exit linkage: " + current.exits[i] + " (" + current.location + ")")
 				current.exits[i] = None
+
+def resolve_populators():
+	for current in populators:
+		if denizens.has_key(current.denizen):
+			current.denizen = denizens[current.denizen]
+		elif denizens.has_key(current.area + ":" + current.denizen):
+			current.denizen = denizens[current.area + ":" + current.denizen]
+		else:
+			log("  *  ERROR", "Unresolved denizen reference: " + current.denizen)
+		
+		if rooms.has_key(current.target):
+			current.target = rooms[current.target]
+		elif rooms.has_key(current.area + ":" + current.target):
+			current.target = rooms[current.area + ":" + current.target]
+		else:
+			log("  *  ERROR", "Unresolved target room reference: " + current.target)
+
+class populator(object):
+	def __init__(self, node, area):
+		self.denizen = node.attributes["denizen"].value
+		self.target = node.attributes["target"].value
+		self.area = area
+		self.flags = []
+		
+		for info_node in node.childNodes:
+			if info_node.nodeName != "flag":
+				log("FATAL", "Bad element within <populator>: " + info_node.nodeName)
+				sys.exit(1)
+			else:
+				self.flags.append(strip_whitespace(info_node.firstChild.data))
 
 class entity(object):
 	def __init__(self):
@@ -98,7 +130,7 @@ class denizen(character):
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
-
+	
 class player(character):
 	def __init__(self, s):
 		character.__init__(self)

@@ -29,6 +29,12 @@ def load_tasks():
 		log("TASK", "Loading [" + task_name + "] (" + task_author + ", " + task_version + ")")
 		tasks.append([sys.modules[name], time.time(), task_interval])
 
+def init_tasks():
+	for task in tasks:
+		log("TASK", "Starting up [" + task[0].task_info()[0] + "]")
+		libsigma.safe_mode(task[0].task_init)
+		task[1] = time.time()
+
 def run_tasks():
 	for task in tasks:
 		if time.time() >= (task[1] + task[2]):

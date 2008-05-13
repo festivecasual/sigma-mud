@@ -1,4 +1,4 @@
-import asyncore, asynchat, socket, sys
+import asyncore, asynchat, socket, sys, string
 import world, command, archive, libsigma
 from common import *
 
@@ -14,7 +14,7 @@ class client_socket(asynchat.async_chat):
 			if char == '\b' and len(self.buffer) > 0:
 				self.buffer = self.buffer[:-1]
 			elif char == '\b' or char == '\r': pass
-			else:
+			elif char in string.printable:
 				self.buffer += char
 
 	def found_terminator(self):

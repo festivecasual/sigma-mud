@@ -82,6 +82,12 @@ def look(data):
 				if keyword.startswith(objective):
 					speaker.send_line(character.desc)
 					return
+		
+		for item in speaker.location.contents:
+			for keyword in item.keywords:
+				if keyword.startswith(objective):
+					speaker.send_line(item.desc)
+					return
 
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)
@@ -94,6 +100,9 @@ def look(data):
 	for character in speaker.location.characters:
 		if character != speaker:
 			speaker.send_line(character.short)
+	
+	for item in speaker.location.contents:
+		speaker.send_line(item.short)
 
 def go(data):
 	speaker = data["speaker"]

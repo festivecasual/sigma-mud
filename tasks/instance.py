@@ -11,6 +11,9 @@ def task_init():
 def task_execute():
 	for current in world.populators:
 		current.target.characters.append(pickle.loads(current.denizen))
+	
+	for current in world.placements:
+		current.target.contents.append(pickle.loads(current.item))
 
 def task_deinit():
 	pass

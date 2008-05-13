@@ -80,6 +80,16 @@ def process_area(f, name):
 					events.expandNode(node)
 					world.denizens[ref] = pickle.dumps(world.denizen(node))
 				
+				elif node.tagName == "item":
+					if not node.attributes.has_key("id"):
+						log("FATAL", "Error in <item> tag")
+						sys.exit(1)
+					
+					ref = name + ":"+ node.attributes["id"].value
+					
+					events.expandNode(node)
+					world.items[ref] = pickle.dumps(world.item(node))
+				
 				elif node.tagName == "populator":
 					if not node.attributes.has_key("denizen") or not node.attributes.has_key("target"):
 						log("FATAL", "Error in <populator> tag")
@@ -87,6 +97,14 @@ def process_area(f, name):
 					
 					events.expandNode(node)
 					world.populators.append(world.populator(node, name))
+				
+				elif node.tagName == "placement":
+					if not node.attributes.has_key("item") or not node.attributes.has_key("target"):
+						log("FATAL", "Error in <placement> tag")
+						sys.exit(1)
+					
+					events.expandNode(node)
+					world.placements.append(world.placement(node, name))
 
 	except SAXParseException, msg:
 		log("FATAL", "XML Error: " + str(msg))

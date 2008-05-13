@@ -76,6 +76,12 @@ def look(data):
 		if direction >= 0 and speaker.location.exits[direction]:
 			speaker.send_line("You see " + speaker.location.exits[direction].name + " in that direction.")
 			return
+		
+		for character in speaker.location.characters:
+			for keyword in character.keywords:
+				if keyword.startswith(objective):
+					speaker.send_line(character.desc)
+					return
 
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)

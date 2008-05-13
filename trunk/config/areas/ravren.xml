@@ -29,7 +29,7 @@
   
   <denizen id="penguin">
     <name>a penguin</name>
-    <keywords>penguin</keywords>
+    <keywords>penguin tux</keywords>
     <short>A penguin waddles around your feet.</short>
     <desc>
       The penguin is waddling about, looking for attention from wherever

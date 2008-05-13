@@ -120,6 +120,8 @@ class denizen(character):
 
 		self.state = STATE_PLAYING
 		
+		self.keywords = []
+		
 		node.normalize()
 		for info_node in node.childNodes:
 			if info_node.nodeName == "name":
@@ -130,6 +132,8 @@ class denizen(character):
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+	
+	keywords = []
 	
 class player(character):
 	def __init__(self, s):

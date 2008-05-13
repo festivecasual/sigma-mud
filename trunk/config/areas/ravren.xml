@@ -27,6 +27,15 @@
     <exit dir="leave" target="second" />
   </room>
   
+  <item id="cookie">
+    <name>a delicious chocolate chunk cookie is here.</name>
+    <keywords>cookie chocolate treat</keywords>
+    <short>A delicious cholocate chunk cookie</short>
+    <desc>
+      The cookie has a delicious, gooey smell of freshly-baked dough.
+    </desc>
+  </item>
+  
   <denizen id="penguin">
     <name>a penguin</name>
     <keywords>penguin tux</keywords>
@@ -37,5 +46,7 @@
     </desc>
   </denizen>
   
-  <populator denizen="penguin" target="waterfall"></populator>
+  <populator denizen="penguin" target="waterfall" />
+  
+  <placement item="cookie" target="second" />
 </area>

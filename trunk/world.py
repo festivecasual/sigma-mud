@@ -5,8 +5,10 @@ players = []
 
 rooms = {}
 denizens = {}
+items = {}
 
 populators = []
+placements = []
 
 def resolve_links():
 	for current in rooms.values():		
@@ -38,6 +40,22 @@ def resolve_populators():
 		else:
 			log("  *  ERROR", "Unresolved target room reference: " + current.target)
 
+def resolve_placements():
+	for current in placements:
+		if items.has_key(current.item):
+			current.item = items[current.item]
+		elif items.has_key(current.area + ":" + current.item):
+			current.item = items[current.area + ":" + current.item]
+		else:
+			log("  *  ERROR", "Unresolved denizen reference: " + current.item)
+		
+		if rooms.has_key(current.target):
+			current.target = rooms[current.target]
+		elif rooms.has_key(current.area + ":" + current.target):
+			current.target = rooms[current.area + ":" + current.target]
+		else:
+			log("  *  ERROR", "Unresolved target room reference: " + current.target)
+
 class populator(object):
 	def __init__(self, node, area):
 		self.denizen = node.attributes["denizen"].value
@@ -45,9 +63,25 @@ class populator(object):
 		self.area = area
 		self.flags = []
 		
+		node.normalize()
 		for info_node in node.childNodes:
 			if info_node.nodeName != "flag":
 				log("FATAL", "Bad element within <populator>: " + info_node.nodeName)
+				sys.exit(1)
+			else:
+				self.flags.append(strip_whitespace(info_node.firstChild.data))
+
+class placement(object):
+	def __init__(self, node, area):
+		self.item = node.attributes["item"].value
+		self.target = node.attributes["target"].value
+		self.area = area
+		self.flags = []
+		
+		node.normalize()
+		for info_node in node.childNodes:
+			if info_node.nodeName != "flag":
+				log("FATAL", "Bad element within <placement>: " + info_node.nodeName)
 				sys.exit(1)
 			else:
 				self.flags.append(strip_whitespace(info_node.firstChild.data))
@@ -63,6 +97,17 @@ class entity(object):
 class item(entity):
   def __init__(self, node):
     entity.__init__(self)
+    
+    node.normalize()
+    for info_node in node.childNodes:
+   		if info_node.nodeName == "name":
+			self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+		elif info_node.nodeName == "keywords":
+			self.keywords.extend(strip_whitespace(info_node.firstChild.data).split())
+		elif info_node.nodeName == "short":
+			self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+		elif info_node.nodeName == "desc":
+			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 
 class room(entity):
 	def __init__(self, ref, node):
@@ -105,22 +150,12 @@ class character(entity):
 	def send(self, s = ""): pass
 
 	def send_line(self, s = "", breaks = 1): pass
-	
-	def get_keywords(self):
-		return [self.name.lower()]
-	
-	def set_keywords(self, new_keywords):
-		pass
-	
-	keywords = property(get_keywords, set_keywords)
 
 class denizen(character):
 	def __init__(self, node):
 		character.__init__(self)
 
 		self.state = STATE_PLAYING
-		
-		self.keywords = []
 		
 		node.normalize()
 		for info_node in node.childNodes:
@@ -132,8 +167,6 @@ class denizen(character):
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
-	
-	keywords = []
 	
 class player(character):
 	def __init__(self, s):
@@ -160,6 +193,14 @@ class player(character):
 	def send_line(self, s = "", breaks = 1):
 		self.send(s)
 		self.send("\r\n" * breaks)
+
+	def get_keywords(self):
+		return [self.name.lower()]
+	
+	def set_keywords(self, data):
+		pass
+	
+	keywords = property(get_keywords, set_keywords)
 	
 	def get_short(self):
 		return self.name + " is here."

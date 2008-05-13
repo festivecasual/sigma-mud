@@ -19,6 +19,9 @@ def main():
 	
 	log("WORLD", "Resolving populator objects")
 	world.resolve_populators()
+	
+	log("WORLD", "Resolving placement objects")
+	world.resolve_placements()
 
 	log("NETWORK", "Initializing master socket")
 	listener = network.server_socket()

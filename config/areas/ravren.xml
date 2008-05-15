@@ -28,9 +28,9 @@
   </room>
   
   <item id="cookie">
-    <name>a delicious chocolate chunk cookie is here.</name>
+    <name>a delicious chocolate chunk cookie</name>
     <keywords>cookie chocolate treat</keywords>
-    <short>A delicious cholocate chunk cookie</short>
+    <short>A delicious cholocate chunk cookie sits here.</short>
     <desc>
       The cookie has a delicious, gooey smell of freshly-baked dough.
     </desc>

@@ -87,7 +87,7 @@ def look(data):
 		
 		target = object_in_room(speaker, objective)
 		if target:
-			speaker.send_line(item.desc)
+			speaker.send_line(target.desc)
 			return
 
 	speaker.send_line(speaker.location.name)
@@ -170,5 +170,8 @@ def inventory(data):
 	
 	speaker.send_line("You are carrying:")
 	
-	for item in speaker.contents:
-		speaker.send_line("   " + item.name)
+	if len(speaker.contents) == 0:
+		speaker.send_line("    nothing");
+	else:
+		for item in speaker.contents:
+			speaker.send_line("   " + item.name)

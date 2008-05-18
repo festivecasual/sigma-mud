@@ -58,6 +58,14 @@ def character_in_room(character, name):
 	
 	return None
 
+def object_in_room(character, name):
+	for search in character.location.contents:
+		for keyword in search.keywords:
+			if keyword.lower().startswith(name.lower()):
+				return search
+
+	return None
+
 def queue_command(character, text):
 	command.accept_command(character, text)
 

@@ -5,7 +5,10 @@ def register_handlers():
 		"say" : say,
 		"emote" : emote,
 		"look" : look,
-		"go" : go
+		"go" : go,
+		"get" : get,
+		"drop" : drop,
+		"inventory" : inventory
 		}
 
 def say(data):
@@ -77,17 +80,15 @@ def look(data):
 			speaker.send_line("You see " + speaker.location.exits[direction].name + " in that direction.")
 			return
 		
-		for character in speaker.location.characters:
-			for keyword in character.keywords:
-				if keyword.startswith(objective):
-					speaker.send_line(character.desc)
-					return
+		target = character_in_room(speaker, objective)
+		if target:
+			speaker.send_line(target.desc)
+			return
 		
-		for item in speaker.location.contents:
-			for keyword in item.keywords:
-				if keyword.startswith(objective):
-					speaker.send_line(item.desc)
-					return
+		target = object_in_room(speaker, objective)
+		if target:
+			speaker.send_line(item.desc)
+			return
 
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)
@@ -124,3 +125,50 @@ def go(data):
 		run_command(speaker, "look")
 	else:
 		speaker.send_line("There is no exit in that direction.")
+
+def get(data):
+	speaker = data["speaker"]
+	args = data["args"]
+	
+	# TODO: Containers within inventory (len(args) == 3)
+	if len(args) == 1:
+		speaker.send_line("Get what?")
+		return
+	elif len(args) != 2:
+		speaker.send_line("You can't do that.")
+		return
+	
+	target = object_in_room(speaker, args[1])
+	if target:
+		speaker.contents.append(target)
+		speaker.location.contents.remove(target)
+		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), target)
+	else:
+		speaker.send_line("You can't find it.")
+
+def drop(data):
+	speaker = data["speaker"]
+	args = data["args"]
+	
+	if len(args) == 1:
+		speaker.send_line("Drop what?")
+		return
+	elif len(args) != 2:
+		speaker.send_line("You can't do that.")
+		return
+	
+	for item in speaker.contents:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				speaker.location.contents.append(item)
+				speaker.contents.remove(item)
+				report(SELF | ROOM, "$actor $verb $direct.", speaker, ("drop", "drops"), item)
+				return
+
+def inventory(data):
+	speaker = data["speaker"]
+	
+	speaker.send_line("You are carrying:")
+	
+	for item in speaker.contents:
+		speaker.send_line("   " + item.name)

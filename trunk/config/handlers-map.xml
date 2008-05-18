@@ -3,12 +3,17 @@
   <special type="apostrophe" rewrite="say" />
   <special type="comma" rewrite="emote" />
 
+  <handler command="drop" function="drop" />
+
   <handler command="east" function="go" />
   <handler command="emote" function="emote" />
   <handler command="enter" function="go" />
   <handler command="exit" function="quit" />
   
   <handler command="go" function="go" />
+  <handler command="get" function="get" />
+  
+  <handler command="inventory" function="inventory" />
 
   <handler command="look" function="look" />
   <handler command="laugh" function="emote" />

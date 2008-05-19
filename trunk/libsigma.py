@@ -50,7 +50,7 @@ def enter_room(character, room):
 def character_in_room(character, name):
 	for search in character.location.characters:
 		for keyword in search.keywords:
-			if keyword.lower().startswith(name.lower()):
+			if keyword.startswith(name):
 				return search
 
 	if "self".startswith(name):
@@ -61,10 +61,18 @@ def character_in_room(character, name):
 def object_in_room(character, name):
 	for search in character.location.contents:
 		for keyword in search.keywords:
-			if keyword.lower().startswith(name.lower()):
+			if keyword.startswith(name):
 				return search
 
 	return None
+
+def transfer_item(item, from_collection, to_collection):
+	if item in from_collection:
+		to_collection.append(item)
+		from_collection.remove(item)
+		return True
+	else:
+		return False
 
 def queue_command(character, text):
 	command.accept_command(character, text)

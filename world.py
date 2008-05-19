@@ -92,6 +92,7 @@ class entity(object):
 		self.description = ""
 		self.keywords = []
 		self.contents = []
+		self.capacity = 0
 		self.location = ""
 
 class item(entity):
@@ -103,7 +104,7 @@ class item(entity):
    		if info_node.nodeName == "name":
 			self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 		elif info_node.nodeName == "keywords":
-			self.keywords.extend(strip_whitespace(info_node.firstChild.data).split())
+			self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 		elif info_node.nodeName == "short":
 			self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 		elif info_node.nodeName == "desc":
@@ -117,6 +118,8 @@ class room(entity):
 		self.characters = []
 		self.keywords = ["room"]
 		self.exits = [None] * NUM_DIRS
+		
+		self.capacity = -1
 
 		node.normalize()
 		for info_node in node.childNodes:
@@ -162,7 +165,7 @@ class denizen(character):
 			if info_node.nodeName == "name":
 				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "keywords":
-				self.keywords.extend(strip_whitespace(info_node.firstChild.data).split())
+				self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 			elif info_node.nodeName == "short":
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":

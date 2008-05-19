@@ -29,7 +29,7 @@
   
   <item id="cookie">
     <name>a delicious chocolate chunk cookie</name>
-    <keywords>cookie chocolate treat</keywords>
+    <keywords>cookie</keywords>
     <short>A delicious cholocate chunk cookie sits here.</short>
     <desc>
       The cookie has a delicious, gooey smell of freshly-baked dough.
@@ -38,7 +38,7 @@
   
   <denizen id="penguin">
     <name>a penguin</name>
-    <keywords>penguin tux</keywords>
+    <keywords>penguin</keywords>
     <short>A penguin waddles around your feet.</short>
     <desc>
       The penguin is waddling about, looking for attention from wherever

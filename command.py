@@ -21,7 +21,7 @@ def run_command(speaker, message):
 		return True
 
 	try:
-		tokens = message.split()
+		tokens = message.lower().split()
 	except:
 		return False
 

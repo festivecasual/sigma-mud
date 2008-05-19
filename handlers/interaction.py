@@ -138,11 +138,11 @@ def get(data):
 		speaker.send_line("You can't do that.")
 		return
 	
-	target = object_in_room(speaker, args[1])
-	if target:
-		speaker.contents.append(target)
-		speaker.location.contents.remove(target)
-		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), target)
+	item = object_in_room(speaker, args[1])
+	if item:
+		# TODO: Detect failure
+		transfer_item(item, speaker.location.contents, speaker.contents)
+		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), item)
 	else:
 		speaker.send_line("You can't find it.")
 
@@ -160,10 +160,11 @@ def drop(data):
 	for item in speaker.contents:
 		for keyword in item.keywords:
 			if keyword.startswith(args[1]):
-				speaker.location.contents.append(item)
-				speaker.contents.remove(item)
+				transfer_item(item, speaker.contents, speaker.location.contents)
 				report(SELF | ROOM, "$actor $verb $direct.", speaker, ("drop", "drops"), item)
 				return
+	
+	speaker.send_line("You don't have that.")
 
 def inventory(data):
 	speaker = data["speaker"]

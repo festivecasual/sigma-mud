@@ -78,7 +78,7 @@ def process_area(f, name):
 					ref = name + ":" + node.attributes["id"].value
 
 					events.expandNode(node)
-					world.denizens[ref] = pickle.dumps(world.denizen(node))
+					world.denizens_source[ref] = pickle.dumps(world.denizen(node))
 				
 				elif node.tagName == "item":
 					if not node.attributes.has_key("id"):
@@ -88,7 +88,7 @@ def process_area(f, name):
 					ref = name + ":"+ node.attributes["id"].value
 					
 					events.expandNode(node)
-					world.items[ref] = pickle.dumps(world.item(node))
+					world.items_source[ref] = pickle.dumps(world.item(node))
 				
 				elif node.tagName == "populator":
 					if not node.attributes.has_key("denizen") or not node.attributes.has_key("target"):

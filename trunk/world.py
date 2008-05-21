@@ -7,6 +7,9 @@ rooms = {}
 denizens = {}
 items = {}
 
+denizens_source = {}
+items_source = {}
+
 populators = []
 placements = []
 
@@ -26,10 +29,10 @@ def resolve_links():
 
 def resolve_populators():
 	for current in populators:
-		if denizens.has_key(current.denizen):
-			current.denizen = denizens[current.denizen]
-		elif denizens.has_key(current.area + ":" + current.denizen):
-			current.denizen = denizens[current.area + ":" + current.denizen]
+		if denizens_source.has_key(current.denizen):
+			current.denizen = denizens_source[current.denizen]
+		elif denizens_source.has_key(current.area + ":" + current.denizen):
+			current.denizen = denizens_source[current.area + ":" + current.denizen]
 		else:
 			log("  *  ERROR", "Unresolved denizen reference: " + current.denizen)
 		
@@ -42,10 +45,10 @@ def resolve_populators():
 
 def resolve_placements():
 	for current in placements:
-		if items.has_key(current.item):
-			current.item = items[current.item]
-		elif items.has_key(current.area + ":" + current.item):
-			current.item = items[current.area + ":" + current.item]
+		if items_source.has_key(current.item):
+			current.item = items_source[current.item]
+		elif items_source.has_key(current.area + ":" + current.item):
+			current.item = items_source[current.area + ":" + current.item]
 		else:
 			log("  *  ERROR", "Unresolved denizen reference: " + current.item)
 		
@@ -62,6 +65,7 @@ class populator(object):
 		self.target = node.attributes["target"].value
 		self.area = area
 		self.flags = []
+		self.instance = None
 		
 		node.normalize()
 		for info_node in node.childNodes:
@@ -77,6 +81,7 @@ class placement(object):
 		self.target = node.attributes["target"].value
 		self.area = area
 		self.flags = []
+		self.instance = None
 		
 		node.normalize()
 		for info_node in node.childNodes:

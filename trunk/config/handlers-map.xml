@@ -3,6 +3,7 @@
   <special type="apostrophe" rewrite="say" />
   <special type="comma" rewrite="emote" />
 
+  <handler command="down" function="go" />
   <handler command="drop" function="drop" />
 
   <handler command="east" function="go" />
@@ -37,6 +38,8 @@
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
   <handler command="sw" function="go" />
+
+  <handler command="up" function="go" />
 
   <handler command="west" function="go" />
   <handler command="wave" function="emote" />

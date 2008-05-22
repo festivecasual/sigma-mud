@@ -17,11 +17,11 @@ def task_execute():
 			current.target.characters.append(current.instance)
 	
 	for current in world.placements:
-		if not world.items.has_key(id(current.instance)):
+		if not id(current.instance) in [id(i) for i in current.target.contents]:
 			current.instance = pickle.loads(current.item)
 			
 			world.items[id(current.instance)] = current.instance
-			current.target.contents.append(pickle.loads(current.item))
+			current.target.contents.append(current.instance)
 
 def task_deinit():
 	pass

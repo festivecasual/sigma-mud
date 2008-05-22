@@ -2,9 +2,7 @@
   <room id="beginning">
     <name>The Beginning Room</name>
     <desc>
-      You are in a dark room.  It seems like it is the beginning of the universe!
-        There are    				pointless
-   instances of whitespace  here, like primordial	goo.
+      You are in a dark room.
     </desc>
     <exit dir="e" target="second" />
   </room>
@@ -13,10 +11,20 @@
     <name>The Second Room</name>
     <desc>
       Things look a bit better here.  You see a waterfall ahead in the distance,
-      but the developers will have to decide if you can get to it or not.
+      but the developers will have to decide if you can get to it or not.  There is
+      a tree here.
     </desc>
     <exit dir="w" target="beginning" />
+    <exit dir="u" target="treetop" />
     <exit dir="enter" target="waterfall" />
+  </room>
+  
+  <room id="treetop">
+    <name>In the Tree</name>
+    <desc>
+      You are at the top of the tree.
+    </desc>
+    <exit dir="d" target="second" />
   </room>
   
   <room id="waterfall">

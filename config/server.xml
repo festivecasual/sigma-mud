@@ -2,6 +2,7 @@
   <option name="bind_port" value="4000" />
   <option name="default_start" value="ravren:beginning" />
 
+  <area name="system" file="areas/system.xml" />
   <area name="ravren" file="areas/ravren.xml" />
 
   <handlers file="handlers-map.xml" />

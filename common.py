@@ -1,16 +1,37 @@
+## @package common
+#  Utility functions and structure definitions.
+#
+#  Functions and structures within common are not designer-facing,
+#  as those items are to be placed in libsigma.
+#
+#  @sa Consult libsigma for additional utility features.
+
 import time, sha
 
+## Construct a log entry for the server console.
+#
+#  @param label The type of log message.
+#  @param text The log message to display.
+#  @param trivial Set to True when the log message should be shown only in "verbose" mode.
 def log(label, text, trivial = False):
 	if not (trivial and (options["verbose"] == "no")):
 		print "%-10s | %s" % (label, text)
 
+## Return a formatted string to indicate the current time.
 def time_string():
 	return time.strftime("%H:%M:%S")
 
+## Return an encrypted (SHA hashed) password.
+#
+#  @param password The plain-text password to encrypt.
 def encrypt_password(password):
 	crypter = sha.new(password)
 	return crypter.digest()
 
+## Remove the excess whitespace from a string (for XML CDATA).
+#
+#  @param text The text to process.
+#  @return The whitespace-stripped \c text.
 def strip_whitespace(text):
 	new = text
 	old = ""
@@ -22,6 +43,11 @@ def strip_whitespace(text):
 
 	return new.strip()
 
+## Wrap text at a specified width.
+#
+#  @param text The text to wrap.
+#  @param width The width to wrap, or -1 to wrap at the default wrap width.
+#  @return The processed text.
 def wordwrap(text, width = -1):
 	working = text
 	wrapped = ""

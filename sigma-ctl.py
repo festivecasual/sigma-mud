@@ -1,3 +1,6 @@
+## @package sigma-ctl
+#  Standalone script to manipulate game structures outside the main environment.
+
 import pickle
 from sys import argv, exit
 import world, importer, handler

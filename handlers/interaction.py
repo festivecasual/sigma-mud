@@ -1,5 +1,11 @@
+## @package interaction
+#  Handler functions to process and respond to interactions between the character and the world.
+#  
+#  @ingroup handler
+
 from libsigma import *
 
+## The mandatory registration function.
 def register_handlers():
 	return	{
 		"say" : say,
@@ -11,6 +17,7 @@ def register_handlers():
 		"inventory" : inventory
 		}
 
+## Process character conversation.
 def say(data):
 	speaker = data["speaker"]
 	tail = data["tail"]
@@ -24,6 +31,7 @@ emote_mappings = {
 	"wink" : ("$actor $verb.", "$actor $verb at $direct.", ("wink", "winks"))
 	}
 
+## Process character emotion.
 def emote(data):
 	speaker = data["speaker"]
 	tail = data["tail"]
@@ -64,6 +72,7 @@ def emote(data):
 		speaker.send_line("I don't understand.")
 		alert("Emote command <" + mapped + "> references an unknown emote_mapping")
 
+## Process character observation of world objects (items, players, denizens, etc.).
 def look(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -105,6 +114,7 @@ def look(data):
 	for item in speaker.location.contents:
 		speaker.send_line(item.short)
 
+## Process character movement.
 def go(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -126,11 +136,14 @@ def go(data):
 	else:
 		speaker.send_line("There is no exit in that direction.")
 
+## Process item acquisition.
+#
+#  @todo Containers within inventory (len(args) == 3)
+#  @todo Detect failures during item transfers (weight limits, etc.)
 def get(data):
 	speaker = data["speaker"]
 	args = data["args"]
 	
-	# TODO: Containers within inventory (len(args) == 3)
 	if len(args) == 1:
 		speaker.send_line("Get what?")
 		return
@@ -140,12 +153,12 @@ def get(data):
 	
 	item = object_in_room(speaker, args[1])
 	if item:
-		# TODO: Detect failure
 		transfer_item(item, speaker.location.contents, speaker.contents)
 		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), item)
 	else:
 		speaker.send_line("You can't find it.")
 
+## Process item drops.
 def drop(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -166,6 +179,7 @@ def drop(data):
 	
 	speaker.send_line("You don't have that.")
 
+## Display a list of inventory.
 def inventory(data):
 	speaker = data["speaker"]
 	

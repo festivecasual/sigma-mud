@@ -1,9 +1,13 @@
+## @package importer
+#  Pull in data from XML configuration files.
+
 import sys, pickle
 from xml.dom import pulldom
 from xml.sax import SAXParseException
 import handler, world
 from common import *
 
+## Main function for processing server.xml and subordinate files.
 def process_xml():
 	try:
 		server_xml = open(directories["xml_root"] + "/server.xml")
@@ -55,6 +59,10 @@ def process_xml():
 
 	server_xml.close()
 
+## Traverse an area definition and create all necessary world objects.
+#
+#  @param f The area node to process.
+#  @param name The name of the area (used to dereference links).
 def process_area(f, name):
 	try:
 		events = pulldom.parse(f)
@@ -110,6 +118,9 @@ def process_area(f, name):
 		log("FATAL", "XML Error: " + str(msg))
 		sys.exit(1)
 
+## Traverse a handler definition structure and create mappings.
+#
+#  @param f The handler node to process.
 def process_handlers(f):
 	try:
 		events = pulldom.parse(f)

@@ -1,11 +1,37 @@
+## @package command
+#  Accepts, parses, and dispatches commands according to context.
+#
+#  Accepted typed input is queued as (speaker, message) tuples within command_queue.
+#  The first word within the message constitutes the command, which is mapped
+#  according to the instructions within config/handlers-map.xml and the handlers
+#  system constructed by handler.py.  Dispatched commands are mapped to handler
+#  definitions within the handlers/ directory.
+
 import archive, world, handler, libsigma
 from common import *
 
 command_queue = []
 
+## Enqueues a raw message to command_queue for later processing.
+#  @param speaker The character initiating the message.
+#  @param message The typed (or simulated-typed input).
 def accept_command(speaker, message):
 	command_queue.append((speaker, message))
 
+## Parses a raw message into a command and argument list.
+#
+#  If a command is successfully mapped to a handler, the handler function
+#  is executed using libsigma's safe_mode mechanism, to trap and report
+#  errors on the console rather than halting execution (since all handlers
+#  are optional).
+#  
+#  run_command is only executed when the character is in STATE_PLAYING.
+#  Input within other states is handled by process_commands.
+#  
+#  @param speaker The character initiating the message.
+#  @param message The typed (or simulated-typed input).
+#  
+#  @sa For more information, please see libsigma.safe_mode and handler.py.
 def run_command(speaker, message):
 	reduced = message.lstrip()
 	if reduced:
@@ -42,6 +68,7 @@ def run_command(speaker, message):
 	else:
 		return True
 
+## Flush the command queue and respond to all user input.
 def process_commands():
 	while len(command_queue) > 0:
 		speaker, message = command_queue.pop(0)

@@ -1,7 +1,18 @@
+## @package libsigma
+#  Designer-facing utility functions.
+
 import traceback, sys, command
 from string import Template
 from common import *
 
+## Run a function within an error-trapped environment.
+#
+#  The safe_mode function is used to trap errors in non-essential
+#  (usually designer-generated) code, to avoid a forced quit and stack
+#  trace in normal game operation.
+#
+#  @param function The function to execute.
+#  @param args The arguments to pass to the function.
 def safe_mode(function, *args):
 	ret = False
 
@@ -14,9 +25,18 @@ def safe_mode(function, *args):
 
 	return ret
 
+## Provide a basic means of producing log text within designer code.
+#
+#  @param text The text to include in the log entry.
 def alert(text):
 	log("  *  ALERT", text)
 
+## Convert a text-based direction specifier to a mapped direction code.
+#
+#  @param text The text to convert.
+#  @return The direction code, or -1 to indicate that \c text was invalid.
+#
+#  @sa This function's inverse is dir2txt.
 def txt2dir(text):
 	for i in range(len(dir_match_dir)):
 		if dir_match_txt[i].startswith(text):
@@ -24,6 +44,12 @@ def txt2dir(text):
 
 	return -1
 
+## Convert a direction code to a text-based identifier.
+#
+#  @param dir The direction code to convert.
+#  @return The plain-text direction.
+#
+#  @sa This function's inverse is txt2dir.
 def dir2txt(dir):
 	for i in range(len(dir_match_dir)):
 		if dir_match_dir[i] == dir:
@@ -31,6 +57,10 @@ def dir2txt(dir):
 	
 	return ''
 
+## Generate a list of all available exits in the room.
+#
+#  @param room The room to analyze.
+#  @return A list object with all available exits in \c room.
 def exits(room):
 	result = []
 
@@ -40,6 +70,10 @@ def exits(room):
 	
 	return result
 
+## Move a character into a room.
+#
+#  @param character The character to relocate.
+#  @param room The destination room.
 def enter_room(character, room):
 	if character.location:
 		character.location.characters.remove(character)
@@ -47,6 +81,13 @@ def enter_room(character, room):
 	room.characters.append(character)
 	character.location = room
 
+## Check if a name maps to a character in a character's location.
+#
+#  @param character The character reference that defines the search location.
+#  @param name The name to search for.
+#  @return The character object, if found.  Otherwise, None.
+#
+#  @todo Reform this function (and all its associated calls) to be more sensibly-named.
 def character_in_room(character, name):
 	for search in character.location.characters:
 		for keyword in search.keywords:
@@ -58,6 +99,14 @@ def character_in_room(character, name):
 	
 	return None
 
+## Check if a name maps to an object in a character's location.
+#
+#  @param character The character reference that defines the search location.
+#  @param name The name to search for.
+#  @return The item, if found.  Otherwise, None.
+#
+#  @todo Reform this function (and all its associated calls) to be more sensibly-named.
+#  @todo Change the name of this function to item_in_room.
 def object_in_room(character, name):
 	for search in character.location.contents:
 		for keyword in search.keywords:
@@ -66,6 +115,12 @@ def object_in_room(character, name):
 
 	return None
 
+## Move an item from one collection (inventory, room) to another.
+#
+#  @param item The item to relocate.
+#  @param from_collection The collection the item is currently within.
+#  @param to_collection The collection the item is to be within.
+#  @return Boolean indication of success.
 def transfer_item(item, from_collection, to_collection):
 	if item in from_collection:
 		to_collection.append(item)
@@ -74,19 +129,46 @@ def transfer_item(item, from_collection, to_collection):
 	else:
 		return False
 
+## Force a simulated command into the command queue.
+#
+#  This function is generally used to type a command for a denizen to execute.
+#  It is also useful for queueing a default command (i.e., "look") as a result
+#  of another action (i.e., "go").
+#
+#  @param character The character that receives the simulated-typed command.
+#  @param text The text to simulate-type.
+#
+#  @sa Use run_command to execute the command immediately, rather than queueing it for next processing.
 def queue_command(character, text):
 	command.accept_command(character, text)
 
+## Force a simulated command to be run immediately.
+#
+#  @param character The character that receives the simulated-typed command.
+#  @param text The text to simulate-type.
+#
+#  @sa Use queue_command to queue the command, rather than executing it immediately.
 def run_command(character, text):
 	if not command.run_command(character, text):
 		log("  *  ERROR", "Command <" + text + "> unsuccessful")
 
+# Recipient constants
 SELF =  1
 ROOM =  2
 NEAR =  4 # TODO
 AREA =  8 # TODO
 GAME = 16 # TODO
 
+## The master function to send formatted, conjugated text to arbitrary groups of characters.
+#
+#  @param recipients One of the recipient constants defined within libsigma.py.
+#  @param template The template string through which the message is formatted.
+#  @param actor The subject of the action report.
+#  @param verbs A tuple of conjugated verbs
+#  @param direct The direct object of the action report.
+#  @param indirect The indirect object of the action report.
+#
+#  @todo Fully define all recipient constants in libsigma.py.
 def report(recipients, template, actor, verbs = None, direct = None, indirect = None):
 	out = ""
 	s = Template(template)

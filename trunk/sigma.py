@@ -1,7 +1,15 @@
+## @package sigma
+#  Start the Sigma server and initialize the main control loop.
+
+## @mainpage
+#  This documentation contains descriptions of all class structures and modules
+#  contained within Sigma.
+
 import asyncore
 import network, command, task, handler, importer, world
 from common import *
 
+## The primary control function for Sigma.
 def main():
 	log("SYSTEM", "Startup in progress")
 

@@ -1,3 +1,11 @@
+## @package handler
+#  Defines the handler framework for input-driven execution.
+
+## @defgroup handler Built-In Handlers
+#  Handlers included as default infrastructure within the environment.
+#
+#  @sa The handler framework defined in handler.py.
+
 import glob, os.path, imp, sys
 import libsigma
 from common import *
@@ -11,6 +19,7 @@ specials = {
 	"period" : None
 	}
 
+## Process the handlers/ directory and load handlers into the master handler list.
 def load_handlers():
 	handler_modules = glob.glob(directories["handlers_root"] + "/*.py")
 	for handler_file in handler_modules:

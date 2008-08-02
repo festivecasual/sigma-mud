@@ -16,13 +16,16 @@ from common import *
 def safe_mode(function, *args):
 	ret = False
 
+	if options['debug'] == 'yes':
+		return function(*args)
+	
 	try:
 		ret = function(*args)
 	except:
 		tb = sys.exc_info()[2]
 		last = traceback.extract_tb(tb)[-1]
 		log("  *  ERROR", last[0] + ":" + str(last[1]) + " (" + last[2] + ")")
-
+	
 	return ret
 
 ## Provide a basic means of producing log text within designer code.

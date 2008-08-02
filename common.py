@@ -149,7 +149,8 @@ options = {
 	"players_db" : "./config/players.db",  # Location of players database
 	"default_start" : "system:default",  # Default starting room
 	"wrap_size" : "60",  # Default word-wrap line length
-	"verbose" : "yes"  # Display "trivial" log entries?
+	"verbose" : "yes",  # Display "trivial" log entries?
+	"debug" : "no",  # Halt on errors from safe_mode?
 	}
 
 root_dir = "."

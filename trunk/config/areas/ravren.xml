@@ -54,7 +54,9 @@
     </desc>
   </denizen>
   
-  <populator denizen="penguin" target="waterfall" />
+  <populator denizen="penguin" target="waterfall">
+    <flag>mobile</flag>
+  </populator>
   
   <placement item="cookie" target="second" />
 </area>

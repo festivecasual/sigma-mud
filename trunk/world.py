@@ -5,7 +5,6 @@ import sys, libsigma
 from common import *
 
 players = []
-
 rooms = {}
 denizens = {}
 items = {}
@@ -90,10 +89,7 @@ class populator(object):
 		
 		node.normalize()
 		for info_node in node.childNodes:
-			if info_node.nodeName != "flag":
-				log("FATAL", "Bad element within <populator>: " + info_node.nodeName)
-				sys.exit(1)
-			else:
+			if info_node.nodeName == "flag":
 				self.flags.append(strip_whitespace(info_node.firstChild.data))
 
 ## Encapsulates an instruction to place an item in a certain location.
@@ -121,10 +117,7 @@ class placement(object):
 		
 		node.normalize()
 		for info_node in node.childNodes:
-			if info_node.nodeName != "flag":
-				log("FATAL", "Bad element within <placement>: " + info_node.nodeName)
-				sys.exit(1)
-			else:
+			if info_node.nodeName == "flag":
 				self.flags.append(strip_whitespace(info_node.firstChild.data))
 
 ## Encapsulates any entity within the world structure.

@@ -4,7 +4,7 @@
 #  @ingroup task
 
 import pickle
-import world
+import world, libsigma
 from common import *
 
 ## Returns name, authorship, version, and period length (in seconds).
@@ -22,7 +22,7 @@ def task_execute():
 			current.instance = pickle.loads(current.denizen)
 			
 			world.denizens[id(current.instance)] = current.instance
-			current.target.characters.append(current.instance)
+			libsigma.enter_room(current.instance, current.target)
 	
 	for current in world.placements:
 		if not id(current.instance) in [id(i) for i in current.target.contents]:

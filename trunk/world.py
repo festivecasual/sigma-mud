@@ -178,6 +178,7 @@ class room(entity):
 		self.characters = []
 		self.keywords = ["room"]
 		self.exits = [None] * NUM_DIRS
+		self.foci = {}
 		
 		self.capacity = -1
 
@@ -187,6 +188,14 @@ class room(entity):
 				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			elif info_node.nodeName == "focus":
+				if not info_node.attributes.has_key("name"):
+					log("FATAL", "Error in <focus /> tag within <room />")
+					sys.exit(1)
+				name = info_node.attributes["name"].value
+				description = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				
+				self.foci[name] = description
 			elif info_node.nodeName == "exit":
 				if (not info_node.attributes.has_key("dir")) or (not info_node.attributes.has_key("target")):
 					log("FATAL", "Error in <room /> tag")

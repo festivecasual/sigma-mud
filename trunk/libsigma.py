@@ -129,6 +129,18 @@ def item_in_room(name, room):
 
 	return None
 
+## Check if a name maps to a focus in a location.
+#
+#  @param name The name to search for.
+#  @param room The room to search.
+#  @return The focus text, if found.  Otherwise, None.
+def focus_in_room(name, room):
+	for key, text in room.foci.items():
+		if key.startswith(name):
+			return text
+	
+	return None
+
 ## Move an item from one collection (inventory, room) to another.
 #
 #  @param item The item to relocate.

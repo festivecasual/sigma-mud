@@ -14,6 +14,9 @@
       but the developers will have to decide if you can get to it or not.  There is
       a tree here.
     </desc>
+    <focus name="waterfall">
+      It looks like you can go inside the waterfall!
+    </focus>
     <exit dir="w" target="beginning" />
     <exit dir="u" target="treetop" />
     <exit dir="enter" target="waterfall" />
@@ -50,7 +53,7 @@
     <short>A penguin waddles around your feet.</short>
     <desc>
       The penguin is waddling about, looking for attention from wherever
-      it may come.  He also appears hungry, perhaps for herring.
+      it may come.  He also appears hungry, perhaps for herring or shrimp.
     </desc>
   </denizen>
   

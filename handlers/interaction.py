@@ -89,6 +89,11 @@ def look(data):
 		if target:
 			speaker.send_line(target.desc)
 			return
+		
+		focus_text = focus_in_room(objective, speaker.location)
+		if focus_text:
+			speaker.send_line(focus_text)
+			return
 
 	speaker.send_line(speaker.location.name)
 	speaker.send_line(speaker.location.desc)

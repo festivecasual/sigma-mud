@@ -20,15 +20,15 @@ def task_execute():
 	for current in world.populators:
 		if world.denizens.has_key(id(current.instance)) and 'mobile' in current.flags:
 			active_denizen = world.denizens[id(current.instance)]
+
 			choices = [None]
-			for exit_option in active_denizen.location.exits:
-				if exit_option:
-					choices.append(exit_option)
+			choices.extend(libsigma.exits(active_denizen.location))
+
 			selection = random.choice(choices)
 			
-			if (selection):
+			if (selection != None):
 				libsigma.report(libsigma.ROOM, "$actor has left the room.", active_denizen)
-				libsigma.enter_room(active_denizen, selection)
+				libsigma.enter_room(active_denizen, active_denizen.location.exits[selection])
 				libsigma.report(libsigma.ROOM, "$actor has entered the room.", active_denizen)
 
 ## Defines the code to be run upon shutdown of the server.

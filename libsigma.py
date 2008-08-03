@@ -34,6 +34,12 @@ def safe_mode(function, *args):
 def alert(text):
 	log("  *  ALERT", text)
 
+## Test if a character object (or any other object within Sigma) is a Player.
+#
+#  @param object The object to test.
+def is_player(object):
+	return hasattr(object, "socket")
+
 ## Convert a text-based direction specifier to a mapped direction code.
 #
 #  @param text The text to convert.
@@ -67,7 +73,7 @@ def dir2txt(dir):
 def exits(room):
 	result = []
 
-	for i in range(NUM_DIRS):
+	for i in range(len(room.exits)):
 		if room.exits[i]:
 			result.append(i)
 	
@@ -84,34 +90,30 @@ def enter_room(character, room):
 	room.characters.append(character)
 	character.location = room
 
-## Check if a name maps to a character in a character's location.
+## Check if a name maps to a character in a room.
 #
-#  @param character The character reference that defines the search location.
 #  @param name The name to search for.
+#  @param room The room to search.
+#  @param self_character Character to return for "self" if desired.
 #  @return The character object, if found.  Otherwise, None.
-#
-#  @todo Reform this function (and all its associated calls) to be more sensibly-named.
-def character_in_room(character, name):
-	for search in character.location.characters:
+def character_in_room(name, room, self_character = None):
+	for search in room.characters:
 		for keyword in search.keywords:
 			if keyword.startswith(name):
 				return search
 
 	if "self".startswith(name):
-		return character
+		return self_character
 	
 	return None
 
-## Check if a name maps to an object in a character's location.
+## Check if a name maps to an item in a location.
 #
-#  @param character The character reference that defines the search location.
 #  @param name The name to search for.
+#  @param room The room to search.
 #  @return The item, if found.  Otherwise, None.
-#
-#  @todo Reform this function (and all its associated calls) to be more sensibly-named.
-#  @todo Change the name of this function to item_in_room.
-def object_in_room(character, name):
-	for search in character.location.contents:
+def item_in_room(name, room):
+	for search in room.contents:
 		for keyword in search.keywords:
 			if keyword.startswith(name):
 				return search

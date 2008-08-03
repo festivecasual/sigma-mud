@@ -5,7 +5,7 @@ import asyncore, asynchat, socket, sys, string
 import world, command, archive, libsigma
 from common import *
 
-## Encapsulate a client socket.
+## Encapsulates a client socket.
 class client_socket(asynchat.async_chat):
 	## Construct a client socket using an incoming connection.
 	#  @arg connection The incoming connection.
@@ -49,7 +49,7 @@ class client_socket(asynchat.async_chat):
 	def handle_accept(self):
 		pass
 
-## Encapsulate a server socket.
+## Encapsulates a server socket.
 class server_socket(asyncore.dispatcher):
 	## Construct the server socket.
 	def __init__(self):

@@ -50,7 +50,7 @@ def emote(data):
 			if not direct:
 				speaker.send_line("You can't do that.")
 				return
-			target = character_in_room(speaker, args[1])
+			target = character_in_room(args[1], speaker.location, speaker)
 			if target:
 				report(SELF | ROOM, direct, speaker, verbs, target)
 				return
@@ -89,12 +89,12 @@ def look(data):
 			speaker.send_line("You see " + speaker.location.exits[direction].name + " in that direction.")
 			return
 		
-		target = character_in_room(speaker, objective)
+		target = character_in_room(objective, speaker.location, speaker)
 		if target:
 			speaker.send_line(target.desc)
 			return
 		
-		target = object_in_room(speaker, objective)
+		target = item_in_room(objective, speaker.location)
 		if target:
 			speaker.send_line(target.desc)
 			return
@@ -103,8 +103,8 @@ def look(data):
 	speaker.send_line(speaker.location.desc)
 
 	speaker.send("Exits: ")
-	for dir in exits(speaker.location):
-		speaker.send(dir2txt(dir) + " ")
+	for code in exits(speaker.location):
+		speaker.send(dir2txt(code) + " ")
 	speaker.send_line("")
 	
 	for character in speaker.location.characters:
@@ -151,7 +151,7 @@ def get(data):
 		speaker.send_line("You can't do that.")
 		return
 	
-	item = object_in_room(speaker, args[1])
+	item = item_in_room(args[1], speaker.location)
 	if item:
 		transfer_item(item, speaker.location.contents, speaker.contents)
 		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), item)

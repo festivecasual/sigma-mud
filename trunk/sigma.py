@@ -44,6 +44,7 @@ def main():
 			command.process_commands()
 			task.run_tasks()
 		except KeyboardInterrupt:
+			print("")
 			log("CONSOLE", "Keyboard interrupt detected")
 			break
 

@@ -6,14 +6,8 @@
 import archive
 from libsigma import *
 
-## The mandatory registration function.
-def register_handlers():
-	return	{
-		"quit" : quit,
-		"save" : save
-		}
-
 ## Handle player quit.
+@handler
 def quit(data):
 	speaker = data["speaker"]
 
@@ -24,6 +18,7 @@ def quit(data):
 		speaker.send_line("Only players can quit.")
 
 ## Handle player save.
+@handler
 def save(data):
 	speaker = data["speaker"]
 

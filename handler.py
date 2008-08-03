@@ -6,7 +6,7 @@
 #
 #  @sa The handler framework defined in handler.py.
 
-import glob, os.path, imp, sys
+import glob, os.path, imp, sys, inspect
 import libsigma
 from common import *
 
@@ -19,6 +19,12 @@ specials = {
 	"period" : None
 	}
 
+## Detect if the passed function is a valid handler (as defined by the @handler decorator).
+#
+#  @param function The function to check.
+def is_handler(function):
+	return hasattr(function, '__handler__')
+
 ## Process the handlers/ directory and load handlers into the master handler list.
 def load_handlers():
 	handler_modules = glob.glob(directories["handlers_root"] + "/*.py")
@@ -28,10 +34,16 @@ def load_handlers():
 
 		try:
 			imp.load_source(name, directories["handlers_root"] + "/" + source)
-			new_handlers = libsigma.safe_mode(sys.modules[name].register_handlers)
-			if new_handlers:
-				functions.update(new_handlers)
-				log("HANDLERS", "Loading " + str(len(new_handlers)) + " handler(s) from [" + source + "]")
+			
+			count = 0
+			new_handlers = inspect.getmembers(sys.modules[name], inspect.isfunction)
+			for key, function in new_handlers:
+				if is_handler(function):
+					functions[key] = function
+					count += 1
+			
+			log("HANDLERS", "Loaded " + str(count) + " handler(s) from [" + source + "]")
+
 		except:
 			log("  *  ERROR", "Handler module [" + source + "] is not functional")
 			continue

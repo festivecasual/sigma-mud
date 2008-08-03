@@ -5,6 +5,15 @@ import traceback, sys, command
 from string import Template
 from common import *
 
+## Decorator function to be attached to all handlers.
+#
+#  "Marks" a designer function as a handler for import.
+#
+#  @param function The function to decorate.
+def handler(function):
+	function.__handler__ = 'handler'
+	return function
+
 ## Run a function within an error-trapped environment.
 #
 #  The safe_mode function is used to trap errors in non-essential
@@ -174,6 +183,7 @@ GAME = 16 # TODO
 #  @param indirect The indirect object of the action report.
 #
 #  @todo Fully define all recipient constants in libsigma.py.
+#  @todo Gender awareness.
 def report(recipients, template, actor, verbs = None, direct = None, indirect = None):
 	out = ""
 	s = Template(template)
@@ -194,7 +204,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 			mapping["direct"] = direct.name
 			self_mapping["direct"] = direct.name
 		else:
-			mapping["direct"] = "itself" # TODO
+			mapping["direct"] = "itself"
 			self_mapping["direct"] = "yourself"
 	
 	if indirect:
@@ -202,7 +212,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 			mapping["indirect"] = indirect.name
 			self_mapping["indirect"] = indirect.name
 		else:
-			mapping["indirect"] = "itself" # TODO
+			mapping["indirect"] = "itself"
 			self_mapping["indirect"] = "yourself"
 
 	if SELF & recipients:

@@ -5,19 +5,8 @@
 
 from libsigma import *
 
-## The mandatory registration function.
-def register_handlers():
-	return	{
-		"say" : say,
-		"emote" : emote,
-		"look" : look,
-		"go" : go,
-		"get" : get,
-		"drop" : drop,
-		"inventory" : inventory
-		}
-
 ## Process character conversation.
+@handler
 def say(data):
 	speaker = data["speaker"]
 	tail = data["tail"]
@@ -32,6 +21,7 @@ emote_mappings = {
 	}
 
 ## Process character emotion.
+@handler
 def emote(data):
 	speaker = data["speaker"]
 	tail = data["tail"]
@@ -73,6 +63,7 @@ def emote(data):
 		alert("Emote command <" + mapped + "> references an unknown emote_mapping")
 
 ## Process character observation of world objects (items, players, denizens, etc.).
+@handler
 def look(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -115,6 +106,7 @@ def look(data):
 		speaker.send_line(item.short)
 
 ## Process character movement.
+@handler
 def go(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -140,6 +132,7 @@ def go(data):
 #
 #  @todo Containers within inventory (len(args) == 3)
 #  @todo Detect failures during item transfers (weight limits, etc.)
+@handler
 def get(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -159,6 +152,7 @@ def get(data):
 		speaker.send_line("You can't find it.")
 
 ## Process item drops.
+@handler
 def drop(data):
 	speaker = data["speaker"]
 	args = data["args"]
@@ -180,6 +174,7 @@ def drop(data):
 	speaker.send_line("You don't have that.")
 
 ## Display a list of inventory.
+@handler
 def inventory(data):
 	speaker = data["speaker"]
 	

@@ -67,34 +67,51 @@ def wordwrap(text, width = -1):
 	
 	return wrapped + working
 
-# Ignorable whitespace (used by strip_whitespace)
-# Double-space should go last for the sake of efficiency
+## Ignorable whitespace (used by strip_whitespace)
+#
+#  Double-space should go last for the sake of efficiency
 whitespace = ["\t", "\n", "\f", "\r", "\v", "  "]
 
-# Play state constants
+## Null play state
 STATE_NULL       = 0
+## Initial play state
 STATE_INIT       = 1
+## Play state for typing name
 STATE_NAME       = 2
+## Play state for typing password
 STATE_PASSWORD   = 3
+## Play state for normal gameplay
 STATE_PLAYING    = 4
 
-# Direction constants
+## Direction: North
 DIR_NORTH        =  0
+## Direction: Northeast
 DIR_NORTHEAST    =  1
+## Direction: East
 DIR_EAST         =  2
+## Direction: Southeast
 DIR_SOUTHEAST    =  3
+## Direction: South
 DIR_SOUTH        =  4
+## Direction: Southwest
 DIR_SOUTHWEST    =  5
+## Direction: West
 DIR_WEST         =  6
+## Direction: Northwest
 DIR_NORTHWEST    =  7
+## Direction: Up
 DIR_UP           =  8
+## Direction: Down
 DIR_DOWN         =  9
+## Direction: Enter
 DIR_ENTER        = 10
+## Direction: Leave
 DIR_LEAVE        = 11
 
+## Total number of directions.
 NUM_DIRS         = 12
 
-# Tuple for matching direction text
+## Tuple for matching direction text
 dir_match_txt = (
 	"north",
 	"northeast",
@@ -114,7 +131,7 @@ dir_match_txt = (
 	"leave"
 	)
 
-# Tuple for matching direction constants
+## Tuple for matching direction constants
 dir_match_dir = (
 	DIR_NORTH,
 	DIR_NORTHEAST,
@@ -134,7 +151,7 @@ dir_match_dir = (
 	DIR_LEAVE
 	)
 
-# Prompts (and default values)
+## Prompts (and default values).
 prompts = {
 	STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",
 	STATE_NAME : "Please enter your name: ",
@@ -142,7 +159,7 @@ prompts = {
 	STATE_PLAYING : "\r\n> "
 	}
 
-# Basic configurable options (and default values)
+## Basic configurable options (and default values).
 options = {
 	"bind_address" : "",  # "" is a special system identifier for * (all)
 	"bind_port" : "4000",  # The server's listening port
@@ -153,7 +170,10 @@ options = {
 	"debug" : "no",  # Halt on errors from safe_mode?
 	}
 
+## Defines the relative root for all file access.
 root_dir = "."
+
+## Defines system directories.
 directories = {
 	"xml_root" : root_dir + "/config",  # XML root directory and location of server.xml
 	"tasks_root" : root_dir + "/tasks",  # Root directory for task modules

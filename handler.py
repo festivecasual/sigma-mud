@@ -10,8 +10,13 @@ import glob, os.path, imp, sys, inspect
 import libsigma
 from common import *
 
+## Holds list of all available handler functions.
 functions = {}
+
+## Holds mappings from typed commands to handlers.
 mappings = []
+
+## Stores all available "special" shortcut commands.
 specials = {
 	"apostrophe" : None,
 	"comma" : None,
@@ -19,7 +24,7 @@ specials = {
 	"period" : None
 	}
 
-## Detect if the passed function is a valid handler (as defined by the @handler decorator).
+## Detect if the passed function is a valid handler (as defined by the \@handler decorator).
 #
 #  @param function The function to check.
 def is_handler(function):

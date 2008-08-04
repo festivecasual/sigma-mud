@@ -13,6 +13,7 @@ def say(data):
 	
 	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
 
+## Used by the emote handler to produce the necessary action strings.
 emote_mappings = {
 	"laugh" : ("$actor $verb.", "$actor $verb at $direct.", ("laugh", "laughs")),
 	"slap" : ("", "$actor $verb $direct.", ("slap", "slaps")),

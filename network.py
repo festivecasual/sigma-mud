@@ -11,8 +11,13 @@ class client_socket(asynchat.async_chat):
 	#  @arg connection The incoming connection.
 	def __init__(self, connection):
 		asynchat.async_chat.__init__(self, connection)
+		
+		## Holds all pending text (awaiting a newline from client).
 		self.buffer = ''
+		
 		self.set_terminator('\n')
+		
+		## Retains the player class tied to this socket.
 		self.parent = world.player(self)
 
 	## Add input data to the buffer and handle backspaces.

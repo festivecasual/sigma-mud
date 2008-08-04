@@ -4,15 +4,29 @@
 import sys, libsigma
 from common import *
 
+## All players currently in game.
 players = []
+
+## All available rooms (mapped to area:name).
 rooms = {}
+
+## All denizens active in the game.
 denizens = {}
+
+## All items active in the game.
 items = {}
 
+
+## Denizen prototypes (for pickle).
 denizens_source = {}
+
+## Item prototypes (for pickle).
 items_source = {}
 
+## All populator objects (for placing denizens in rooms).
 populators = []
+
+## All placement objects (for placing items in game).
 placements = []
 
 ## Map exit codes to room objects, reporting any mapping errors.
@@ -130,7 +144,7 @@ class entity(object):
 		self.name = ""
 		
 		## The long description of the entity.
-		self.description = ""
+		self.desc = ""
 		
 		## Keywords applicable when searching for the entity.
 		self.keywords = []
@@ -160,6 +174,7 @@ class item(entity):
 		elif info_node.nodeName == "keywords":
 			self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 		elif info_node.nodeName == "short":
+			## The short description of the item.
 			self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 		elif info_node.nodeName == "desc":
 			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
@@ -174,10 +189,16 @@ class room(entity):
 	def __init__(self, ref, node):
 		entity.__init__(self)
 		self.location = ref
-
+		
+		## The characters (denizens and players) occupying the room.
 		self.characters = []
+
 		self.keywords = ["room"]
+		
+		## List of all exits, ultimately resolved to other room objects.
 		self.exits = [None] * NUM_DIRS
+		
+		## Mapping of points of interest within the room.
 		self.foci = {}
 		
 		self.capacity = -1
@@ -222,7 +243,8 @@ class character(entity):
 	#  @param self The active instance.
 	def __init__(self):
 		entity.__init__(self)
-
+		
+		## States defined in common module, determines processing context of input.
 		self.state = STATE_NULL
 
 	## Abstract function to simulate sending a prompt string to a player.
@@ -261,6 +283,7 @@ class denizen(character):
 			elif info_node.nodeName == "keywords":
 				self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 			elif info_node.nodeName == "short":
+				## The short description of the denizen.
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
@@ -273,9 +296,14 @@ class player(character):
 	#  @param s The player's socket object.
 	def __init__(self, s):
 		character.__init__(self)
-
+		
+		## Holds savegame data from archive.
 		self.proto = None
+		
+		## Holds player password.
 		self.password = None
+		
+		## Holds the client socket for the player.
 		self.socket = None
 		self.state = STATE_INIT
 
@@ -317,6 +345,7 @@ class player(character):
 	## Blank function to complete the property() assignment to keywords.
 	#
 	#  @param self The active instance.
+	#  @param data (Not processed) the provided data.
 	def set_keywords(self, data):
 		pass
 	
@@ -327,5 +356,6 @@ class player(character):
 	#  @param self The active instance.
 	def get_short(self):
 		return self.name + " is here."
-
+	
+	## The short description of the player (using player name).
 	short = property(get_short)

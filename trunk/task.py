@@ -10,6 +10,7 @@ import glob, os.path, imp, sys, time
 import libsigma
 from common import *
 
+## Holds all loaded tasks for periodic processing.
 tasks = []
 
 ## Process the tasks/ directory and load tasks into master task list.

@@ -10,6 +10,7 @@
 import archive, world, handler, libsigma
 from common import *
 
+## Stores all commands pending processing, as a (speaker, message) tuple.
 command_queue = []
 
 ## Enqueues a raw message to command_queue for later processing.

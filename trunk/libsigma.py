@@ -178,11 +178,15 @@ def run_command(character, text):
 	if not command.run_command(character, text):
 		log("  *  ERROR", "Command <" + text + "> unsuccessful")
 
-# Recipient constants
+## Report function recipient: the acting player.
 SELF =  1
+## Report function recipient: the acting player's room.
 ROOM =  2
+## Report function recipient: the acting player's nearby rooms.
 NEAR =  4 # TODO
+## Report function recipient: the acting player's area (excluding nearby rooms).
 AREA =  8 # TODO
+## Report function recipient: the entire game (excluding the active area).
 GAME = 16 # TODO
 
 ## The master function to send formatted, conjugated text to arbitrary groups of characters.

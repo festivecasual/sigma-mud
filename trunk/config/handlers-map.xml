@@ -13,6 +13,7 @@
   
   <handler command="go" function="go" />
   <handler command="get" function="get" />
+  <handler command="give" function="give" />
   
   <handler command="inventory" function="inventory" />
 

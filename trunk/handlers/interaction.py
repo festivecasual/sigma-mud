@@ -179,6 +179,42 @@ def drop(data):
 	
 	speaker.send_line("You don't have that.")
 
+## Transfer item from character to character
+@handler
+def give(data):
+	speaker = data["speaker"]
+	args = data["args"]
+	
+	if len(args) == 2:
+		speaker.send_line("Give to whom?")
+		return
+	elif len(args) != 3:
+		speaker.send_line("You can't do that.")
+		return
+	
+	target = None
+	for item in speaker.contents:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				target = item
+				break
+	
+	if not target:
+		speaker.send_line("You don't have that.")
+		return
+	
+	recipient = character_in_room(args[2], speaker.location, speaker)
+	if not recipient:
+		speaker.send_line("They're not here.")
+		return
+	
+	if recipient == speaker:
+		speaker.send_line("You cannot give to yourself.")
+		return
+	
+	transfer_item(target, speaker.contents, recipient.contents)
+	report(SELF | ROOM, "$actor $verb $direct to $indirect.", speaker, ("give", "gives"), target, recipient)
+
 ## Display a list of inventory.
 @handler
 def inventory(data):

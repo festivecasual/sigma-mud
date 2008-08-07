@@ -46,7 +46,7 @@ def emote(data):
 				report(SELF | ROOM, direct, speaker, verbs, target)
 				return
 			else:
-				report(SELF, "They are not here.", speaker)
+				report(SELF, "They're not here.", speaker)
 				return
 		else:
 			if nodirect:

@@ -11,7 +11,7 @@ import libsigma
 from common import *
 
 ## Holds all loaded tasks for periodic processing.
-tasks = []
+tasks = {}
 
 ## Process the tasks/ directory and load tasks into master task list.
 def load_tasks():
@@ -23,7 +23,9 @@ def load_tasks():
 		try:
 			imp.load_source(name, directories["tasks_root"] + "/" + source)
 
-			f_info = sys.modules[name].task_info
+			task_name = sys.modules[name].name
+			task_interval = sys.modules[name].interval
+			
 			f_init = sys.modules[name].task_init
 			f_execute = sys.modules[name].task_execute
 			f_deinit = sys.modules[name].task_deinit
@@ -31,32 +33,31 @@ def load_tasks():
 			log("  *  ERROR", "Task module [" + source + "] is not functional")
 			continue
 
-		ret = libsigma.safe_mode(f_info)
-		if ret:
-			task_name, task_author, task_version, task_interval = ret
-			libsigma.safe_mode(f_init)
-
-		log("TASK", "Loading [" + task_name + "] (" + task_author + ", " + task_version + ")")
-		tasks.append([sys.modules[name], time.time(), task_interval])
-
-
+		log("TASK", "Loading task [" + task_name + "]")
+		tasks[task_name] = (sys.modules[name], 0, task_interval)
+		
 ## Run the task_init function for each loaded task.
 def init_tasks():
-	for task in tasks:
-		log("TASK", "Starting up [" + task[0].task_info()[0] + "]")
-		libsigma.safe_mode(task[0].task_init)
-		task[1] = time.time()
+	for task_name, task_info in tasks.items():
+		task_module, task_time, task_interval = task_info
+		
+		log("TASK", "Starting up [" + task_name + "]")
+		libsigma.safe_mode(task_module.task_init)
+		tasks[task_name] = (task_module, time.time(), task_interval)
 
 ## Run the task_execute function for each task whose delay period has passed.
 def run_tasks():
-	for task in tasks:
-		if time.time() >= (task[1] + task[2]):
-			libsigma.safe_mode(task[0].task_execute)
-			task[1] = time.time()
+	for task_name, task_info in tasks.items():
+		task_module, task_time, task_interval = task_info
+		
+		if time.time() >= (task_time + task_interval):
+			libsigma.safe_mode(task_module.task_execute)
+			tasks[task_name] = (task_module, time.time(), task_interval)
 
 ## Run the task_deinit function for each task upon server shutdown.
 def deinit_tasks():
-	for task in tasks:
-		log("TASK", "Shutting down [" + task[0].task_info()[0] + "]")
-
-		libsigma.safe_mode(task[0].task_deinit)
+	for task_name, task_info in tasks.items():
+		task_module, task_time, task_interval = task_info
+		
+		log("TASK", "Shutting down [" + task_name + "]")
+		libsigma.safe_mode(task_module.task_deinit)

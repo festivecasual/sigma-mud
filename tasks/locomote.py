@@ -7,9 +7,11 @@ import random
 import world, libsigma
 from common import *
 
-## Returns name, authorship, version, and period length (in seconds).
-def task_info():
-	return ('Denizen Locomotion', 'Sigma Internal', '1.0', 20)
+## Proper name of task
+name = 'Denizen Locomotion'
+
+## Interval of task (in seconds)
+interval = 60
 
 ## Defines the code to be run upon loading the task.
 def task_init():

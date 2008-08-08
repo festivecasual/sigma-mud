@@ -178,5 +178,5 @@ directories = {
 	"xml_root" : root_dir + "/config",  # XML root directory and location of server.xml
 	"tasks_root" : root_dir + "/tasks",  # Root directory for task modules
 	"handlers_root" : root_dir + "/handlers",  # Root directory for handler modules
-	"classes_root" : root_dir + "/classes"  # Root directory for class modules
+	"orders_root" : root_dir + "/classes"  # Root directory for order modules
 	}

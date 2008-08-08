@@ -18,23 +18,23 @@ def load_tasks():
 	task_modules = glob.glob(directories["tasks_root"] + "/*.py")
 	for task_file in task_modules:
 		source = os.path.basename(task_file)
-		name = "task_" + os.path.splitext(source)[0]
+		module_name = "task_" + os.path.splitext(source)[0]
 
 		try:
-			imp.load_source(name, directories["tasks_root"] + "/" + source)
+			imp.load_source(module_name, directories["tasks_root"] + "/" + source)
 
-			task_name = sys.modules[name].name
-			task_interval = sys.modules[name].interval
+			task_name = sys.modules[module_name].name
+			task_interval = sys.modules[module_name].interval
 			
-			f_init = sys.modules[name].task_init
-			f_execute = sys.modules[name].task_execute
-			f_deinit = sys.modules[name].task_deinit
+			f_init = sys.modules[module_name].task_init
+			f_execute = sys.modules[module_name].task_execute
+			f_deinit = sys.modules[module_name].task_deinit
 		except:
 			log("  *  ERROR", "Task module [" + source + "] is not functional")
 			continue
 
 		log("TASK", "Loading task [" + task_name + "]")
-		tasks[task_name] = (sys.modules[name], 0, task_interval)
+		tasks[task_name] = (sys.modules[module_name], 0, task_interval)
 		
 ## Run the task_init function for each loaded task.
 def init_tasks():

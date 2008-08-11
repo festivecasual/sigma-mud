@@ -6,7 +6,7 @@
 #
 #  @sa Consult libsigma for additional utility features.
 
-import time, sha
+import time, datetime, sha
 
 ## Construct a log entry for the server console.
 #
@@ -21,9 +21,16 @@ def log(label, text, trivial = False):
 def time_string():
 	return time.strftime("%H:%M:%S")
 
+## Returns a formatted string with both current date and time
+def date_time_string():
+	return time.strftime("%Y/%m/%d %H:%M:%S")
+
+		
+##=======
 ## Return an encrypted (SHA hashed) password.
 #
 #  @param password The plain-text password to encrypt.
+##>>>>>>> .r78
 def encrypt_password(password):
 	crypter = sha.new(password)
 	return crypter.digest()

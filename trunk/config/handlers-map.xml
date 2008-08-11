@@ -40,6 +40,8 @@
   <handler command="southwest" function="go" />
   <handler command="sw" function="go" />
 
+  <handler command="time" function="time" />	
+			
   <handler command="up" function="go" />
 
   <handler command="west" function="go" />

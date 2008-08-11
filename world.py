@@ -29,6 +29,9 @@ populators = []
 ## All placement objects (for placing items in game).
 placements = []
 
+#All Calendars in the game
+calendars = []
+
 ## Map exit codes to room objects, reporting any mapping errors.
 def resolve_links():
 	for current in rooms.values():		
@@ -359,3 +362,125 @@ class player(character):
 	
 	## The short description of the player (using player name).
 	short = property(get_short)
+
+class calendar(object):
+    ## Construct a calendar from xml
+	#
+	#  @param self The active instance.
+	#  @param ref The reference code for the room.
+	#  @param node The XML node describing the room.
+    def __init__(self,cname, node):
+    	self.name=cname
+    	self.daylength=0 # measured in RL hours
+    	self.yearlength=0 # measured in IG Days
+    	self.months={}
+    	self.monthlist= []
+    	self.holidays={}
+    	self.watershed_name=""
+    	self.watershed_date=""
+     	node.normalize()
+     	## Bunch of calendar compliance checks below
+    	for info_node in node.childNodes:
+			if info_node.nodeName == "IGDayLengthInHours":
+				try:
+					self.daylength = int(wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"])))
+				except ValueError:
+					log("FATAL", "IGDayLengthInHours property must be an integer")
+					sys.exit(1)
+				if(self.daylength < 1 or self.daylength > 24):
+					log("FATAL", "IGDayLengthInHours property must be between 1 and 24 inclusive")
+					sys.exit(1)
+			elif info_node.nodeName== "month":
+				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("days")):
+					log("FATAL", "Error in <month /> tag")
+					sys.exit(1)
+				if(self.months.has_key(info_node.attributes["name"].value)):
+				   	log("FATAL", "Duplicate month name found. Month names must be unique")
+				   	sys.exit(1)
+				try:
+					self.months[info_node.attributes["name"].value]=int(info_node.attributes["days"].value)
+					self.monthlist.append(info_node.attributes["name"].value)
+				except ValueError:
+					log("FATAL", "days property must be an integer")
+					sys.exit(1)
+				if(self.months[info_node.attributes["name"].value] < 1):
+					log("FATAL", "days must be greater than 0")
+					sys.exit(1)		
+			elif info_node.nodeName=="holiday":
+				holiday_compliance=True
+				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("month_day")) or (not info_node.attributes.has_key("month")):
+					log("FATAL", "Error in <holiday /> tag")
+					sys.exit(1)
+				if(self.holidays.has_key(info_node.attributes["name"].value)):
+				   	log("FATAL", "Duplicate holiday name found. Holiday names must be unique")
+				   	sys.exit(1)
+				try:
+					int(info_node.attributes["month_day"].value)
+				except ValueError:
+					log("FATAL", "month_day property must be an integer")
+					sys.exit(1)
+				if(not self.months.has_key(info_node.attributes["month"].value)):
+					holiday_compliance=False
+				else:
+					if(int(info_node.attributes["month_day"].value) > self.months[info_node.attributes["month"].value] or int(info_node.attributes["month_day"].value) < 1):
+						   holiday_compliance=False
+					
+				if(holiday_compliance):
+					self.holidays[info_node.attributes["name"].value]={info_node.attributes["month"].value:int(info_node.attributes["month_day"].value)}
+				else:
+					log("ERROR", "Cannot create " + info_node.attributes["name"].value + " holiday")
+			elif info_node.nodeName=="WatershedEvent": ## TODO add Compliance to Watershed Event values
+				if(not info_node.attributes.has_key("title") or not info_node.attributes.has_key("date")  ):
+					log("FATAL", "Error in <Watershed Event /> tag")
+					sys.exit(1)
+				self.watershed_name=info_node.attributes["title"].value
+				self.watershed_date=info_node.attributes["date"].value  + " 00:00:00"
+    	for m in self.months:
+    		self.yearlength+=self.months[m]
+    
+    	
+    def get_current_IG_DateTime(self):
+    	current_time=""
+    	current_time=date_time_string()
+    	c_y,c_m,c_d,c_h,c_M,c_s=self.unpackDate(current_time)
+    	z_y,z_m,z_d,z_h,z_M,z_s=self.unpackDate(self.watershed_date)
+    	#current_date_list=self.unpackDate(current_time)
+     	#zero_date_list=self.unpackDate(self.watershed_date)
+     	
+    	current_date=datetime.datetime(int(c_y),int(c_m),int(c_d),int(c_h),int(c_M),int(c_s))
+    	zero_date=datetime.datetime(int(z_y),int(z_m),int(z_d),int(z_h),int(z_M),int(z_s))
+    	#current_date=datetime.datetime(*current_date_list)
+    	#zero_date=datetime.datetime(*zero_date)
+    	date_diff=current_date-zero_date;
+    	
+    	##hours rollup
+    	hours=date_diff.seconds/3600
+    	remainder=date_diff.seconds%3600
+    	minutes=int(remainder/60)
+    	seconds=remainder%60
+    	IG_days_diff=date_diff.days*24/self.daylength + int(hours/self.daylength)
+    	hours=hours%self.daylength
+    	
+      	IGyear=IG_days_diff/self.yearlength;
+      	IGdays_remainder=IG_days_diff%self.yearlength
+      	
+      	for month in self.monthlist:
+      		if(IGdays_remainder>self.months[month]):
+      		 	IGdays_remainder-=int(self.months[month])
+      		else:
+      			IGmonth=month
+      			IGday=IGdays_remainder
+      			break
+     
+        return "It is day " + str(IGday) + " of the month of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
+    # returns list in format [month, day, year, hours, mins, seconds]
+    def unpackDate(self, date):
+    	t_date=date.replace(" ", "/")
+    	t_date=t_date.replace(":", "/")
+    	sp = t_date.split("/")
+    	for x in sp:
+    	  x=int(x)		
+    	return sp;
+	  
+	   	
+				

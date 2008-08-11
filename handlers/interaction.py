@@ -142,9 +142,8 @@ def go(data):
 def get(data):
 	speaker = data["speaker"]
 	args = data["args"]
-	
 	if len(args) == 1:
-		speaker.send_line("Get what?")
+		speaker.send_line(args[0].title() + " what?")
 		return
 	elif len(args) != 2:
 		speaker.send_line("You can't do that.")

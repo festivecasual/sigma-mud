@@ -14,6 +14,7 @@
   <handler command="go" function="go" />
   <handler command="get" function="get" />
   <handler command="give" function="give" />
+  <handler command="grab" function="get" />
   
   <handler command="inventory" function="inventory" />
 
@@ -40,6 +41,7 @@
   <handler command="southwest" function="go" />
   <handler command="sw" function="go" />
 
+  <handler command="take" function="get" />
   <handler command="time" function="time" />	
 			
   <handler command="up" function="go" />

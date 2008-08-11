@@ -29,7 +29,12 @@ def task_execute():
 			selection = random.choice(choices)
 			
 			if (selection != None):
-				libsigma.report(libsigma.ROOM, "$actor has left the room.", active_denizen)
+				if (libsigma.dir2txt(selection) =='leave'):
+					libsigma.report(libsigma.ROOM, "$actor just went out.", active_denizen)
+				elif (libsigma.dir2txt(selection) == 'enter'):
+					libsigma.report(libsigma.ROOM, "$actor just went in.", active_denizen)
+				else:
+					libsigma.report(libsigma.ROOM, "$actor just went " + libsigma.dir2txt(selection) + ".", active_denizen)					
 				libsigma.enter_room(active_denizen, active_denizen.location.exits[selection])
 				libsigma.report(libsigma.ROOM, "$actor has entered the room.", active_denizen)
 

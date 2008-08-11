@@ -127,12 +127,17 @@ def go(data):
 	if dir == -1:
 		speaker.send_line("Where do you want to go?")
 	elif speaker.location.exits[dir]:
-		report(ROOM, "$actor has left the room.", speaker)
+		if dir2txt(dir) =="leave":
+			report(ROOM, "$actor just went out.", speaker)
+		elif dir2txt(dir) =="enter":
+			report(ROOM, "$actor just went in.", speaker)
+		else:
+			report(ROOM, "$actor just went " + dir2txt(dir) + ".", speaker)        
 		enter_room(speaker, speaker.location.exits[dir])
 		report(ROOM, "$actor has entered the room.", speaker)
 		run_command(speaker, "look")
 	else:
-		speaker.send_line("There is no exit in that direction.")
+		speaker.send_line("There is no exit in that direction.")    
 
 ## Process item acquisition.
 #

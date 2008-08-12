@@ -34,30 +34,35 @@ def load_tasks():
 			continue
 
 		log("TASK", "Loading task [" + task_name + "]")
-		tasks[task_name] = (sys.modules[module_name], 0, task_interval)
+		tasks[task_name] = (sys.modules[module_name], 0, task_interval, -1)
 		
 ## Run the task_init function for each loaded task.
 def init_tasks():
 	for task_name, task_info in tasks.items():
-		task_module, task_time, task_interval = task_info
+		task_module, task_time, task_interval, task_ttl = task_info
 		
 		log("TASK", "Starting up [" + task_name + "]")
 		libsigma.safe_mode(task_module.task_init)
-		tasks[task_name] = (task_module, time.time(), task_interval)
+		tasks[task_name] = (task_module, time.time(), task_interval, task_ttl)
 
 ## Run the task_execute function for each task whose delay period has passed.
 def run_tasks():
 	for task_name, task_info in tasks.items():
-		task_module, task_time, task_interval = task_info
+		task_module, task_time, task_interval, task_ttl = task_info
 		
 		if time.time() >= (task_time + task_interval):
 			libsigma.safe_mode(task_module.task_execute)
-			tasks[task_name] = (task_module, time.time(), task_interval)
+			if task_ttl > 1:
+				tasks[task_name] = (task_module, time.time(), task_interval, task_ttl - 1)
+			elif task_ttl == 1:
+				del tasks[task_name]
+			else:
+				tasks[task_name] = (task_module, time.time(), task_interval, -1)
 
 ## Run the task_deinit function for each task upon server shutdown.
 def deinit_tasks():
 	for task_name, task_info in tasks.items():
-		task_module, task_time, task_interval = task_info
+		task_module, task_time, task_interval, task_ttl = task_info
 		
 		log("TASK", "Shutting down [" + task_name + "]")
 		libsigma.safe_mode(task_module.task_deinit)

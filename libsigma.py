@@ -1,8 +1,10 @@
 ## @package libsigma
 #  Designer-facing utility functions.
 
-import traceback, sys, command
+import traceback, sys, command, time
 from string import Template
+
+import task
 from common import *
 
 ## Decorator function to be attached to all handlers.
@@ -48,6 +50,30 @@ def alert(text):
 #  @param object The object to test.
 def is_player(object):
 	return hasattr(object, "socket")
+
+## Provide a "NOOP" function for empty callbacks.
+def noop():
+	pass
+
+## Provides a basic object infrastructure for inserting tasks.
+class inserted_task(object):
+	## Construct the default inserted task.
+	def __init__(self):
+		self.task_init = noop
+		self.task_execute = noop
+		self.task_deinit = noop
+
+## Insert a task with a specified TTL into the tasks structure
+#
+#  @param name The identifier for the task.
+#  @param task_function The function to insert.
+#  @param interval Time space between each function execution (in seconds).
+#  @param ttl The lifetime (number of intervals) for the task.
+def insert_task(name, task_function, interval, ttl = -1):
+	# Construct a dummy "module" for the task
+	task_module = inserted_task()
+	task_module.task_execute = task_function
+	task.tasks[name + '_' + str(time.time())] = (task_module, time.time(), interval, ttl)
 
 ## Convert a text-based direction specifier to a mapped direction code.
 #

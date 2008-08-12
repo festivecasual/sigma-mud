@@ -472,7 +472,7 @@ class calendar(object):
       			IGday=IGdays_remainder
       			break
      
-        return "It is day " + str(IGday) + " of the month of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
+        return "It is the " + ordinals(IGday) + " of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
     # returns list in format [month, day, year, hours, mins, seconds]
     def unpackDate(self, date):
     	t_date=date.replace(" ", "/")

@@ -74,6 +74,16 @@ def wordwrap(text, width = -1):
 	
 	return wrapped + working
 
+def ordinals(int_val):
+	
+	if(int(int_val)%10==1 and int(int_val)%100!=11):
+		return str(int_val) + "st"
+	elif(int(int_val)%10==2 and int(int_val)%100!=12):
+		return str(int_val) + "nd"
+	elif(int(int_val)%10==1 and int(int_val)%100!=13):
+		return str(int_val) + "rd"
+	return str(int_val) + "th"
+
 ## Ignorable whitespace (used by strip_whitespace)
 #
 #  Double-space should go last for the sake of efficiency

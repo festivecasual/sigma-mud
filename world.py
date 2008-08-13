@@ -201,6 +201,9 @@ class room(entity):
 		## List of all exits, ultimately resolved to other room objects.
 		self.exits = [None] * NUM_DIRS
 		
+		## holds a list of alternate messaging that may be available for an exit
+		self.altmsg=[None]* NUM_DIRS
+		
 		## Mapping of points of interest within the room.
 		self.foci = {}
 		
@@ -229,7 +232,10 @@ class room(entity):
 					log("FATAL", "Bad exit direction: " + info_node.attributes["dir"].value)
 					sys.exit(1)
 				self.exits[dir] = info_node.attributes["target"].value
-
+				if (info_node.attributes.has_key("altmsg")):
+					self.altmsg[dir]=info_node.attributes["altmsg"].value
+					
+				
 	## Return the area portion of the room's location code.
 	#
 	#  @param self The active instance.

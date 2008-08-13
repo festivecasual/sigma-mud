@@ -12,14 +12,16 @@
     <desc>
       Things look a bit better here.  You see a waterfall ahead in the distance,
       but the developers will have to decide if you can get to it or not.  There is
-      a tree here.
+      a tree here. There also seems to be a strange, apparently new path off to the 
+      southwest.      
     </desc>
     <focus name="waterfall">
       It looks like you can go inside the waterfall!
     </focus>
     <exit dir="w" target="beginning" />
+    <exit dir="sw" target="testland:bonfire"/>
     <exit dir="u" target="treetop" />
-    <exit dir="enter" target="waterfall" />
+    <exit dir="enter" target="waterfall" altmsg="into the waterfall" />
   </room>
   
   <room id="treetop">

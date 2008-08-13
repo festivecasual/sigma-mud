@@ -1,0 +1,53 @@
+<area>
+  <room id="bonfire">
+    <name>Testland, Bonfire Land</name>
+    <desc>
+      There's lots of scenery here, varied and wild. But none of that matters
+      because there's a huge bonfire which draws all attention!
+    </desc>
+    <focus name="bonfire">
+    You don't know why, but you feel like whooping.
+    </focus>
+    <exit dir="ne" target="ravren:second" />
+    <exit dir="w" target="icecavern" />
+  </room>
+  
+  <room id="icecavern">
+  	<name>Testland, Ice Cavern</name>
+  	<desc>
+  	It's cold, and its windy, which adds to the wind chill factor. 
+  	The wind seems to be coming from the northwest.	
+  	</desc>
+  	 <exit dir="e" target="bonfire" />
+  	 <exit dir="nw" target="windtunnel" />
+  	 <exit dir="s"  target="bigtree" />
+  </room>
+  
+  <room id="windtunnel">
+  	<name>Testland, Wind Tunnel</name>
+  	<desc>
+  	You suddenly find yourself next to a huge vortex of wind and leaves!	
+  	</desc>
+  	<focus name="vortex">
+     Its a tornado, Dorothy.
+    </focus>
+  	 <exit dir="se" target="icecavern" />
+  </room>
+  
+  <room id="bigtree">
+  	<name>Testland, Wind Tunnel</name>
+  	<desc>
+  	A grand, ancient oak tree stands here, as it has done for centuries	
+  	</desc>
+  	<focus name="tree">
+     Its big. Very big. Oh, and at the base of the tree you see a door.
+     This seems to be a hint that doors will be implemented soon.
+    </focus>
+  	 <exit dir="n" target="icecavern" />
+  	 
+  </room>
+  
+  
+  </area>
+
+  

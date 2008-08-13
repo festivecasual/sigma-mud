@@ -127,7 +127,9 @@ def go(data):
 	if dir == -1:
 		speaker.send_line("Where do you want to go?")
 	elif speaker.location.exits[dir]:
-		if dir2txt(dir) =="leave":
+		if speaker.location.altmsg[dir]!=None: ## checks first for any alternate messaging
+			report(ROOM, "$actor just went " + speaker.location.altmsg[dir]  + "." , speaker)
+		elif dir2txt(dir) =="leave":
 			report(ROOM, "$actor just went out.", speaker)
 		elif dir2txt(dir) =="enter":
 			report(ROOM, "$actor just went in.", speaker)

@@ -5,7 +5,7 @@
 
   <area name="system" file="areas/system.xml" />
   <area name="ravren" file="areas/ravren.xml" />
-	
+  <area name="testland" file="areas/testland.xml" />	
   <calendar name ="main" file="calendar.xml" /> 
   
   <handlers file="handlers-map.xml" />

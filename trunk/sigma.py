@@ -6,7 +6,7 @@
 #  contained within Sigma.
 
 import asyncore
-import command, handler, importer, network, order, task, world
+import command, handler, importer, network, task, world
 from common import *
 
 ## The primary control function for Sigma.
@@ -18,9 +18,6 @@ def main():
 
 	log("MODULES", "Inspecting handler modules")
 	handler.load_handlers()
-	
-	log("ORDERS", "Inspecting order modules")
-	order.load_orders()
 
 	log("XML", "Processing server.xml")
 	importer.process_xml()

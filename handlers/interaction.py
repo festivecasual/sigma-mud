@@ -117,25 +117,25 @@ def go(data):
 	speaker = data["speaker"]
 	args = data["args"]
 
-	dir = -1
+	direction = -1
 
 	if "go".startswith(args[0]) and len(args) == 2:
-		dir = txt2dir(args[1])
+		direction = txt2dir(args[1])
 	elif len(args) == 1:
-		dir = txt2dir(args[0])
+		direction = txt2dir(args[0])
 
-	if dir == -1:
+	if direction == -1:
 		speaker.send_line("Where do you want to go?")
-	elif speaker.location.exits[dir]:
-		if speaker.location.altmsg[dir]!=None: ## checks first for any alternate messaging
-			report(ROOM, "$actor just went " + speaker.location.altmsg[dir]  + "." , speaker)
-		elif dir2txt(dir) =="leave":
+	elif speaker.location.exits[direction]:
+		if speaker.location.altmsg[direction]!=None: ## checks first for any alternate messaging
+			report(ROOM, "$actor just went " + speaker.location.altmsg[direction]  + "." , speaker)
+		elif dir2txt(direction) =="leave":
 			report(ROOM, "$actor just went out.", speaker)
-		elif dir2txt(dir) =="enter":
+		elif dir2txt(direction) =="enter":
 			report(ROOM, "$actor just went in.", speaker)
 		else:
-			report(ROOM, "$actor just went " + dir2txt(dir) + ".", speaker)        
-		enter_room(speaker, speaker.location.exits[dir])
+			report(ROOM, "$actor just went " + dir2txt(direction) + ".", speaker)        
+		enter_room(speaker, speaker.location.exits[direction])
 		report(ROOM, "$actor has entered the room.", speaker)
 		run_command(speaker, "look")
 	else:

@@ -8,7 +8,7 @@ from libsigma import *
 
 ## Handle player quit.
 @handler
-def quit(data):
+def player_quit(data):
 	speaker = data["speaker"]
 
 	if is_player(speaker):
@@ -19,7 +19,7 @@ def quit(data):
 
 ## Handle player save.
 @handler
-def save(data):
+def player_save(data):
 	speaker = data["speaker"]
 
 	if is_player(speaker):

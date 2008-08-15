@@ -227,13 +227,13 @@ class room(entity):
 				if (not info_node.attributes.has_key("dir")) or (not info_node.attributes.has_key("target")):
 					log("FATAL", "Error in <room /> tag")
 					sys.exit(1)
-				dir = libsigma.txt2dir(info_node.attributes["dir"].value)
-				if dir == -1:
+				direction = libsigma.txt2dir(info_node.attributes["dir"].value)
+				if direction == -1:
 					log("FATAL", "Bad exit direction: " + info_node.attributes["dir"].value)
 					sys.exit(1)
-				self.exits[dir] = info_node.attributes["target"].value
+				self.exits[direction] = info_node.attributes["target"].value
 				if (info_node.attributes.has_key("altmsg")):
-					self.altmsg[dir]=info_node.attributes["altmsg"].value
+					self.altmsg[direction]=info_node.attributes["altmsg"].value
 					
 				
 	## Return the area portion of the room's location code.

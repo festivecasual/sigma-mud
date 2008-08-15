@@ -266,18 +266,18 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 	out = out[0].upper() + out[1:]
 
 	if ROOM & recipients:
-		for character in actor.location.characters:
-			if character != actor:
-				character.send_line("")
-				if character == direct:
+		for search in actor.location.characters:
+			if search != actor:
+				search.send_line("")
+				if search == direct:
 					out_special = s.safe_substitute(mapping, direct = "you")
 					out_special = out_special[0].upper() + out_special[1:]
-					character.send_line(out_special)
-				elif character == indirect:
+					search.send_line(out_special)
+				elif search == indirect:
 					out_special = s.safe_substitute(mapping, indirect = "you")
 					out_special = out_special[0].upper() + out_special[1:]
-					character.send_line(out_special)
+					search.send_line(out_special)
 				else:
-					character.send_line(out)
+					search.send_line(out)
 
 	return out

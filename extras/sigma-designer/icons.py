@@ -1,4 +1,78 @@
-import embeddedimage
+# This file synthesizes the auto-generated image code from img2py,
+# preceded by the class code from embeddedimage.py that defines
+# the embedded image class.
+
+# EMBEDDED FILE
+#----------------------------------------------------------------------
+# Name:        wx.lib.embeddedimage
+# Purpose:     Defines a class used for embedding PNG images in Python
+#              code. The primary method of using this module is via
+#              the code generator in wx.tools.img2py.
+#
+# Author:      Anthony Tuininga
+#
+# Created:     26-Nov-2007
+# RCS-ID:      $Id: embeddedimage.py 51013 2008-01-04 22:12:40Z RD $
+# Copyright:   (c) 2007 by Anthony Tuininga
+# Licence:     wxWindows license
+#----------------------------------------------------------------------
+
+import base64
+import cStringIO
+import wx
+
+class PyEmbeddedImage(object):
+    """
+    PyEmbeddedImage is primarily intended to be used by code generated
+    by img2py as a means of embedding image data in a python module so
+    the image can be used at runtime without needing to access the
+    image from an image file.  This makes distributing icons and such
+    that an application uses simpler since tools like py2exe will
+    automatically bundle modules that are imported, and the
+    application doesn't have to worry about how to locate the image
+    files on the user's filesystem.
+
+    The class can also be used for image data that may be acquired
+    from some other source at runtime, such as over the network or
+    from a database.  In this case pass False for isBase64 (unless the
+    data actually is base64 encoded.)  Any image type that
+    wx.ImageFromStream can handle should be okay.
+    """
+
+    def __init__(self, data, isBase64=True):
+        self.data = data
+        self.isBase64 = isBase64
+
+    def GetBitmap(self):
+        return wx.BitmapFromImage(self.GetImage())
+
+    def GetData(self):
+        return self.data
+
+    def GetIcon(self):
+        icon = wx.EmptyIcon()
+        icon.CopyFromBitmap(self.GetBitmap())
+        return icon
+
+    def GetImage(self):
+        data = self.data
+        if self.isBase64:
+            data = base64.b64decode(self.data)
+        stream = cStringIO.StringIO(data)
+        return wx.ImageFromStream(stream)
+
+    # added for backwards compatibility
+    getBitmap = GetBitmap
+    getData = GetData
+    getIcon = GetIcon
+    getImage = GetImage
+
+    # define properties, for convenience
+    Bitmap = property(GetBitmap)
+    Icon = property(GetIcon)
+    Image = property(GetImage)
+
+
 
 # ***************** Catalog starts here *******************
 
@@ -6,7 +80,7 @@ catalog = {}
 index = []
 
 #----------------------------------------------------------------------
-Save = embeddedimage.PyEmbeddedImage(
+Save = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAz1J"
     "REFUWIXll0FLI0kUx3+liensxgwiZCNsDsllh5z0EyjjbS6CH2CFOXjczZfwLHOc+BX8ACLs"
     "woJHEZTgJWjEm0qWjY0m6aquzGGsnupOp9MZve0fHl1d9XjvX//3uuiC/zuEGezu7v4FfDDv"
@@ -32,7 +106,7 @@ getSaveBitmap = Save.GetBitmap
 getSaveIcon = Save.GetIcon
 
 #----------------------------------------------------------------------
-Folder = embeddedimage.PyEmbeddedImage(
+Folder = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAABv9J"
     "REFUWIXll8uPHFcVxn+3Ht09/ajumdgksYgDCigSWQMLRjaCTdZs82dkD4Ilm2z4A1izR1ng"
     "YJxxDFESa4iV+IEfY7sZd/c4011dXa/7Oiy6e5jB4wTx2nCkkupxb53vfN95VMH/u6kve7iz"
@@ -76,7 +150,7 @@ getFolderBitmap = Folder.GetBitmap
 getFolderIcon = Folder.GetIcon
 
 #----------------------------------------------------------------------
-Designer = embeddedimage.PyEmbeddedImage(
+Designer = PyEmbeddedImage(
     "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAABJ1J"
     "REFUWIXt1k9o21YcB/DvcyQF23ImOXFqx21G/pe2WTbYDh2DmG6HhLKSbaSjsMFGD4OQ9dZR"
     "GE0vCzv1VOgh7SDNCjmtGWpKEhZW2ymDUrLVJNCULsWOyWK3jezG1pOsSH47LAmlpGvzx6ft"
@@ -107,4 +181,35 @@ getDesignerData = Designer.GetData
 getDesignerImage = Designer.GetImage
 getDesignerBitmap = Designer.GetBitmap
 getDesignerIcon = Designer.GetIcon
+
+#----------------------------------------------------------------------
+New = PyEmbeddedImage(
+    "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAABC5J"
+    "REFUWIXllk9oHFUcxz/z3kw2S1M3u+muRGNTAyJV1EBESIVtqBUCvZTaq/RQLHgSFFu9aA8F"
+    "b+KhSA+GHgKBxKttwZQWEhVKvYghYNhSUAzV3YTExPyZf8/D7pvOzr5JNunRHzzeY97M+33m"
+    "+/u+NwP/97BMF3+YnV2xILeP9aqBUiPlcnn+iQBmZ2ZWhoeHc1gWYRgSBEHU+77f1DzPw3Xd"
+    "er+9zcbGxpLtOK8dO3bsz3YARDqa1egshBBRL4RASolt21HvOA6O47DtunQdPNjjue6PMzMz"
+    "xf0DKIVlWU1JdbNtO0quE+vW0dFBqVQiXyj0qzC8Oz09vWsZjQBKqYQYFlJKowJxFWzbJpfL"
+    "USwW6Tl06OWMbX8/NzfXsWeAMAybILQaGiLea0U0RDabJZ/PUyqVKPX2vlGr1W5OTU3JNAC7"
+    "HQU0BIAQgjAMkVJGYHGVADKZDN3d3VqhtwRMAmefCCCuhBDCeL/jOFQqlWh3BEGA53kIId65"
+    "c/v2FydOnvx0XwCqYcq4AnEIrUY+n2/aqp7nReNHi4ufAO0BhEHQAqLHcdmTSti2bXwBq3Ge"
+    "mMIMkFKCJIgJQvtAzyulEEKkltUMYKCNl0GHlTisktfi6+1JAZMHdoJI+kJ7Qj+X3Na7Amha"
+    "00MaInlOxCH0nPaEnmsfoJ7J+IAJLOkL7YP4OM1XRgDCENPtyUT6WrLu2ng6LMtCpSjQbOE5"
+    "uljgs48PX+rK/pYlO5+lXClzZfEKa/5aC0iyjxZNfMCklG0oUOGEDOQ3A3Lg+b5iH4NyEEtZ"
+    "1LZrTK5MMv77ONdeuMZIYcSY1LT3tQpCiFQF6gALnO0MOr89fuA4BVmom0ABIRTtIsXuIsuZ"
+    "ZU7/fJqxl8Y48+yZ1DIkIfQ3Ik0BwQJF4Yvr5WyZgnicfOKZCSb6JgiDENd36RQZhp4b4sK9"
+    "C1S3qiilomZSIErQ+JlJ9YDlWh8ckUe6emRPPblujXB9l3V3nb+3qiwFS5CFq79eTd2iyaYh"
+    "0j3gcqr/QP9j2RUEjW8BwOzqLMveMgQNMAduVW5x+fXLLdKbSrGbQjYeL+ZFHkKYODzRckN1"
+    "qBqN5V0JHfDgrwctSXc6LYEdTLiFVL7Cxzfe0BQBKE/hbrotb9iUzHBapiuwzfziv4uDD4OH"
+    "yHsy8kDwZr0M8k79mgpVfe4fOJo72rRo2gEVj/RdsM2N+4v3qW3V6nX2G00vFChUoOpzAahH"
+    "itGB0bZMmJwzKqA21ZdqVb0vbFHAoWUX4BOdCaxBoVrg4nsX6ezsNC6YGmm/eQBcZxSf70Sv"
+    "kGRicuum6smtXyw+6vuQV3Ov7C15I949dy4HbAJeMwDAV7yNxzjdPG09ZcGBRvLVuuz8wRIV"
+    "LnGTn9p530aieGwQucgEAPA5XSjO43MKnyI+EFDF5waKMb5mfU+v3Eb8B1CDZSjcZMibAAAA"
+    "AElFTkSuQmCC")
+index.append('New')
+catalog['New'] = New
+getNewData = New.GetData
+getNewImage = New.GetImage
+getNewBitmap = New.GetBitmap
+getNewIcon = New.GetIcon
 

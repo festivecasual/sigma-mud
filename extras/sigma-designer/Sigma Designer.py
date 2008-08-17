@@ -24,6 +24,7 @@ class DesignerFrame(wx.Frame):
 		status = self.CreateStatusBar()
 		
 		toolbar = self.CreateToolBar()
+		toolbar.AddLabelTool(wx.ID_NEW, "New", icons.getNewBitmap())
 		toolbar.AddLabelTool(wx.ID_OPEN, "Open", icons.getFolderBitmap())
 		toolbar.AddLabelTool(wx.ID_SAVE, "Save", icons.getSaveBitmap())
 		toolbar.Realize()

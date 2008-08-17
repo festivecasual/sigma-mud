@@ -1,4 +1,5 @@
 import wx, wx.stc
+import icons
 
 def main():
 	app = DesignerApp()
@@ -10,16 +11,31 @@ class DesignerApp(wx.App):
 		self.SetAppName("Sigma Designer")
 		self.SetTopWindow(frame)
 		
-		frame.Show(True)		
+		frame.Centre()
+		frame.Show(True)
 		return True
 
 class DesignerFrame(wx.Frame):
 	def __init__(self, parent, title):
-		wx.Frame.__init__(self, parent, -1, title, pos=(150, 50), size=(700, 500))
+		wx.Frame.__init__(self, parent, -1, title, size=(700, 500))
 
+		self.SetIcon(icons.getDesignerIcon())
+		
+		status = self.CreateStatusBar()
+		
+		toolbar = self.CreateToolBar()
+		toolbar.AddLabelTool(wx.ID_OPEN, "Open", icons.getFolderBitmap())
+		toolbar.AddLabelTool(wx.ID_SAVE, "Save", icons.getSaveBitmap())
+		toolbar.Realize()
+		
 		splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE)
+		splitter.SetSashSize(5)
+		splitter.SetMinimumPaneSize(5)
 		
 		tree = wx.TreeCtrl(splitter)
+		root = tree.AddRoot("Area File")
+		tree.AppendItem(root, "Room 1")
+		tree.AppendItem(root, "Room 2")
 		
 		tabs = wx.Notebook(splitter)
 		design_tab = wx.NotebookPage(tabs)

@@ -6,7 +6,7 @@
 #
 #  @sa Consult libsigma for additional utility features.
 
-import time, datetime, sha
+import time, datetime, sha, os.path, sys
 
 ## Construct a log entry for the server console.
 #
@@ -75,7 +75,6 @@ def wordwrap(text, width = -1):
 	return wrapped + working
 
 def ordinals(int_val):
-	
 	if(int(int_val)%10==1 and int(int_val)%100!=11):
 		return str(int_val) + "st"
 	elif(int(int_val)%10==2 and int(int_val)%100!=12):
@@ -83,6 +82,10 @@ def ordinals(int_val):
 	elif(int(int_val)%10==1 and int(int_val)%100!=13):
 		return str(int_val) + "rd"
 	return str(int_val) + "th"
+
+def sigma_path():
+	sigma_command = os.path.dirname(sys.argv[0])
+	return os.path.abspath(sigma_command)
 
 ## Ignorable whitespace (used by strip_whitespace)
 #
@@ -145,7 +148,7 @@ dir_match_txt = (
 	"up",
 	"down",
 	"enter",
-	"leave"
+	"leave",
 	)
 
 ## Tuple for matching direction constants
@@ -165,7 +168,7 @@ dir_match_dir = (
 	DIR_UP,
 	DIR_DOWN,
 	DIR_ENTER,
-	DIR_LEAVE
+	DIR_LEAVE,
 	)
 
 ## Prompts (and default values).
@@ -173,7 +176,7 @@ prompts = {
 	STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",
 	STATE_NAME : "Please enter your name: ",
 	STATE_PASSWORD : "Your password: ",
-	STATE_PLAYING : "\r\n> "
+	STATE_PLAYING : "\r\n> ",
 	}
 
 ## Basic configurable options (and default values).
@@ -185,6 +188,7 @@ options = {
 	"wrap_size" : "60",  # Default word-wrap line length
 	"verbose" : "yes",  # Display "trivial" log entries?
 	"debug" : "no",  # Halt on errors from safe_mode?
+	"root_dir" : sigma_path(),  # Where to look for designer modules and XML files
 	}
 
 ## Defines the relative root for all file access.
@@ -192,8 +196,8 @@ root_dir = "."
 
 ## Defines system directories.
 directories = {
-	"xml_root" : root_dir + "/config",  # XML root directory and location of server.xml
-	"tasks_root" : root_dir + "/tasks",  # Root directory for task modules
-	"handlers_root" : root_dir + "/handlers",  # Root directory for handler modules
-	"orders_root" : root_dir + "/classes"  # Root directory for order modules
+	"xml_root" : options["root_dir"] + "/config",  # XML root directory and location of server.xml
+	"tasks_root" : options["root_dir"] + "/tasks",  # Root directory for task modules
+	"handlers_root" : options["root_dir"] + "/handlers",  # Root directory for handler modules
+	"orders_root" : options["root_dir"] + "/classes",  # Root directory for order modules
 	}

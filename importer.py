@@ -52,18 +52,18 @@ def process_xml():
 					log("XML", "Processing calendar file at [" + node.attributes["file"].value + "]")
 					process_calendar(calendar_xml, node.attributes["name"].value) 
 				   	calendar_xml.close()
-				elif node.tagName == "classes":
+				elif node.tagName == "class":
 					if not node.attributes.has_key("file"):
-						log("FATAL", "Error in <classes /> tag")
+						log("FATAL", "Error in <class /> tag")
 						sys.exit(1)
 					try:
-						classes_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
+						class_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
 					except IOError:
-						log("FATAL", "Unable to open classes XML source [" + node.attributes["file"].value + "]")
+						log("FATAL", "Unable to open class XML source [" + node.attributes["file"].value + "]")
 						sys.exit(1)
-					log("XML", "Processing class definitions in [" + node.attributes["file"].value + "]")
-					process_classes(classes_xml)
-					classes_xml.close()
+					log("XML", "Processing class definition at [" + node.attributes["file"].value + "]")
+					process_class(class_xml)
+					class_xml.close()
 				elif node.tagName == "handlers":
 					if not node.attributes.has_key("file"):
 						log("FATAL", "Error in <handlers /> tag")
@@ -187,15 +187,12 @@ def process_calendar(f, name):
 				events.expandNode(node)
 				world.calendars.append(world.calendar(ref, node))
 
-def process_classes(f):
+def process_class(f):
 	events = pulldom.parse(f)
 	for (event, node) in events:
 		if event == pulldom.START_ELEMENT:
 			if node.tagName == "class":
-				if not node.attributes.has_key("name"):
-					log("FATAL", "Error in <class> tag")
-					sys.exit(1)
-				
-				ref = node.attributes["name"].value
 				events.expandNode(node)
-				creation.classes[ref] = creation.character_class(node)
+				new_class = creation.character_class(node)
+				creation.classes[new_class.name] = new_class
+

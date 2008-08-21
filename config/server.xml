@@ -1,15 +1,15 @@
 <server>
-  <option name="bind_port" value="4000" />
-  <option name="default_start" value="ravren:beginning" />
-  <option name="debug" value="yes" />
-
-  <area name="system" file="areas/system.xml" />
-  <area name="ravren" file="areas/ravren.xml" />
-  <area name="testland" file="areas/testland.xml" />	
-
-  <calendar name="main" file="calendar.xml" /> 
-
-  <classes file="classes.xml" />
-
-  <handlers file="handlers-map.xml" />
+	<option name="bind_port" value="4000" />
+	<option name="default_start" value="ravren:beginning" />
+	<option name="debug" value="yes" />
+	
+	<area name="system" file="areas/system.xml" />
+	<area name="ravren" file="areas/ravren.xml" />
+	<area name="testland" file="areas/testland.xml" />	
+	
+	<calendar name="main" file="calendar.xml" /> 
+	
+	<class file="classes/fighter.xml" />
+	
+	<handlers file="handlers-map.xml" />
 </server>

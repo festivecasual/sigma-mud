@@ -24,13 +24,10 @@ def time_string():
 ## Returns a formatted string with both current date and time
 def date_time_string():
 	return time.strftime("%Y/%m/%d %H:%M:%S")
-
 		
-##=======
 ## Return an encrypted (SHA hashed) password.
 #
 #  @param password The plain-text password to encrypt.
-##>>>>>>> .r78
 def encrypt_password(password):
 	crypter = sha.new(password)
 	return crypter.digest()
@@ -53,15 +50,15 @@ def strip_whitespace(text):
 ## Wrap text at a specified width.
 #
 #  @param text The text to wrap.
-#  @param width The width to wrap, or -1 to wrap at the default wrap width.
+#  @param width The width to wrap
 #  @return The processed text.
 def wordwrap(text, width = -1):
 	working = text
 	wrapped = ""
-	
+
 	if width == -1:
-		width = options["wrap-size"]
-	
+		width = int(options["wrap_size"])
+
 	while len(working) > width:
 		pos = working.rfind(" ", 0, width)
 		

@@ -1,0 +1,45 @@
+<class>
+	<name>Fighter</name>
+	<desc>A master of weapons and physical prowess.</desc>
+	<background>
+		Most of today's Fighters receive informal training based on an
+		ancient hand- and sword-fighting discipline developed by Stursgaard
+		Falconer, the first general of the Old Ravren militia.  While the
+		texts and drills used in the militia's training have long since
+		disappeared, all Fighters hold a number of commitments in common:
+		a deep knowledge of all weaponry, a disdain for magic, and an
+		emphasis on strength training.
+	</background>
+	
+	<stats>
+		<roll type="AGI" initial="0.60" maturity="55" />
+		<roll type="DEX" initial="0.75" maturity="40" />
+		<roll type="INT" initial="0.40" maturity="70" />
+		
+		<duple type="HLT" context="initial" mean="40" spread="0.1" />
+		<duple type="HLT" context="increment" mean="8" spread="0.3" />
+		
+		<duple type="IMP" context="initial" mean="0" spread="0.0" />
+		<duple type="IMP" context="increment" mean="0" spread="0.0" />
+		
+		<duple type="PWR" context="initial" mean="16" spread="0.2" />
+		<duple type="PWR" context="increment" mean="4" spread="0.2" />
+		
+		<duple type="RES" context="initial" mean="10" spread="0.2" />
+		<duple type="RES" context="increment" mean="4" spread="0.2" />
+	</stats>
+	
+	<paths>
+		<fork level="5">
+			<option path="Pugilist" />
+			<option path="Swordsman" />
+		</fork>
+	</paths>
+	
+	<skills>
+		<weapon id="Unarmed:Punching" available="1" points="0" />
+		<weapon id="Unarmed:Sparring" available="5" points="0" path="Pugilist" />
+		<weapon id="Unarmed:Rapid" available="5" points="2" path="Pugilist" />
+		<weapon id="Sword:Slashing" available="1" points="0" />
+	</skills>
+</class>

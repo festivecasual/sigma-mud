@@ -173,14 +173,14 @@ class item(entity):
     node.normalize()
     for info_node in node.childNodes:
    		if info_node.nodeName == "name":
-			self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
 		elif info_node.nodeName == "keywords":
 			self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 		elif info_node.nodeName == "short":
 			## The short description of the item.
-			self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
 		elif info_node.nodeName == "desc":
-			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
 
 ## Encapsulates a room within the world.
 class room(entity):
@@ -212,15 +212,15 @@ class room(entity):
 		node.normalize()
 		for info_node in node.childNodes:
 			if info_node.nodeName == "name":
-				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
 			elif info_node.nodeName == "desc":
-				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
 			elif info_node.nodeName == "focus":
 				if not info_node.attributes.has_key("name"):
 					log("FATAL", "Error in <focus /> tag within <room />")
 					sys.exit(1)
 				name = info_node.attributes["name"].value
-				description = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				description = wordwrap(strip_whitespace(info_node.firstChild.data))
 				
 				self.foci[name] = description
 			elif info_node.nodeName == "exit":
@@ -288,14 +288,14 @@ class denizen(character):
 		node.normalize()
 		for info_node in node.childNodes:
 			if info_node.nodeName == "name":
-				self.name = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
 			elif info_node.nodeName == "keywords":
 				self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
 			elif info_node.nodeName == "short":
 				## The short description of the denizen.
-				self.short = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
 			elif info_node.nodeName == "desc":
-				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"]))
+				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
 
 ## Encapsulates a player (with a socket connection) within the world.
 class player(character):
@@ -389,7 +389,7 @@ class calendar(object):
     	for info_node in node.childNodes:
 			if info_node.nodeName == "IGDayLengthInHours":
 				try:
-					self.daylength = int(wordwrap(strip_whitespace(info_node.firstChild.data), int(options["wrap_size"])))
+					self.daylength = int(wordwrap(strip_whitespace(info_node.firstChild.data)))
 				except ValueError:
 					log("FATAL", "IGDayLengthInHours property must be an integer")
 					sys.exit(1)

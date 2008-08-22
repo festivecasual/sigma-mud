@@ -76,7 +76,7 @@ def ordinals(int_val):
 		return str(int_val) + "st"
 	elif(int(int_val)%10==2 and int(int_val)%100!=12):
 		return str(int_val) + "nd"
-	elif(int(int_val)%10==1 and int(int_val)%100!=13):
+	elif(int(int_val)%10==3 and int(int_val)%100!=13):
 		return str(int_val) + "rd"
 	return str(int_val) + "th"
 

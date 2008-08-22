@@ -379,6 +379,7 @@ class calendar(object):
     	self.name=cname
     	self.daylength=0 # measured in RL hours
     	self.yearlength=0 # measured in IG Days
+    	self.days_of_week = []
     	self.months={}
     	self.monthlist= []
     	self.holidays={}
@@ -396,6 +397,7 @@ class calendar(object):
 				if(self.daylength < 1 or self.daylength > 24):
 					log("FATAL", "IGDayLengthInHours property must be between 1 and 24 inclusive")
 					sys.exit(1)
+			
 			elif info_node.nodeName== "month":
 				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("days")):
 					log("FATAL", "Error in <month /> tag")
@@ -411,7 +413,11 @@ class calendar(object):
 					sys.exit(1)
 				if(self.months[info_node.attributes["name"].value] < 1):
 					log("FATAL", "days must be greater than 0")
-					sys.exit(1)		
+					sys.exit(1)
+			
+			elif info_node.nodeName=="day":		
+					self.days_of_week.append(strip_whitespace(info_node.firstChild.data))
+
 			elif info_node.nodeName=="holiday":
 				holiday_compliance=True
 				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("month_day")) or (not info_node.attributes.has_key("month")):
@@ -435,6 +441,7 @@ class calendar(object):
 					self.holidays[info_node.attributes["name"].value]={info_node.attributes["month"].value:int(info_node.attributes["month_day"].value)}
 				else:
 					log("ERROR", "Cannot create " + info_node.attributes["name"].value + " holiday")
+			
 			elif info_node.nodeName=="WatershedEvent": ## TODO add Compliance to Watershed Event values
 				if(not info_node.attributes.has_key("title") or not info_node.attributes.has_key("date")  ):
 					log("FATAL", "Error in <Watershed Event /> tag")
@@ -465,6 +472,7 @@ class calendar(object):
     	minutes=int(remainder/60)
     	seconds=remainder%60
     	IG_days_diff=date_diff.days*24/self.daylength + int(hours/self.daylength)
+    	IG_day_of_week_index=IG_days_diff % len(self.days_of_week)
     	hours=hours%self.daylength
     	
       	IGyear=IG_days_diff/self.yearlength;
@@ -478,7 +486,7 @@ class calendar(object):
       			IGday=IGdays_remainder
       			break
      
-        return "It is the " + ordinals(IGday) + " of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
+        return "It is "+ self.days_of_week[IG_day_of_week_index] +", the " + ordinals(IGday) + " of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
     # returns list in format [month, day, year, hours, mins, seconds]
     def unpackDate(self, date):
     	t_date=date.replace(" ", "/")

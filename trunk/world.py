@@ -453,40 +453,64 @@ class calendar(object):
     
     	
     def get_current_IG_DateTime(self):
-    	current_time=""
-    	current_time=date_time_string()
-    	c_y,c_m,c_d,c_h,c_M,c_s=self.unpackDate(current_time)
-    	z_y,z_m,z_d,z_h,z_M,z_s=self.unpackDate(self.watershed_date)
-    	#current_date_list=self.unpackDate(current_time)
-     	#zero_date_list=self.unpackDate(self.watershed_date)
-     	
-    	current_date=datetime.datetime(int(c_y),int(c_m),int(c_d),int(c_h),int(c_M),int(c_s))
+    	return self.get_IG_DateTime(date_time_string())
+    
+    def get_IG_DateTime(self,date_time):    	
+     	date_diff=self.get_date_diff(date_time)
+     	    	
+    	IG_days_diff= self.get_IG_days_diff(date_diff)
+    	
+    	hours=date_diff["hours"]%self.daylength
+    	##needed for Time of day, WIP
+    	
+    	IG_date = self.get_IG_date(IG_days_diff)
+      	
+      	IG_date["day_of_week"] = self.get_day_of_week(IG_days_diff)
+       	return IG_date
+           
+    # returns a RL time breakdown between a given time and the watershed date  
+    def get_date_diff(self,given_time): 
+    	ret={}
+    	c_y,c_m,c_d,c_h,c_M,c_s=self.unpackDate(given_time)
+    	z_y,z_m,z_d,z_h,z_M,z_s=self.unpackDate(self.watershed_date)	    	
+    	given_date=datetime.datetime(int(c_y),int(c_m),int(c_d),int(c_h),int(c_M),int(c_s))
     	zero_date=datetime.datetime(int(z_y),int(z_m),int(z_d),int(z_h),int(z_M),int(z_s))
-    	#current_date=datetime.datetime(*current_date_list)
-    	#zero_date=datetime.datetime(*zero_date)
-    	date_diff=current_date-zero_date;
-    	
-    	##hours rollup
-    	hours=date_diff.seconds/3600
-    	remainder=date_diff.seconds%3600
-    	minutes=int(remainder/60)
-    	seconds=remainder%60
-    	IG_days_diff=date_diff.days*24/self.daylength + int(hours/self.daylength)
-    	IG_day_of_week_index=IG_days_diff % len(self.days_of_week)
-    	hours=hours%self.daylength
-    	
-      	IGyear=IG_days_diff/self.yearlength;
-      	IGdays_remainder=IG_days_diff%self.yearlength
+       
+    	diff= given_date-zero_date;
+    	ret["days"]=diff.days
+     	ret["hours"]=diff.seconds/3600
+    	remainder=diff.seconds%3600
+    	ret["minutes"]=int(remainder/60)
+    	ret["seconds"]=remainder%60
+    
+     	return ret
+    
+    def get_IG_days_diff(self, date_diff):
+    	return int((date_diff["days"]*24 + date_diff["hours"])/self.daylength)
+
+    
+    
+    # given a difference in days since watershed, give the day of the week
+    def get_day_of_week(self, IG_days_diff):
+     	IG_day_of_week_index=IG_days_diff % len(self.days_of_week)
+      	return self.days_of_week[IG_day_of_week_index]
+    
+    # returns a dictionary of years, months, days
+    def get_IG_date(self,IGdays):
+    	ret={}
+    	ret["year"]=IGdays/self.yearlength;
+      	IGdays_remainder=IGdays%self.yearlength
       	
       	for month in self.monthlist:
       		if(IGdays_remainder>self.months[month]):
       		 	IGdays_remainder-=int(self.months[month])
       		else:
-      			IGmonth=month
-      			IGday=IGdays_remainder
+      			ret["month"]=month
+      			ret["day"]=IGdays_remainder
       			break
-     
-        return "It is "+ self.days_of_week[IG_day_of_week_index] +", the " + ordinals(IGday) + " of " + str(IGmonth) + ", " + str(IGyear) + " years since the " + self.watershed_name + "." 
+      		
+      	return ret
+    
     # returns list in format [month, day, year, hours, mins, seconds]
     def unpackDate(self, date):
     	t_date=date.replace(" ", "/")

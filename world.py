@@ -459,13 +459,15 @@ class calendar(object):
      	date_diff=self.get_date_diff(date_time)
      	    	
     	IG_days_diff= self.get_IG_days_diff(date_diff)
-    	
-    	hours=date_diff["hours"]%self.daylength
-    	##needed for Time of day, WIP
-    	
+    	    	
     	IG_date = self.get_IG_date(IG_days_diff)
       	
       	IG_date["day_of_week"] = self.get_day_of_week(IG_days_diff)
+       	
+     	IG_date["hour"]= self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["hours"] 
+       	IG_date["minute"]=self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["minutes"] 
+
+       	
        	return IG_date
            
     # returns a RL time breakdown between a given time and the watershed date  
@@ -488,8 +490,16 @@ class calendar(object):
     def get_IG_days_diff(self, date_diff):
     	return int((date_diff["days"]*24 + date_diff["hours"])/self.daylength)
 
-    
-    
+    def get_IG_time(self, hours, mins, seconds):
+    	ret={}
+     	remainder=(hours%self.daylength) * 3600 + (mins*60) + seconds     	
+     	IGHourlength_in_seconds=self.daylength*150 # 3600 / 24...
+     	ret["hours"] = int(remainder/IGHourlength_in_seconds)
+     	remainder%=IGHourlength_in_seconds
+     	ret["minutes"]= int(remainder/(IGHourlength_in_seconds/60))
+     	return ret
+     
+     
     # given a difference in days since watershed, give the day of the week
     def get_day_of_week(self, IG_days_diff):
      	IG_day_of_week_index=IG_days_diff % len(self.days_of_week)

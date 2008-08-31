@@ -15,7 +15,10 @@ def say(data):
 
 ## Used by the emote handler to produce the necessary action strings.
 emote_mappings = {
+	"cackle" : ("$actor $verb like a maniac!", "$actor $verb at $direct!", ("cackle", "cackles")),
+	"grin" : ("$actor $verb.", "$actor $verb at $direct.", ("grin", "grins")),
 	"laugh" : ("$actor $verb.", "$actor $verb at $direct.", ("laugh", "laughs")),
+	"smile" : ("$actor $verb.", "$actor $verb at $direct.", ("smile", "smiles")),
 	"slap" : ("", "$actor $verb $direct.", ("slap", "slaps")),
 	"wave" : ("$actor $verb.", "$actor $verb at $direct.", ("wave", "waves")),
 	"wink" : ("$actor $verb.", "$actor $verb at $direct.", ("wink", "winks"))

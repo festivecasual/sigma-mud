@@ -3,6 +3,8 @@
   <special type="apostrophe" rewrite="say" />
   <special type="comma" rewrite="emote" />
 
+  <handler command="cackle" function="emote" />
+
   <handler command="down" function="go" />
   <handler command="drop" function="drop" />
 
@@ -15,6 +17,8 @@
   <handler command="get" function="get" />
   <handler command="give" function="give" />
   <handler command="grab" function="get" />
+  <handler command="grin" function="emote" />
+  
   
   <handler command="inventory" function="inventory" />
 
@@ -37,6 +41,7 @@
   <handler command="se" function="go" />
   <handler command="shutdown" function="player_quit" />
   <handler command="slap" function="emote" />
+  <handler command="smile" function="emote" />
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
   <handler command="sw" function="go" />

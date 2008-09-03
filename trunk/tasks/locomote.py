@@ -24,7 +24,7 @@ def task_execute():
 			active_denizen = world.denizens[id(current.instance)]
 
 			choices = [None]
-			choices.extend(libsigma.exits(active_denizen.location))
+			choices.extend(libsigma.open_exits(active_denizen.location))
 			
 			selection = random.choice(choices)
 			

@@ -4,6 +4,7 @@
   <special type="comma" rewrite="emote" />
 
   <handler command="cackle" function="emote" />
+  <handler command="close" function="close"/>	
 
   <handler command="down" function="go" />
   <handler command="drop" function="drop" />
@@ -33,6 +34,8 @@
   <handler command="northwest" function="go" />
   <handler command="nw" function="go" />
 
+  <handler command="open" function="open"/>	
+  	
   <handler command="quit" function="player_quit" />
 
   <handler command="south" function="go" />

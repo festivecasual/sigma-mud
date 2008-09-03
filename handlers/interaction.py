@@ -80,7 +80,8 @@ def look(data):
 			return
 
 		direction = txt2dir(objective)
-		if direction >= 0 and speaker.location.exits[direction]:
+		#if direction >= 0 and speaker.location.exits[direction]:
+		if direction >= 0 and direction in open_exits(speaker.location):
 			speaker.send_line("You see " + speaker.location.exits[direction].name + " in that direction.")
 			return
 		
@@ -103,8 +104,8 @@ def look(data):
 	speaker.send_line(speaker.location.desc)
 
 	speaker.send("Exits: ")
-	for code in exits(speaker.location):
-		speaker.send(dir2txt(code) + " ")
+	for code in open_exits(speaker.location):
+			speaker.send(dir2txt(code) + " ")
 	speaker.send_line("")
 	
 	for character in speaker.location.characters:
@@ -129,7 +130,7 @@ def go(data):
 
 	if direction == -1:
 		speaker.send_line("Where do you want to go?")
-	elif speaker.location.exits[direction]:
+	elif speaker.location.can_character_go(direction):			
 		if speaker.location.altmsg[direction]!=None: ## checks first for any alternate messaging
 			report(ROOM, "$actor just went " + speaker.location.altmsg[direction]  + "." , speaker)
 		elif dir2txt(direction) =="leave":
@@ -236,3 +237,32 @@ def inventory(data):
 	else:
 		for item in speaker.contents:
 			speaker.send_line("   " + item.name)
+@ handler
+def open(data):
+	speaker=data["speaker"]
+	args=data["args"]
+	
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+	else: ## support currently only for doors! Open will most likely also deal with containers later
+   		direction=txt2dir(args[1])
+   	 	if(speaker.location.is_door_closed(direction)):
+	   	  	speaker.location.open_door(direction)
+	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("open","opens"))
+	 	else:
+	 		speaker.send_line("You can't open that.")
+
+@ handler
+def close(data):
+	speaker=data["speaker"]
+	args=data["args"]
+	
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+	else: ## support currently only for doors! Close will most likely also deal with containers later
+   		direction=txt2dir(args[1])
+   	 	if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None):
+	   	  	speaker.location.close_door(direction)
+	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("close","closes"))
+	 	else: 
+	 		speaker.send_line("You can't close that.")

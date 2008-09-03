@@ -168,6 +168,14 @@ dir_match_dir = (
 	DIR_LEAVE,
 	)
 
+## States for doors
+
+DOOR_OPEN = 0
+
+DOOR_CLOSED = 1
+
+DOOR_LOCKED = 2
+
 ## Prompts (and default values).
 prompts = {
 	STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",

@@ -113,7 +113,15 @@ def exits(room):
 			result.append(i)
 	
 	return result
-
+#Generates a list of all exits that are not closed
+def open_exits(room):
+	result = []
+	
+	for i in range(len(room.exits)):
+		if room.exits[i]:
+			if(not room.is_door_closed(i)):
+				result.append(i)
+	return result
 ## Move a character into a room.
 #
 #  @param character The character to relocate.

@@ -122,6 +122,9 @@ def process_area(f, name):
 					events.expandNode(node)
 					world.items_source[ref] = pickle.dumps(world.item(node))
 				
+				elif node.tagName == "door":
+					events.expandNode(node)
+					world.doors.append(world.door(node,name,len(world.doors)))	
 				elif node.tagName == "populator":
 					if not node.attributes.has_key("denizen") or not node.attributes.has_key("target"):
 						log("FATAL", "Error in <populator> tag")

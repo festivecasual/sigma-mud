@@ -35,18 +35,37 @@
   </room>
   
   <room id="bigtree">
-  	<name>Testland, Wind Tunnel</name>
+  	<name>Testland, Ancient Oak Tree</name>
   	<desc>
-  	A grand, ancient oak tree stands here, as it has done for centuries	
+  	A grand, ancient oak tree stands here, as it has done for centuries.	
   	</desc>
   	<focus name="tree">
-     Its big. Very big. Oh, and at the base of the tree you see a door.
-     This seems to be a hint that doors will be implemented soon.
+     Its big. Very big. Oh, and at the base of the tree you see a 
+     bronze door that leads inside (try OPEN ENTER!).
     </focus>
   	 <exit dir="n" target="icecavern" />
-  	 
+  	 <exit dir="enter" target="insidetree" />
   </room>
   
+  <room id="insidetree">
+  	<name>Testland, Inside Oak </name>
+  	<desc>
+  	The great tree is hollowed out, and the inside reveals
+  	that many generations of elves have lived here, making
+  	cookies for children everywhere. There also appears be
+  	a great bronze door.
+  	</desc>
+  	<focus name="door">
+  	It probably leads outside, if you LEAVE, assuming its 
+  	open
+  	</focus>
+  	<exit dir="leave" target="bigtree"/>	
+  </room>
+  
+  <door>
+  <exit room="bigtree" dir="enter"/>
+  <exit room="insidetree" dir="leave"/>
+  </door>
   
   </area>
 

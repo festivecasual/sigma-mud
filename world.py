@@ -32,6 +32,10 @@ placements = []
 #All Calendars in the game
 calendars = []
 
+#All Doors in the game
+
+doors = []
+
 ## Map exit codes to room objects, reporting any mapping errors.
 def resolve_links():
 	for current in rooms.values():		
@@ -204,6 +208,9 @@ class room(entity):
 		## holds a list of alternate messaging that may be available for an exit
 		self.altmsg=[None]* NUM_DIRS
 		
+		## holds a list of door indices pointing to doors
+		self.doors=[None]*NUM_DIRS
+		
 		## Mapping of points of interest within the room.
 		self.foci = {}
 		
@@ -244,7 +251,28 @@ class room(entity):
 
 	## Provide a property structure to return the room's area.
 	area = property(get_area)
-
+	
+	#returns whether a character can go in a particular direction
+	def can_character_go(self, direction):
+		if self.exits[direction]!=None:
+			if self.doors[direction]==None:
+				return True
+			if doors[self.doors[direction]].is_open():
+				return True
+		return False
+	
+	def open_door(self, direction):
+		if self.doors[direction]!=None:
+			doors[self.doors[direction]].status=DOOR_OPEN
+	
+	def close_door(self, direction):
+		if self.doors[direction]!=None:
+			doors[self.doors[direction]].status=DOOR_CLOSED		
+	
+	def is_door_closed(self,direction):
+		if self.doors[direction]!=None:
+			return doors[self.doors[direction]].is_closed()
+		return False
 ## Encapsulates an abstract denizen or player within the world.
 class character(entity):
 	## Construct the abstract character.
@@ -531,4 +559,41 @@ class calendar(object):
     	return sp;
 	  
 	   	
-				
+
+class door(object):
+    ## Construct a calendar from xml
+	#
+	#  @param self The active instance.
+	#  @param ref The reference code for the room.
+	#  @param node The XML node describing the room.				
+	def __init__(self, node,area_name,index):
+		self.exits = {}
+		self.status=DOOR_CLOSED
+		self.lockable=False
+		self.keys={}
+		node.normalize()
+		for info_node in node.childNodes:
+			if info_node.nodeName == "exit":
+				if (not info_node.attributes.has_key("room")) or (not info_node.attributes.has_key("dir")):
+					log("FATAL", "Error in <door /> tag")
+					sys.exit(1)
+				if(info_node.attributes["room"].value.find(":") != -1):
+					room_id=info_node.attributes["room"].value
+				else:
+					room_id=area_name+":"+info_node.attributes["room"].value
+				if(not rooms.has_key(room_id)):
+					log("FATAL", "Invalid room value in door tag " + room_id)
+					sys.exit(1)
+				rooms[room_id].doors[libsigma.txt2dir(info_node.attributes["dir"].value)]=index
+	def is_open(self):
+		if self.status==DOOR_OPEN:
+			return True
+		return False
+	def is_closed(self):
+		if self.status==DOOR_CLOSED or self.is_locked():
+			return True
+		return False
+	def is_locked(self):
+		if self.status==DOOR_LOCKED:
+			return True
+		return False

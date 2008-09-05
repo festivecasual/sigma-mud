@@ -582,7 +582,10 @@ class door(object):
 				else:
 					room_id=area_name+":"+info_node.attributes["room"].value
 				if(not rooms.has_key(room_id)):
-					log("FATAL", "Invalid room value in door tag " + room_id)
+					log("FATAL", "Invalid room value in door tag")
+					sys.exit(1)
+				elif rooms[room_id].exits[libsigma.txt2dir(info_node.attributes["dir"].value)]==None:
+					log("FATAL", "Invalid dir value in door tag ")
 					sys.exit(1)
 				rooms[room_id].doors[libsigma.txt2dir(info_node.attributes["dir"].value)]=index
 	def is_open(self):

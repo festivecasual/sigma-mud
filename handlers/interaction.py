@@ -261,7 +261,7 @@ def close(data):
 		speaker.send_line(str(args[0]).title() + " what?")
 	else: ## support currently only for doors! Close will most likely also deal with containers later
    		direction=txt2dir(args[1])
-   	 	if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None):
+   	 	if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None and direction !=-1):
 	   	  	speaker.location.close_door(direction)
 	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("close","closes"))
 	 	else: 

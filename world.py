@@ -270,8 +270,9 @@ class room(entity):
 			doors[self.doors[direction]].status=DOOR_CLOSED		
 	
 	def is_door_closed(self,direction):
-		if self.doors[direction]!=None:
-			return doors[self.doors[direction]].is_closed()
+		if direction != -1:
+			if self.doors[direction]!=None:
+				return doors[self.doors[direction]].is_closed()
 		return False
 ## Encapsulates an abstract denizen or player within the world.
 class character(entity):

@@ -1,7 +1,7 @@
 ## @package libsigma
 #  Designer-facing utility functions.
 
-import traceback, sys, command, time
+import traceback, sys, command, time, math
 from string import Template
 
 import task
@@ -188,6 +188,14 @@ def transfer_item(item, from_collection, to_collection):
 		return True
 	else:
 		return False
+
+## Generate a phi (asymptotic percentage statistic) function.
+#
+#  @param stat_initial The value of phi at L = 0
+#  @param level_maturity The L value for which phi = 0.95
+def phi(stat_initial, level_maturity):
+	alpha = math.exp((-1 * math.log(0.05 / (1 - stat_initial))) / level_maturity)
+	return lambda L: stat_initial + (1 - stat_initial) * (1 - alpha ** (-1 * L))
 
 ## Force a simulated command into the command queue.
 #

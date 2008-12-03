@@ -58,4 +58,5 @@
   <handler command="wave" function="emote" />
   <handler command="wink" function="emote" />
 
+  <handler command="yell" function="yell" />
 </handlers>

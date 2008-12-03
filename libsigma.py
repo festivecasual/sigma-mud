@@ -295,5 +295,25 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 					search.send_line(out_special)
 				else:
 					search.send_line(out)
-
+	if NEAR & recipients:
+		announce(NEAR, actor.location, out)
+	
 	return out
+
+# room based report. Does not originate at a person, rather at a room.
+# Since the room is the target, this is the messaging that is used
+# only when the message is uniformly presented to all in the room
+# with this implementation
+def announce(recipients,room, message):
+	
+	if(ROOM & recipients):
+		for all in room.characters:
+			all.send_line(message)
+	if(NEAR & recipients): 
+		for exit in room.exits:         #assuming that NEAR does not require open doors. Good assumption?
+			if exit != None:
+				announce(ROOM, exit, message)
+	#if(AREA & recipients):
+	 
+	#if(GAME & recipients):				
+	return

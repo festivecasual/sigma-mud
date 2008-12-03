@@ -12,7 +12,14 @@ def say(data):
 	tail = data["tail"]
 	
 	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
-
+@handler
+def yell(data):
+	speaker = data["speaker"]
+	tail = data["tail"]
+	
+	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("yell", "yells"))
+	report(NEAR, "You hear $actor $verb, '" + tail+ "'", speaker, ("yell", "yell"))
+	
 ## Used by the emote handler to produce the necessary action strings.
 emote_mappings = {
 	"cackle" : ("$actor $verb like a maniac!", "$actor $verb at $direct!", ("cackle", "cackles")),
@@ -249,6 +256,7 @@ def open(data):
    	 	if(speaker.location.is_door_closed(direction)):
 	   	  	speaker.location.open_door(direction)
 	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("open","opens"))
+	   	   	announce(ROOM, speaker.location.exits[direction],"The door opens.")
 	 	else:
 	 		speaker.send_line("You can't open that.")
 
@@ -264,5 +272,6 @@ def close(data):
    	 	if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None and direction !=-1):
 	   	  	speaker.location.close_door(direction)
 	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("close","closes"))
+	   	   	announce(ROOM, speaker.location.exits[direction],"The door closes shut.")
 	 	else: 
 	 		speaker.send_line("You can't close that.")

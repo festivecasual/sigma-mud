@@ -90,15 +90,20 @@ def sigma_path():
 whitespace = ["\t", "\n", "\f", "\r", "\v", "  "]
 
 ## Null play state
-STATE_NULL       = 0
+STATE_NULL       		 = 0
 ## Initial play state
-STATE_INIT       = 1
+STATE_INIT       		 = 1
 ## Play state for typing name
-STATE_NAME       = 2
+STATE_NAME      		 = 2
 ## Play state for typing password
-STATE_PASSWORD   = 3
+STATE_PASSWORD   		 = 3
 ## Play state for normal gameplay
-STATE_PLAYING    = 4
+STATE_PLAYING   		 = 4
+##  Play states for configuring player
+STATE_CONFIG_NAME		 = 5
+STATE_CONFIG_PASSWORD    = 6
+
+
 
 ## Direction: North
 DIR_NORTH        =  0
@@ -176,12 +181,60 @@ DOOR_CLOSED = 1
 
 DOOR_LOCKED = 2
 
+# Wear places
+
+NOT_WORN = 0
+
+HEAD_WORN = 1
+HEAD_LIMIT = 1
+
+NECK_WORN = 2
+NECK_LIMIT = 1
+
+TORSO_WORN = 3
+TORSO_LIMT = 1
+
+ARM_WORN = 4
+ARM_LIMIT = 2
+
+WRIST_WORN = 5
+WRIST_LIMIT = 2
+
+FINGER_WORN = 6
+FINGER_LIMIT = 10
+
+LEG_WORN = 7
+LEG_LIMIT = 1
+
+FOOT_WORN = 8
+FOOT_LIMIT = 1
+
+WAIST_WORN = 9
+WAIST_LIMIT = 1
+
+BACK_WORN = 10 ## cloaks/robes and such
+BACK_LIMIT = 1
+
+SHOULDER_WORN =11
+SHOULDER_LIMIT = 2
+
+HANDS_WORN = 12
+HANDS_WORN = 1
+
+# Gender Handling
+
+GENDER_NEUTRAL ="N"
+GENDER_MALE = "M"
+GENDER_FEMALE = "F"
+
 ## Prompts (and default values).
 prompts = {
 	STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",
-	STATE_NAME : "Please enter your name: ",
+	STATE_NAME : "Please enter your name:\r\n(type 'new' to create a new character)\r\n ",
 	STATE_PASSWORD : "Your password: ",
 	STATE_PLAYING : "\r\n> ",
+	STATE_CONFIG_NAME : "Please provide what your name will be: ",
+	STATE_CONFIG_PASSWORD : "Please provide a password: ",
 	}
 
 ## Basic configurable options (and default values).

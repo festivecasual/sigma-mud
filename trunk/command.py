@@ -76,14 +76,17 @@ def process_commands():
 		prompt = True
 
 		if speaker.state == STATE_NAME:
-			name = message.strip()
-			player_file = archive.player_load(name)
-			if player_file:
-				speaker.name = name
-				speaker.proto = player_file
-				speaker.state = STATE_PASSWORD
+			if message.lower() == "new":
+				speaker.state=STATE_CONFIG_NAME
 			else:
-				speaker.send_line("I do not know that name.", 2)
+				name = message.strip()
+				player_file = archive.player_load(name)
+				if player_file:
+					speaker.name = name
+					speaker.proto = player_file
+					speaker.state = STATE_PASSWORD
+				else:
+					speaker.send_line("I do not know that name.", 2)
 
 		elif speaker.state == STATE_PASSWORD:
 			password = encrypt_password(message)
@@ -124,6 +127,25 @@ def process_commands():
 				speaker.proto = None
 				speaker.state = STATE_NAME
 
+		elif speaker.state == STATE_CONFIG_NAME:
+			name = message.strip()
+			player_file = archive.player_load(name)
+			if player_file:
+				speaker.send_line("This name is already taken. Please choose another.")
+			else:
+				speaker.name=name
+				speaker.state = STATE_CONFIG_PASSWORD
+				
+		elif speaker.state == STATE_CONFIG_PASSWORD:		
+			speaker.password = encrypt_password(message)
+			world.players.append(speaker)
+			speaker.state = STATE_PLAYING
+			libsigma.enter_room(speaker, world.rooms[options["default_start"]])
+			libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
+			speaker.send_line("", 2)
+			libsigma.queue_command(speaker, "look")
+			prompt = False
+				
 		elif speaker.state == STATE_PLAYING:
 			if not run_command(speaker, message):
 				speaker.send_line("What?")

@@ -7,7 +7,7 @@
 #  system constructed by handler.py.  Dispatched commands are mapped to handler
 #  definitions within the handlers/ directory.
 
-import archive, world, handler, libsigma
+import archive, world, handler, libsigma,configplayer
 from common import *
 
 ## Stores all commands pending processing, as a (speaker, message) tuple.
@@ -107,9 +107,14 @@ def process_commands():
 					log("LOGIN", "User <" + speaker.name + "> logged in at " + time_string())
 
 					# Copy proto contents to main player class
-					speaker.password = speaker.proto[0]
-					speaker.contents = speaker.proto[1]
-
+					try:
+						speaker.password = speaker.proto[0]
+						speaker.contents = speaker.proto[1]
+						speaker.gender = speaker.proto[2]
+						speaker.race = speaker.proto[3]
+					except IndexError:
+						log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
+						
 					# Add player to master players list
 					world.players.append(speaker)
 					
@@ -138,14 +143,29 @@ def process_commands():
 				
 		elif speaker.state == STATE_CONFIG_PASSWORD:		
 			speaker.password = encrypt_password(message)
-			world.players.append(speaker)
-			speaker.state = STATE_PLAYING
-			libsigma.enter_room(speaker, world.rooms[options["default_start"]])
-			libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
-			speaker.send_line("", 2)
-			libsigma.queue_command(speaker, "look")
-			prompt = False
-				
+			#world.players.append(speaker)			
+			#libsigma.enter_room(speaker, world.rooms[options["default_start"]])
+			#libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
+			#speaker.send_line("", 2)
+			#libsigma.queue_command(speaker, "look")
+			speaker.state = STATE_CONFIG_CHAR
+			configplayer.send_options(speaker)
+			prompt=True
+		
+		elif speaker.state == STATE_CONFIG_CHAR:
+			 if(not configplayer.check_choice(speaker, message.lstrip())):
+				speaker.send_line("Please make a valid choice.")
+			 if(configplayer.is_configured(speaker)):
+			 	world.players.append(speaker)			
+				libsigma.enter_room(speaker, world.rooms[options["default_start"]])
+				libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
+				speaker.send_line("", 2)
+				libsigma.queue_command(speaker, "look")
+				speaker.state = STATE_PLAYING
+				prompt=True
+			 else:
+			 	configplayer.send_options(speaker)
+			 	
 		elif speaker.state == STATE_PLAYING:
 			if not run_command(speaker, message):
 				speaker.send_line("What?")

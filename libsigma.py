@@ -231,6 +231,8 @@ AREA =  8 # TODO
 ## Report function recipient: the entire game (excluding the active area).
 GAME = 16 # TODO
 
+
+
 ## The master function to send formatted, conjugated text to arbitrary groups of characters.
 #
 #  @param recipients One of the recipient constants defined within libsigma.py.
@@ -262,7 +264,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
 			mapping["direct"] = direct.name
 			self_mapping["direct"] = direct.name
 		else:
-			mapping["direct"] = "itself"
+			mapping["direct"] = pronoun_reflexive[direct.gender]
 			self_mapping["direct"] = "yourself"
 	
 	if indirect:

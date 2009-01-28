@@ -281,7 +281,8 @@ class character(entity):
 	#  @param self The active instance.
 	def __init__(self):
 		entity.__init__(self)
-		
+		self.gender = GENDER_NEUTRAL
+		self.race = RACE_NEUTRAL
 		## States defined in common module, determines processing context of input.
 		self.state = STATE_NULL
 

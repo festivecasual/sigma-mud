@@ -100,9 +100,12 @@ STATE_PASSWORD   		 = 3
 ## Play state for normal gameplay
 STATE_PLAYING   		 = 4
 ##  Play states for configuring player
-STATE_CONFIG_NAME		 = 5
-STATE_CONFIG_PASSWORD    = 6
 
+STATE_CONFIG_NAME		 = 5
+# Play state for configuring password
+STATE_CONFIG_PASSWORD    = 6
+# Play state for configuring character attributes
+STATE_CONFIG_CHAR 		 = 7
 
 
 ## Direction: North
@@ -219,13 +222,29 @@ SHOULDER_WORN =11
 SHOULDER_LIMIT = 2
 
 HANDS_WORN = 12
-HANDS_WORN = 1
+HANDS_LIMIT = 1
 
 # Gender Handling
 
-GENDER_NEUTRAL ="N"
-GENDER_MALE = "M"
-GENDER_FEMALE = "F"
+GENDER_NEUTRAL ="Neutral"
+GENDER_MALE = "Male"
+GENDER_FEMALE = "Female"
+RACE_NEUTRAL = "None"
+pronoun_reflexive={}
+pronoun_reflexive[GENDER_NEUTRAL] = "itself"
+pronoun_reflexive[GENDER_MALE] = "himself"
+pronoun_reflexive[GENDER_FEMALE] = "herself"
+
+pronoun_subject={}
+pronoun_subject[GENDER_NEUTRAL] = "it"
+pronoun_subject[GENDER_MALE] = "he"
+pronoun_subject[GENDER_FEMALE]= "she"
+
+#Enumerates genders for processing for character configuration
+#0 is the default gender
+gender = [GENDER_NEUTRAL,GENDER_MALE,GENDER_FEMALE]
+
+races = [RACE_NEUTRAL, "Human", "Elf", "Dwarf", "Orc", "Wyvernfolk" ]
 
 ## Prompts (and default values).
 prompts = {
@@ -235,6 +254,7 @@ prompts = {
 	STATE_PLAYING : "\r\n> ",
 	STATE_CONFIG_NAME : "Please provide what your name will be: ",
 	STATE_CONFIG_PASSWORD : "Please provide a password: ",
+	STATE_CONFIG_CHAR : "Your choice: "
 	}
 
 ## Basic configurable options (and default values).
@@ -259,3 +279,4 @@ directories = {
 	"handlers_root" : options["root_dir"] + "/handlers",  # Root directory for handler modules
 	"orders_root" : options["root_dir"] + "/classes",  # Root directory for order modules
 	}
+

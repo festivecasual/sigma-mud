@@ -76,7 +76,7 @@ def resolve_placements():
 		elif items_source.has_key(current.area + ":" + current.item):
 			current.item = items_source[current.area + ":" + current.item]
 		else:
-			log("  *  ERROR", "Unresolved denizen reference: " + current.item)
+			log("  *  ERROR", "Unresolved item reference: " + current.item)
 		
 		if rooms.has_key(current.target):
 			current.target = rooms[current.target]
@@ -165,6 +165,7 @@ class entity(object):
 		## The entity's room location.
 		self.location = ""
 
+		
 ## Encapsulates a tangible object within the world.
 class item(entity):
   ## Construct the item from XML.
@@ -173,6 +174,9 @@ class item(entity):
   #  @param node The XML node describing the item.
   def __init__(self, node):
     entity.__init__(self)
+    
+    
+    self.worn = NOT_WORN
     
     node.normalize()
     for info_node in node.childNodes:
@@ -185,7 +189,15 @@ class item(entity):
 			self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
 		elif info_node.nodeName == "desc":
 			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
-
+		elif info_node.nodeName == "worn":
+			self.worn = libsigma.txt2worn(strip_whitespace(info_node.firstChild.data))	
+  def get_worn(self):
+	return self.worn
+  def set_worn(self, x):
+  	pass
+  
+  worn_position = property(get_worn, set_worn)
+  
 ## Encapsulates a room within the world.
 class room(entity):
 	## Construct the room from XML.
@@ -283,6 +295,7 @@ class character(entity):
 		entity.__init__(self)
 		self.gender = GENDER_NEUTRAL
 		self.race = RACE_NEUTRAL
+		self.worn_items = []
 		## States defined in common module, determines processing context of input.
 		self.state = STATE_NULL
 

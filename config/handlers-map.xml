@@ -38,6 +38,8 @@
   	
   <handler command="quit" function="player_quit" />
 
+  <handler command="remove" function="remove" />
+  
   <handler command="south" function="go" />
   <handler command="say" function="say" />
   <handler command="save" function="player_save" />
@@ -56,6 +58,7 @@
 
   <handler command="west" function="go" />
   <handler command="wave" function="emote" />
+  <handler command="wear" function="wear" />
   <handler command="wink" function="emote" />
 
   <handler command="yell" function="yell" />

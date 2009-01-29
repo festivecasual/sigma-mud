@@ -101,6 +101,33 @@ def dir2txt(dir):
 	
 	return ''
 
+## Convert a text-based worn item specifier to a mapped worn item code.
+#
+#  @param text The text to convert.
+#  @return The worn item code, or -1 to indicate that \c text was invalid.
+#
+#  @sa This function's inverse is worn2txt.
+def txt2worn(text):
+	for i in range(len(worn_match_val)):
+		if worn_match_txt[i].startswith(text):
+			return worn_match_val[i]
+
+	return -1
+
+## Convert a worn item code to a text-based identifier.
+#
+#  @param worn The worn item code to convert.
+#  @return The plain-text direction.
+#
+#  @sa This function's inverse is txt2worn.
+def worn2txt(worn):
+	for i in range(len(worn_match_val)):
+		if worn_match_val[i] == worn:
+			return worn_match_txt[i]
+	
+	return ''
+
+
 ## Generate a list of all available exits in the room.
 #
 #  @param room The room to analyze.
@@ -220,6 +247,13 @@ def run_command(character, text):
 	if not command.run_command(character, text):
 		log("  *  ERROR", "Command <" + text + "> unsuccessful")
 
+## Determines if for a particular worn item type if a character is at capacity
+def at_capacity(character,worn_spot): 
+	count=0
+	for worn_item in character.worn_items:
+		if worn_item.worn_position == worn_spot:
+			count+=1
+	return count >= worn_limit[worn_spot]
 ## Report function recipient: the acting player.
 SELF =  1
 ## Report function recipient: the acting player's room.

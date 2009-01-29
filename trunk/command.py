@@ -110,8 +110,9 @@ def process_commands():
 					try:
 						speaker.password = speaker.proto[0]
 						speaker.contents = speaker.proto[1]
-						speaker.gender = speaker.proto[2]
-						speaker.race = speaker.proto[3]
+						speaker.worn_items = speaker.proto[2]
+						speaker.gender = speaker.proto[3]
+						speaker.race = speaker.proto[4]
 					except IndexError:
 						log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
 						

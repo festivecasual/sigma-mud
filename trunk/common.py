@@ -176,6 +176,7 @@ dir_match_dir = (
 	DIR_LEAVE,
 	)
 
+
 ## States for doors
 
 DOOR_OPEN = 0
@@ -184,45 +185,63 @@ DOOR_CLOSED = 1
 
 DOOR_LOCKED = 2
 
-# Wear places
-
+# Wear places and limit for items of this type to be worn
+worn_limit ={}
 NOT_WORN = 0
 
 HEAD_WORN = 1
-HEAD_LIMIT = 1
+worn_limit[HEAD_WORN] = 1
 
 NECK_WORN = 2
-NECK_LIMIT = 1
+worn_limit[NECK_WORN] = 1
 
 TORSO_WORN = 3
-TORSO_LIMT = 1
+worn_limit[TORSO_WORN] = 1
 
 ARM_WORN = 4
-ARM_LIMIT = 2
+worn_limit[ARM_WORN] = 2
 
 WRIST_WORN = 5
-WRIST_LIMIT = 2
+worn_limit[WRIST_WORN] = 2
 
 FINGER_WORN = 6
-FINGER_LIMIT = 10
+worn_limit[FINGER_WORN] = 10
 
 LEG_WORN = 7
-LEG_LIMIT = 1
+worn_limit[LEG_WORN] = 1
 
 FOOT_WORN = 8
-FOOT_LIMIT = 1
+worn_limit[FOOT_WORN] = 1
 
 WAIST_WORN = 9
-WAIST_LIMIT = 1
+worn_limit[WAIST_WORN] = 1
 
 BACK_WORN = 10 ## cloaks/robes and such
-BACK_LIMIT = 1
+worn_limit[BACK_WORN] = 1
 
 SHOULDER_WORN =11
-SHOULDER_LIMIT = 2
+worn_limit[SHOULDER_WORN] = 2
 
-HANDS_WORN = 12
-HANDS_LIMIT = 1
+HAND_WORN = 12
+worn_limit[HAND_WORN] = 1
+
+# Tuple for matching worn constants
+ 
+worn_match_txt=(
+"not worn","head","neck",
+"torso","arms","wrists",
+"fingers","legs","feet",	    
+"waist","back","shoulder"
+"hands",			    
+)
+
+worn_match_val=(
+NOT_WORN, HEAD_WORN, NECK_WORN,
+TORSO_WORN,ARM_WORN,WRIST_WORN,
+FINGER_WORN,LEG_WORN,FOOT_WORN,
+WAIST_WORN,BACK_WORN,SHOULDER_WORN			    
+)
+
 
 # Gender Handling
 
@@ -234,7 +253,6 @@ pronoun_reflexive={}
 pronoun_reflexive[GENDER_NEUTRAL] = "itself"
 pronoun_reflexive[GENDER_MALE] = "himself"
 pronoun_reflexive[GENDER_FEMALE] = "herself"
-
 pronoun_subject={}
 pronoun_subject[GENDER_NEUTRAL] = "it"
 pronoun_subject[GENDER_MALE] = "he"

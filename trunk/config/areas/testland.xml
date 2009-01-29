@@ -67,6 +67,17 @@
   <exit room="insidetree" dir="leave"/>
   </door>
   
+    <item id="shirt">
+    <name>a solid blue polo shirt</name>
+    <keywords>shirt</keywords>
+    <worn>torso</worn>
+    <short>A solid blue polo shirt is here.</short>
+    <desc>
+      The shirt looks only slightly worn, but otherwise is in good condition.
+    </desc>
+  </item>
+  
+    <placement item="shirt" target="insidetree" />
   </area>
 
   

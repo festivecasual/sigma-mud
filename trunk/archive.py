@@ -27,7 +27,7 @@ def player_save(player):
 	player_db = pickle.load(player_file)
 	player_file.close()
 
-	player_db[player.name] = pickle.dumps((player.password, player.contents, player.gender,player.race))
+	player_db[player.name] = pickle.dumps((player.password, player.contents,player.worn_items, player.gender,player.race))
 	log("SAVE", "User <" + player.name + "> saved successfully at " + time_string(), True)
 	
 	player_file = open(options["players_db"], "wb")

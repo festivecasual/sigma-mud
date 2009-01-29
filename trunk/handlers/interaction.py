@@ -244,6 +244,11 @@ def inventory(data):
 	else:
 		for item in speaker.contents:
 			speaker.send_line("   " + item.name)
+	if len(speaker.worn_items) > 0:
+		speaker.send_line("You are wearing:")		
+		for i in speaker.worn_items:
+			speaker.send_line( "   " + i.name)
+	
 @ handler
 def open(data):
 	speaker=data["speaker"]
@@ -275,3 +280,41 @@ def close(data):
 	   	   	announce(ROOM, speaker.location.exits[direction],"The door closes shut.")
 	 	else: 
 	 		speaker.send_line("You can't close that.")
+	 		
+	 		
+@ handler
+def wear(data):
+	speaker=data["speaker"]
+	args=data["args"]
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+		return
+	for item in speaker.contents:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				if(item.worn_position==NOT_WORN):
+					speaker.send_line("You can't wear that.")
+					return
+				if(at_capacity(speaker, item.worn_position)):
+					speaker.send_line("You can't wear anything else on your " +worn2txt(item.worn)+".")
+			 		return
+				report(SELF | ROOM, "$actor $verb on " +item.name+ ".", speaker, ("put","puts"))
+				transfer_item(item, speaker.contents,speaker.worn_items)
+				return
+			
+	speaker.send_line("You don't have anything like that in your inventory.")
+	
+@ handler
+def remove(data): # note, does not take into account capacity of the character yet. Still work to do.
+	speaker=data["speaker"]
+	args=data["args"]
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+		return
+	for item in speaker.worn_items:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("remove", "removes" ))
+				transfer_item(item,speaker.worn_items,speaker.contents)
+				
+	speaker.send_line("You're not wearing anything like that.	")

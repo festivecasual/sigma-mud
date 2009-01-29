@@ -52,7 +52,7 @@ def run_command(speaker, message):
 	except:
 		return False
 
-	tail = message[(message.find(tokens[0]) + len(tokens[0])):].lstrip()
+	tail = message[(message.lower().find(tokens[0]) + len(tokens[0])):].lstrip()
 
 	if len(tokens):
 		for (command, function) in handler.mappings:

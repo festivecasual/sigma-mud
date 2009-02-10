@@ -111,8 +111,10 @@ def process_commands():
 						speaker.password = speaker.proto[0]
 						speaker.contents = speaker.proto[1]
 						speaker.worn_items = speaker.proto[2]
-						speaker.gender = speaker.proto[3]
-						speaker.race = speaker.proto[4]
+						speaker.stats = speaker.proto[3]
+						speaker.points_to_allocate = speaker.proto[4]
+						speaker.gender = speaker.proto[5]
+						speaker.race = speaker.proto[6]
 					except IndexError:
 						log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
 						
@@ -157,15 +159,21 @@ def process_commands():
 			 if(not configplayer.check_choice(speaker, message.lstrip())):
 				speaker.send_line("Please make a valid choice.")
 			 if(configplayer.is_configured(speaker)):
+			 	for stat in stats:
+						if speaker.stats[stat]==DEFAULT_STAT:
+							speaker.stats[stat]=3
+				libsigma.add_points(speaker,5)
 			 	world.players.append(speaker)			
 				libsigma.enter_room(speaker, world.rooms[options["default_start"]])
 				libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
 				speaker.send_line("", 2)
 				libsigma.queue_command(speaker, "look")
+				speaker.HP=speaker.calculate_HP_max()
 				speaker.state = STATE_PLAYING
 				prompt=True
 			 else:
 			 	configplayer.send_options(speaker)
+		
 			 	
 		elif speaker.state == STATE_PLAYING:
 			if not run_command(speaker, message):

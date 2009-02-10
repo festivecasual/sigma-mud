@@ -295,10 +295,15 @@ class character(entity):
 		entity.__init__(self)
 		self.gender = GENDER_NEUTRAL
 		self.race = RACE_NEUTRAL
+		self.stats = {}
+		for stat in stats:
+			self.stats[stat]=DEFAULT_STAT
+		self.points_to_allocate=0
 		self.worn_items = []
+		self.HP=0
 		## States defined in common module, determines processing context of input.
 		self.state = STATE_NULL
-
+		
 	## Abstract function to simulate sending a prompt string to a player.
 	#
 	#  @param self The active instance.
@@ -411,7 +416,9 @@ class player(character):
 	
 	## The short description of the player (using player name).
 	short = property(get_short)
-
+	
+	def calculate_HP_max(self):
+		return 4*self.stats["strength"] + 2*self.stats["discipline"]
 class calendar(object):
     ## Construct a calendar from xml
 	#

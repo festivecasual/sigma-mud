@@ -3,6 +3,8 @@
   <special type="apostrophe" rewrite="say" />
   <special type="comma" rewrite="emote" />
 
+  <handler command="allocate" function="allocate"/>	
+	
   <handler command="cackle" function="emote" />
   <handler command="close" function="close"/>	
 
@@ -20,6 +22,8 @@
   <handler command="grab" function="get" />
   <handler command="grin" function="emote" />
   
+  <handler command="health" function="health"/>
+  <handler command="hp" function="health"/>
   
   <handler command="inventory" function="inventory" />
 
@@ -49,6 +53,7 @@
   <handler command="smile" function="emote" />
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
+  <handler command="stats" function="statistics" />
   <handler command="sw" function="go" />
 
   <handler command="take" function="get" />

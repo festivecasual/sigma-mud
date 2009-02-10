@@ -106,7 +106,8 @@ STATE_CONFIG_NAME		 = 5
 STATE_CONFIG_PASSWORD    = 6
 # Play state for configuring character attributes
 STATE_CONFIG_CHAR 		 = 7
-
+# Play state for configuring character statistics
+STATE_CONFIG_STATS      =  8
 
 ## Direction: North
 DIR_NORTH        =  0
@@ -242,6 +243,10 @@ FINGER_WORN,LEG_WORN,FOOT_WORN,
 WAIST_WORN,BACK_WORN,SHOULDER_WORN			    
 )
 
+#stats tuple
+stats = ("strength", "intelligence", "discipline", "agility","charisma","perception")
+
+DEFAULT_STAT=-1
 
 # Gender Handling
 
@@ -272,7 +277,8 @@ prompts = {
 	STATE_PLAYING : "\r\n> ",
 	STATE_CONFIG_NAME : "Please provide what your name will be: ",
 	STATE_CONFIG_PASSWORD : "Please provide a password: ",
-	STATE_CONFIG_CHAR : "Your choice: "
+	STATE_CONFIG_CHAR : "Your choice: ",
+	STATE_CONFIG_STATS : "Pick a number: " 
 	}
 
 ## Basic configurable options (and default values).

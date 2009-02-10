@@ -1,18 +1,18 @@
 (dp0
-S'Alpha'
+S'Brandar'
 p1
-S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\ntp2\n."
+S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\n(lp2\n(dp3\nS'discipline'\np4\nI3\nsS'agility'\np5\nI3\nsS'strength'\np6\nI3\nsS'intelligence'\np7\nI3\nsS'charisma'\np8\nI3\nsS'perception'\np9\nI3\nsI5\nS'Male'\np10\nS'Orc'\np11\ntp12\n."
 p2
-sS'Kristar'
+sS'Alpha'
 p3
-S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\n(lp2\nS'Female'\np3\nS'Elf'\np4\ntp5\n."
+S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\n(lp2\n(dp3\nS'discipline'\np4\nI3\nsS'agility'\np5\nI3\nsS'strength'\np6\nI3\nsS'intelligence'\np7\nI3\nsS'charisma'\np8\nI3\nsS'perception'\np9\nI3\nsI5\nS'Male'\np10\nS'Human'\np11\ntp12\n."
 p4
 sS'Remyn'
 p5
-S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\nccopy_reg\n_reconstructor\np2\n(cworld\nitem\np3\nc__builtin__\nobject\np4\nNtp5\nRp6\n(dp7\nS'short'\np8\nVA delicious cholocate chunk cookie sits here.\np9\nsS'capacity'\np10\nI0\nsS'name'\np11\nVa delicious chocolate chunk cookie\np12\nsS'worn'\np13\nI0\nsS'location'\np14\nS''\np15\nsS'keywords'\np16\n(lp17\nVcookie\np18\nasS'contents'\np19\n(lp20\nsS'desc'\np21\nVThe cookie has a delicious, gooey smell of freshly-baked\r\\u000adough.\np22\nsba(lp23\ng2\n(g3\ng4\nNtp24\nRp25\n(dp26\nS'short'\np27\nVA solid blue polo shirt is here.\np28\nsS'capacity'\np29\nI0\nsS'name'\np30\nVa solid blue polo shirt\np31\nsS'worn'\np32\nI3\nsS'location'\np33\ng15\nsS'keywords'\np34\n(lp35\nVshirt\np36\nasS'contents'\np37\n(lp38\nsS'desc'\np39\nVThe shirt looks only slightly worn, but otherwise is in\r\\u000agood condition.\np40\nsbaS'Male'\np41\nS'Human'\np42\ntp43\n."
+S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\nccopy_reg\n_reconstructor\np2\n(cworld\nitem\np3\nc__builtin__\nobject\np4\nNtp5\nRp6\n(dp7\nS'short'\np8\nVA delicious cholocate chunk cookie sits here.\np9\nsS'capacity'\np10\nI0\nsS'name'\np11\nVa delicious chocolate chunk cookie\np12\nsS'worn'\np13\nI0\nsS'location'\np14\nS''\np15\nsS'keywords'\np16\n(lp17\nVcookie\np18\nasS'contents'\np19\n(lp20\nsS'desc'\np21\nVThe cookie has a delicious, gooey smell of freshly-baked\r\\u000adough.\np22\nsba(lp23\ng2\n(g3\ng4\nNtp24\nRp25\n(dp26\nS'short'\np27\nVA solid blue polo shirt is here.\np28\nsS'capacity'\np29\nI0\nsS'name'\np30\nVa solid blue polo shirt\np31\nsS'worn'\np32\nI3\nsS'location'\np33\ng15\nsS'keywords'\np34\n(lp35\nVshirt\np36\nasS'contents'\np37\n(lp38\nsS'desc'\np39\nVThe shirt looks only slightly worn, but otherwise is in\r\\u000agood condition.\np40\nsba(dp41\nS'discipline'\np42\nI4\nsS'agility'\np43\nI3\nsS'strength'\np44\nI5\nsS'intelligence'\np45\nI3\nsS'charisma'\np46\nI3\nsS'perception'\np47\nI3\nsI2\nS'Male'\np48\nS'Human'\np49\ntp50\n."
 p6
-sS'Brandar'
+sS'Kristar'
 p7
-S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\n(lp2\nS'Male'\np3\nS'Elf'\np4\ntp5\n."
+S"(S'\\xd03\\xe2*\\xe3H\\xae\\xb5f\\x0f\\xc2\\x14\\n\\xec5\\x85\\x0cM\\xa9\\x97'\np0\n(lp1\n(lp2\n(dp3\nS'discipline'\np4\nI3\nsS'agility'\np5\nI3\nsS'strength'\np6\nI3\nsS'intelligence'\np7\nI3\nsS'charisma'\np8\nI3\nsS'perception'\np9\nI3\nsI5\nS'Female'\np10\nS'Elf'\np11\ntp12\n."
 p8
 s.

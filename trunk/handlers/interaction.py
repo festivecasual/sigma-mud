@@ -316,5 +316,6 @@ def remove(data): # note, does not take into account capacity of the character y
 			if keyword.startswith(args[1]):
 				report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("remove", "removes" ))
 				transfer_item(item,speaker.worn_items,speaker.contents)
-				
+				return
+			
 	speaker.send_line("You're not wearing anything like that.	")

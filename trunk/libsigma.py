@@ -254,6 +254,23 @@ def at_capacity(character,worn_spot):
 		if worn_item.worn_position == worn_spot:
 			count+=1
 	return count >= worn_limit[worn_spot]
+
+## adds and removes allocation points
+def add_points(character,number):
+	character.points_to_allocate = character.points_to_allocate + number
+	return True
+def remove_points(character,number):
+	character.points_to_allocate = character.points_to_allocate - number
+	if character.points_to_allocate < 0:
+		character.points_to_allocate = 0
+	return True
+
+# function to raise stats. Any restrictions on whether a stat should be able to be raised
+# can be coded here.
+def raise_stat(character,stat, number):
+		character.stats[stat] = character.stats[stat] + number
+		return True
+	
 ## Report function recipient: the acting player.
 SELF =  1
 ## Report function recipient: the acting player's room.

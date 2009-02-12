@@ -115,6 +115,7 @@ def process_commands():
 						speaker.points_to_allocate = speaker.proto[4]
 						speaker.gender = speaker.proto[5]
 						speaker.race = speaker.proto[6]
+						speaker.HP = speaker.proto[7]
 					except IndexError:
 						log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
 						

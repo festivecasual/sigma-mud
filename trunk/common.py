@@ -6,7 +6,7 @@
 #
 #  @sa Consult libsigma for additional utility features.
 
-import time, datetime, sha, os.path, sys
+import time, datetime, hashlib, os.path, sys
 
 ## Construct a log entry for the server console.
 #
@@ -29,7 +29,8 @@ def date_time_string():
 #
 #  @param password The plain-text password to encrypt.
 def encrypt_password(password):
-	crypter = sha.new(password)
+	crypter = hashlib.sha1()
+	crypter.update(password)
 	return crypter.digest()
 
 ## Remove the excess whitespace from a string (for XML CDATA).

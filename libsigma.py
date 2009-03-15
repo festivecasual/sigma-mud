@@ -127,7 +127,6 @@ def worn2txt(worn):
 	
 	return ''
 
-
 ## Generate a list of all available exits in the room.
 #
 #  @param room The room to analyze.
@@ -140,6 +139,7 @@ def exits(room):
 			result.append(i)
 	
 	return result
+
 #Generates a list of all exits that are not closed
 def open_exits(room):
 	result = []
@@ -149,6 +149,7 @@ def open_exits(room):
 			if(not room.is_door_closed(i)):
 				result.append(i)
 	return result
+
 ## Move a character into a room.
 #
 #  @param character The character to relocate.
@@ -166,7 +167,7 @@ def enter_room(character, room):
 #  @param room The room to search.
 #  @param self_character Character to return for "self" if desired.
 #  @return The character object, if found.  Otherwise, None.
-def character_in_room(name, room, self_character = None):
+def character_in_room(name, room, self_character = None):	
 	for search in room.characters:
 		for keyword in search.keywords:
 			if keyword.startswith(name):
@@ -370,3 +371,55 @@ def announce(recipients,room, message):
 	 
 	#if(GAME & recipients):				
 	return
+
+class Sentence:
+	def __init__(self, args, args_consumed = 1, matches = []):
+		self.arglist = args[args_consumed:]
+		self.matchlist = matches
+	
+	def __getitem__(self, key):
+		return self.matchlist[key]
+	
+	def CompleteMatch(self):
+		if len(self.arglist) == 0 and len(self.matchlist) > 0 and self.matchlist[-1]:
+			return True
+		else:
+			return False
+	
+	def MatchCount(self):
+		return len(self.matchlist)
+	
+	def Allow(self, token):
+		if not self.arglist:
+			return Sentence([], 0, self.matchlist)
+		
+		if self.arglist[0] == token:
+			return Sentence(self.arglist, 1, self.matchlist)
+		else:
+			return Sentence(self.arglist, 0, self.matchlist)
+	
+	def CharacterInRoom(self, room):
+		if not self.arglist:
+			return Sentence([], 0, self.matchlist + [False])
+		
+		result = character_in_room(self.arglist[0], room)
+		if result:
+			return Sentence(self.arglist, 1, self.matchlist + [result])
+		
+		return Sentence([], 0, self.matchlist + [False])
+	
+	def ItemInRoom(self, room):
+		if not self.arglist:
+			return Sentence([], 0, self.matchlist + [False])
+		
+		result = item_in_room(self.arglist[0], room)
+		if result:
+			return Sentence(self.arglist, 1, self.matchlist + [result])
+		
+		return Sentence([], 0, self.matchlist + [False])
+	
+	def LiteralBlob(self):
+		if not self.arglist:
+			return Sentence([], 0, self.matchlist + [False])
+		
+		return Sentence([], 0, self.matchlist + [' '.join(self.arglist)])

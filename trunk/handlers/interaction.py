@@ -12,6 +12,7 @@ def say(data):
 	tail = data["tail"]
 	
 	report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
+
 @handler
 def yell(data):
 	speaker = data["speaker"]
@@ -160,17 +161,17 @@ def go(data):
 def get(data):
 	speaker = data["speaker"]
 	args = data["args"]
+
 	if len(args) == 1:
 		speaker.send_line(args[0].title() + " what?")
 		return
-	elif len(args) != 2:
-		speaker.send_line("You can't do that.")
-		return
 	
-	item = item_in_room(args[1], speaker.location)
-	if item:
-		transfer_item(item, speaker.location.contents, speaker.contents)
-		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), item)
+	source = Sentence(args)
+	result = source.ItemInRoom(speaker.location)
+	
+	if result.CompleteMatch():
+		transfer_item(result[0], speaker.location.contents, speaker.contents)
+		report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), result[0])
 	else:
 		speaker.send_line("You can't find it.")
 

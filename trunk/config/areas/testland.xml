@@ -48,7 +48,7 @@
   </room>
   
   <room id="insidetree">
-  	<name>Testland, Inside Oak </name>
+  	<name>Testland, Inside Oak, Foyer </name>
   	<desc>
   	The great tree is hollowed out, and the inside reveals
   	that many generations of elves have lived here, making
@@ -60,6 +60,31 @@
   	open
   	</focus>
   	<exit dir="leave" target="bigtree"/>	
+  	<exit dir="up" target = "armory"/>
+  </room>
+
+  <room id="armory">
+  	<name>Testland, Inside Oak, Armory </name>
+  	<desc>
+	An array of weapons and other utensils of death make
+	their home here. If you had to guess, you would think
+	that this is the demo room for the developers to test
+	combat.
+  	</desc>
+  	
+  	<exit dir="up" target="training_room"/>
+  	<exit dir="down" target="insidetree"/>	
+  </room>
+
+  <room id="training_room">
+  <name> Testland, Inside Oak, Training Room</name>
+  <desc>
+  The walls in this room are padded, and slightly bloodstained.
+  There appears to be a bucket filled with blood, sinew and teeth,
+  and the remnants of someone's attempt at repairing a broken 
+  limb. All this proves quite impressive for the top of an oak tree.
+  </desc>
+  <exit dir="down" target="armory"/>
   </room>
   
   <door>
@@ -77,7 +102,55 @@
     </desc>
   </item>
   
+  	<item id ="longsword">
+  	<name> a gleaming longsword</name>
+  	<keywords>longsword</keywords>
+  	<short>a gleaming longsword is here.</short>
+  	<weapon type="sword"/>
+	<desc>
+	The longsword gleams from a fresh polish.
+	</desc>  	
+  	</item>
+  
+  	<item id ="razor">
+  	<name> Occam's razor</name>
+  	<keywords>razor</keywords>
+  	<short>Occam's razor lies here.</short>
+  	<weapon type="knife"/>
+	<desc>
+	 You think it may be an axiom that governs the chances of a complex
+	 theory over a simpler one, but its probably just a good weapon
+	 for giving an adversary an extremely close shave.
+	</desc>  	
+  	</item>
+  
+   <denizen id="killer_penguin">
+    <name>a killer penguin</name>
+    <keywords>penguin</keywords>
+    <short>A killer penguin roams about, looking for its next victim.</short>
+    <desc>
+      The penguin is roaming about, looking for attention from wherever
+      it may come.  He also appears hungry, perhaps for a foot or an arm.
+    </desc>
+    <flag>killable</flag>
+  </denizen>
+  
     <placement item="shirt" target="insidetree" />
+    <placement item="razor" target="armory" />
+    <placement item="longsword" target="armory" />
+    
+  <populator denizen="killer_penguin" target="training_room">
+    <flag>mobile</flag>
+  </populator>
+ 
+ <populator denizen="killer_penguin" target="training_room">
+    <flag>mobile</flag>
+  </populator>
+ 
+ <populator denizen="killer_penguin" target="training_room">
+    <flag>mobile</flag>
+  </populator>
+  
   </area>
 
   

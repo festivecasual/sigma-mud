@@ -110,6 +110,16 @@ STATE_CONFIG_CHAR 		 = 7
 # Play state for configuring character statistics
 STATE_CONFIG_STATS      =  8
 
+##Combat States
+COMBAT_STATE_INITIALIZING = 1
+COMBAT_STATE_ENGAGING = 2
+COMBAT_STATE_FIGHTING_C1_ACTION = 3
+COMBAT_STATE_FIGHTING_C2_ACTION = 4
+COMBAT_STATE_INTERMISSION = 5
+
+#Combat actions
+COMBAT_ACTION_ATTACKING=1
+
 ## Direction: North
 DIR_NORTH        =  0
 ## Direction: Northeast
@@ -244,6 +254,62 @@ FINGER_WORN,LEG_WORN,FOOT_WORN,
 WAIST_WORN,BACK_WORN,SHOULDER_WORN			    
 )
 
+
+#Weapon Types
+NOT_A_WEAPON= 0
+SWORD=1
+MACE=2
+LONGBOW=3
+CROSSBOW=4
+KNIFE=4
+SPEAR=5
+STAFF=6
+GREATSWORD=7
+MALLET=8
+BARE_HAND=9
+
+weapon_match_val = (SWORD,MACE,LONGBOW,CROSSBOW,KNIFE,SPEAR,STAFF,GREATSWORD,MALLET, BARE_HAND)
+weapon_match_txt = ("sword","mace","longbow","knife","spear","staff","greatsword","mallet","bare handed")
+
+
+#Combat Ranges. Difference between the integers is significant. Represents distance.
+NOT_IN_COMBAT=0
+MELEE_RANGE=1
+SWORD_RANGE=2
+POLE_RANGE=4
+BOW_RANGE=6
+
+range_match_txt=("melee", "sword","pole","bow")
+range_match_val=(MELEE_RANGE,SWORD_RANGE,POLE_RANGE,BOW_RANGE)
+
+#range for weapon types
+weapon_range = {}
+preferred_range ={}
+
+#Damage multiplayers at differing ranges
+weapon_range[BARE_HAND]={MELEE_RANGE:1.0,SWORD_RANGE:.75}
+weapon_range[SWORD]={SWORD_RANGE:1.0,MELEE_RANGE:.75,POLE_RANGE:.25}
+weapon_range[MACE]={SWORD_RANGE:1.0,MELEE_RANGE:.60}
+weapon_range[LONGBOW]={BOW_RANGE:1.0,POLE_RANGE:.90}
+weapon_range[CROSSBOW]={BOW_RANGE:1.0,POLE_RANGE:.80,SWORD_RANGE:.60}
+weapon_range[KNIFE]={MELEE_RANGE:1.0,SWORD_RANGE:.90}
+weapon_range[SPEAR]={POLE_RANGE:1.0,SWORD_RANGE:.70}
+weapon_range[STAFF]={POLE_RANGE:1.0,SWORD_RANGE:.95}
+weapon_range[GREATSWORD]={SWORD_RANGE:1.0,MELEE_RANGE:.30,POLE_RANGE:.80}
+weapon_range[MALLET]={SWORD_RANGE:1.0,POLE_RANGE:1.0}
+
+preferred_range[BARE_HAND]=MELEE_RANGE
+preferred_range[SWORD]=SWORD_RANGE
+preferred_range[MACE]=SWORD_RANGE
+preferred_range[LONGBOW]=BOW_RANGE
+preferred_range[CROSSBOW]=BOW_RANGE
+preferred_range[KNIFE] = MELEE_RANGE
+preferred_range[SPEAR] = POLE_RANGE
+preferred_range[STAFF] = POLE_RANGE
+preferred_range[GREATSWORD] = SWORD_RANGE
+preferred_range[MALLET] = POLE_RANGE
+
+
 #stats tuple
 stats = ("strength", "intelligence", "discipline", "agility","charisma","perception")
 
@@ -263,6 +329,10 @@ pronoun_subject={}
 pronoun_subject[GENDER_NEUTRAL] = "it"
 pronoun_subject[GENDER_MALE] = "he"
 pronoun_subject[GENDER_FEMALE]= "she"
+pronoun_object={}
+pronoun_object[GENDER_MALE] = "him"
+pronoun_object[GENDER_FEMALE] = "her"
+pronoun_object[GENDER_NEUTRAL] = "it"
 
 #Enumerates genders for processing for character configuration
 #0 is the default gender

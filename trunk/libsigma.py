@@ -1,7 +1,7 @@
 ## @package libsigma
 #  Designer-facing utility functions.
 
-import traceback, sys, command, time, math
+import traceback, sys, command, time, math, random
 from string import Template
 
 import task
@@ -126,6 +126,24 @@ def worn2txt(worn):
 			return worn_match_txt[i]
 	
 	return ''
+
+#generic function for matching a code to an identifier
+def val2txt(value, value_tuple,txt_tuple):
+	for i in range(len(value_tuple)):
+		if value_tuple[i]  == value:
+			return txt_tuple[i] 
+	return ''
+
+#generic function for matching a text piece to a particular code
+#assumes you don't have text values that are non-ambiguous, 
+#so that startswith does not pick a wrong value.
+def txt2val(text, txt_tuple,value_tuple):
+	for i in range(len(value_tuple)):
+		if txt_tuple[i].startswith(text):
+			return value_tuple[i]
+
+	return -1
+	
 
 ## Generate a list of all available exits in the room.
 #
@@ -372,6 +390,9 @@ def announce(recipients,room, message):
 	#if(GAME & recipients):				
 	return
 
+def d100():
+	return random.randint(1,100)
+
 class Sentence:
 	def __init__(self, args, args_consumed = 1, matches = []):
 		self.arglist = args[args_consumed:]
@@ -423,3 +444,4 @@ class Sentence:
 			return Sentence([], 0, self.matchlist + [False])
 		
 		return Sentence([], 0, self.matchlist + [' '.join(self.arglist)])
+

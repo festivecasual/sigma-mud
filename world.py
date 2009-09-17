@@ -36,6 +36,10 @@ calendars = []
 
 doors = []
 
+#All instances of combat in game
+
+combats=[]
+
 ## Map exit codes to room objects, reporting any mapping errors.
 def resolve_links():
 	for current in rooms.values():		
@@ -175,7 +179,7 @@ class item(entity):
   def __init__(self, node):
     entity.__init__(self)
     
-    
+    self.weapon_type=NOT_A_WEAPON
     self.worn = NOT_WORN
     
     node.normalize()
@@ -191,6 +195,12 @@ class item(entity):
 			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
 		elif info_node.nodeName == "worn":
 			self.worn = libsigma.txt2worn(strip_whitespace(info_node.firstChild.data))	
+  		elif info_node.nodeName == "weapon":
+  			if not info_node.attributes.has_key("type"):
+						log("FATAL", "Error in <weapon> tag in item " + name)
+						sys.exit(1)
+			self.weapon_type=libsigma.txt2val(info_node.attributes["type"].value,weapon_match_txt,weapon_match_val)
+  
   def get_worn(self):
 	return self.worn
   def set_worn(self, x):
@@ -299,8 +309,12 @@ class character(entity):
 		for stat in stats:
 			self.stats[stat]=DEFAULT_STAT
 		self.points_to_allocate=0
+		self.equipped_weapon = []
+		self.equipped_shield=None
 		self.worn_items = []
 		self.HP=0
+		self.flags=  []
+		self.combats = []
 		## States defined in common module, determines processing context of input.
 		self.state = STATE_NULL
 		
@@ -322,6 +336,14 @@ class character(entity):
 	#  @param breaks The number of breaks to send, following \c s.
 	def send_line(self, s = "", breaks = 1): pass
 
+
+		
+	def get_preferred_weapon_range(self):
+		pwr=MELEE_RANGE
+		for w in self.equipped_weapon:
+			if preferred_range[w.weapon_type] > pwr:
+				pwr=preferred_range[w.weapon_type]
+		return pwr
 ## Encapsulates a denizen (non-playing character) within the world.
 class denizen(character):
 	## Construct the denizen.
@@ -344,7 +366,8 @@ class denizen(character):
 				self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
 			elif info_node.nodeName == "desc":
 				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
-
+			elif info_node.nodeName == "flag":
+				self.flags.append(strip_whitespace(info_node.firstChild.data))
 ## Encapsulates a player (with a socket connection) within the world.
 class player(character):
 	## Construct the player.
@@ -393,6 +416,8 @@ class player(character):
 		self.send(s)
 		self.send("\r\n" * breaks)
 
+	def send_combat_status(self):
+		self.send_line("[HP: " + str(self.HP) + "/" + str(self.calculate_HP_max()) + "]")
 	## Overloaded function to return search keywords for the player.
 	#
 	#  @param self The active instance.
@@ -580,8 +605,6 @@ class calendar(object):
     	  x=int(x)		
     	return sp;
 	  
-	   	
-
 class door(object):
     ## Construct a calendar from xml
 	#
@@ -622,3 +645,20 @@ class door(object):
 		if self.status==DOOR_LOCKED:
 			return True
 		return False
+	
+class combat(object): ## class which stores an instance of combat and its attributes
+	def __init__(self, combatant1,combatant2): ## an instance of combat is between two characters.
+		self.combatant1=combatant1 # combatant1 is assumed the aggressor. He is assumed
+								   # to be engaged in this combat, as s/he instigated it
+		self.combatant2=combatant2
+		self.combatant1_engaged=True
+		self.combatant2_engaged=None
+		self.combatant1_action=None # may not be used,putting in for now...
+		self.combatant2_action=None
+		self.first_striker=None
+		self.second_striker=None
+		self.combatant1_preferred_weapon_range=combatant1.get_preferred_weapon_range()
+		self.combatant2_preferred_weapon_range=combatant2.get_preferred_weapon_range()
+		self.combat_state=COMBAT_STATE_INITIALIZING
+		range=NOT_IN_COMBAT
+		return

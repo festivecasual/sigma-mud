@@ -4,6 +4,7 @@
 #  @ingroup handler
 
 from libsigma import *
+import world
 
 ## Process character conversation.
 @handler
@@ -320,3 +321,71 @@ def remove(data): # note, does not take into account capacity of the character y
 				return
 			
 	speaker.send_line("You're not wearing anything like that.	")
+
+@ handler	
+def equip(data):
+	speaker=data["speaker"]
+	args=data["args"]
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+		return
+	for item in speaker.contents:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				if item.weapon_type==NOT_A_WEAPON:
+					speaker.send_line("You can't wield that.")
+					return
+				if len(speaker.equipped_weapon)==1: ## Editable for future multi-weapon equipping abilities
+						speaker.send_line("You can't wield anything else.")
+						return	
+				transfer_item(item,speaker.contents,speaker.equipped_weapon)
+				report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("wield", "wields" ))
+				return
+	speaker.send_line("You don't have anything like that in your inventory.")
+	return
+@handler
+def unequip(data):
+	speaker=data["speaker"]
+	args=data["args"]
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+		return
+	for item in speaker.equipped_weapon:
+		for keyword in item.keywords:
+			if keyword.startswith(args[1]):
+				report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("unequip", "unequips" ))
+				transfer_item(item,speaker.equipped_weapon,speaker.contents)
+				return
+			
+	speaker.send_line("You're not wielding anything like that.	")
+	
+@handler
+def engage(data):
+	#first argument should be person/character
+	speaker=data["speaker"]
+	args=data["args"]
+	if len(args) < 2:
+		speaker.send_line(str(args[0]).title() + " what?")
+		return
+	
+	engagee = character_in_room(args[1], speaker.location, speaker)
+	if not engagee:
+		speaker.send_line("They're not here.")
+		return
+	
+	if engagee == speaker:
+		speaker.send_line("You cannot initiate combat with yourself.")
+		return
+	
+	for flag in engagee.flags:
+		 if (flag=="peaceful"):
+		 		speaker.send_line("You can't attack that!")
+		 		return
+
+	
+	c = world.combat(speaker,engagee)
+	world.combats.append(c)
+	speaker.combats.append(c)
+	engagee.combats.append(c)
+   	report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee) 
+	return

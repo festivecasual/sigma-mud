@@ -61,6 +61,7 @@
   
   <populator denizen="penguin" target="waterfall">
     <flag>mobile</flag>
+    <flag>peaceful</flag>
   </populator>
   
   <placement item="cookie" target="second" />

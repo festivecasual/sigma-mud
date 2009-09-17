@@ -111,13 +111,16 @@ def process_commands():
 						speaker.password = speaker.proto[0]
 						speaker.contents = speaker.proto[1]
 						speaker.worn_items = speaker.proto[2]
-						speaker.stats = speaker.proto[3]
-						speaker.points_to_allocate = speaker.proto[4]
-						speaker.gender = speaker.proto[5]
-						speaker.race = speaker.proto[6]
-						speaker.HP = speaker.proto[7]
+						speaker.equipped_weapon = speaker.proto[3]
+						speaker.stats = speaker.proto[4]
+						speaker.points_to_allocate = speaker.proto[5]
+						speaker.gender = speaker.proto[6]
+						speaker.race = speaker.proto[7]
+						speaker.HP = speaker.proto[8]
 					except IndexError:
 						log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
+					
+					
 						
 					# Add player to master players list
 					world.players.append(speaker)

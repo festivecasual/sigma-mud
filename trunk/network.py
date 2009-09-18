@@ -29,6 +29,8 @@ class client_socket(asynchat.async_chat):
 			elif char == '\b' or char == '\r': pass
 			elif char in string.printable:
 				self.buffer += char
+				if self.parent.state == STATE_PASSWORD:
+					self.parent.send('\b \b')
 
 	## Overriden member function called when the newline is detected on the stream.
 	def found_terminator(self):

@@ -1,201 +1,127 @@
-## @package importer
-#  Pull in data from XML configuration files.
-
-import sys, pickle
-from xml.dom import pulldom
-from xml.sax import SAXParseException
+import pickle, os.path
+from xml.etree import ElementTree
 import handler, world, creation
 from common import *
 
-## Main function for processing server.xml and subordinate files.
 def process_xml():
 	try:
-		server_xml = open(directories["xml_root"] + "/server.xml")
-	except IOError:
-		log("FATAL", "Unable to open " + directories["xml_root"] + "/server.xml")
-		sys.exit(1)
+		server_path = os.path.join(directories["xml_root"], "server.xml")
+		server_xml = ElementTree.parse(server_path).getroot()
+	except:
+		log("FATAL", "Unable to open and parse server.xml: %s" % server_path, exit_code=1)
 
-	try:
-		events = pulldom.parse(server_xml)
-		for (event, node) in events:
-			if event == pulldom.START_ELEMENT:
-				if node.tagName == "option":
-					if (not node.attributes.has_key("name")) or (not node.attributes.has_key("value")):
-						log("FATAL", "Error in <option /> tag")
-						sys.exit(1)
-					if not options.has_key(node.attributes["name"].value):
-						log("FATAL", "<option /> tag sets unknown option")
-						sys.exit(1)
-					options[node.attributes["name"].value] = node.attributes["value"].value
-					log("CONFIG", "Option [" + node.attributes["name"].value + "] set to '" + node.attributes["value"].value + "'")
-				elif node.tagName == "area":
-					if (not node.attributes.has_key("file")) or (not node.attributes.has_key("name")):
-						log("FATAL", "Error in <area /> tag")
-						sys.exit(1)
-					try:
-						area_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
-					except IOError:
-						log("FATAL", "Unable to open area XML source [" + node.attributes["file"].value)
-						sys.exit(1)
-					log("XML", "Processing area file at [" + node.attributes["file"].value + "]")
-					process_area(area_xml, node.attributes["name"].value)
-					area_xml.close()
-				elif node.tagName == "calendar":
-					if (not node.attributes.has_key("file")) or (not node.attributes.has_key("name")):
-						log("FATAL", "Error in <calendar /> tag")
-						sys.exit(1)
-					try:
-						calendar_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
-					except IOError:
-						log("FATAL", "Unable to open area XML source [" + node.attributes["file"].value)
-						sys.exit(1)
-					log("XML", "Processing calendar file at [" + node.attributes["file"].value + "]")
-					process_calendar(calendar_xml, node.attributes["name"].value) 
-				   	calendar_xml.close()
-				elif node.tagName == "class":
-					if not node.attributes.has_key("file"):
-						log("FATAL", "Error in <class /> tag")
-						sys.exit(1)
-					try:
-						class_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
-					except IOError:
-						log("FATAL", "Unable to open class XML source [" + node.attributes["file"].value + "]")
-						sys.exit(1)
-					log("XML", "Processing class definition at [" + node.attributes["file"].value + "]")
-					process_class(class_xml)
-					class_xml.close()
-				elif node.tagName == "handlers":
-					if not node.attributes.has_key("file"):
-						log("FATAL", "Error in <handlers /> tag")
-						sys.exit(1)
-					try:
-						handlers_xml = open(directories["xml_root"] + "/" + node.attributes["file"].value)
-					except IOError:
-						log("FATAL", "Unable to open handlers XML source [" + node.attributes["file"].value + "]")
-						sys.exit(1)
-					log("XML", "Processing handler mappings in [" + node.attributes["file"].value + "]")
-					process_handlers(handlers_xml)
-					handlers_xml.close()
+	for option in server_xml.findall('option'):
+		name = required_attribute(option, 'name')
+		value = required_attribute(option, 'value')
+		if not options.has_key(name):
+			log("FATAL", "<option> tag sets unknown option %s" % name, exit_code=1)
+		options[name] = value
+		log("CONFIG", "Option [%s] set to '%s'" % (name, value))
+		server_xml.remove(option)
 
-	except SAXParseException, msg:
-		log("FATAL", "XML Error: " + str(msg))
-		sys.exit(1)
+	for area in server_xml.findall('area'):
+		file = required_attribute(area, 'file')
+		name = required_attribute(area, 'name')
+		log("AREA", "Processing area [%s] at %s" % (name, file))
+		try:
+			area_path = os.path.join(directories["xml_root"], file)
+			area_xml = ElementTree.parse(area_path).getroot()
+		except:
+			log("FATAL", "Unable to parse area file", exit_code=1)
+		process_area(area_xml, name)
+		server_xml.remove(area)
 
-	server_xml.close()
+	for calendar in server_xml.findall('calendar'):
+		file = required_attribute(calendar, 'file')
+		name = required_attribute(calendar, 'name')
+		log("CALENDAR", "Processing calendar [%s] at %s" % (name, file))
+		try:
+			calendar_path = os.path.join(directories["xml_root"], file)
+			calendar_xml = ElementTree.parse(calendar_path).getroot()
+		except:
+			log("FATAL", "Unable to parse calendar file", exit_code=1)
+		world.calendars.append(world.calendar(calendar_xml, name))
+		server_xml.remove(calendar)
 
-## Traverse an area definition and create all necessary world objects.
-#
-#  @param f The area node to process.
-#  @param name The name of the area (used to dereference links).
-def process_area(f, name):
-	try:
-		events = pulldom.parse(f)
-		for (event, node) in events:
-			if event == pulldom.START_ELEMENT:
-				if node.tagName == "room":
-					if not node.attributes.has_key("id"):
-						log("FATAL", "Error in <room> tag")
-						sys.exit(1)
+	for cclass in server_xml.findall('class'):
+		file = required_attribute(cclass, 'file')
+		log("CLASS", "Processing class definition at %s" % file)
+		try:
+			cclass_path = os.path.join(directories["xml_root"], file)
+			cclass_xml = ElementTree.parse(cclass_path).getroot()
+		except:
+			log("FATAL", "Unable to parse class definition", exit_code=1)
+		process_class(cclass_xml)
+		server_xml.remove(cclass)
 
-					ref = name + ":" + node.attributes["id"].value
+	for handlers in server_xml.findall('handlers'):
+		file = required_attribute(handlers, 'file')
+		log("HANDLERS", "Processing handlers mapping at %s" % file)
+		try:
+			handlers_path = os.path.join(directories["xml_root"], file)
+			handlers_xml = ElementTree.parse(handlers_path).getroot()
+		except:
+			log("FATAL", "Unable to parse handler mapping", exit_code=1)
+		process_handlers(handlers_xml)
+		server_xml.remove(handlers)
 
-					events.expandNode(node)
-					world.rooms[ref] = world.room(ref, node)
+	for child in server_xml.getchildren():
+		log("  *  ERROR", "Ignoring unknown tag <%s> in server.xml" % child.tag)
 
-				elif node.tagName == "denizen":
-					if not node.attributes.has_key("id"):
-						log("FATAL", "Error in <denizen> tag")
-						sys.exit(1)
+def process_area(area_xml, area_name):
+	for room in area_xml.findall('room'):
+		id = required_attribute(room, 'id')
+		ref = '%s:%s' % (area_name, id)
+		world.rooms[ref] = world.room(ref, room)
+		area_xml.remove(room)
 
-					ref = name + ":" + node.attributes["id"].value
+	for denizen in area_xml.findall('denizen'):
+		id = required_attribute(denizen, 'id')
+		ref = '%s:%s' % (area_name, id)
+		world.denizens_source[ref] = pickle.dumps(world.denizen(denizen))
+		area_xml.remove(denizen)
 
-					events.expandNode(node)
-					world.denizens_source[ref] = pickle.dumps(world.denizen(node))
-				
-				elif node.tagName == "item":
-					if not node.attributes.has_key("id"):
-						log("FATAL", "Error in <item> tag")
-						sys.exit(1)
-					
-					ref = name + ":"+ node.attributes["id"].value
-					
-					events.expandNode(node)
-					world.items_source[ref] = pickle.dumps(world.item(node))
-				
-				elif node.tagName == "door":
-					events.expandNode(node)
-					world.doors.append(world.door(node,name,len(world.doors)))	
-				elif node.tagName == "populator":
-					if not node.attributes.has_key("denizen") or not node.attributes.has_key("target"):
-						log("FATAL", "Error in <populator> tag")
-						sys.exit(1)
-					
-					events.expandNode(node)
-					world.populators.append(world.populator(node, name))
-				
-				elif node.tagName == "placement":
-					if not node.attributes.has_key("item") or not node.attributes.has_key("target"):
-						log("FATAL", "Error in <placement> tag")
-						sys.exit(1)
-					
-					events.expandNode(node)
-					world.placements.append(world.placement(node, name))
+	for item in area_xml.findall('item'):
+		id = required_attribute(item, 'id')
+		ref = '%s:%s' % (area_name, id)
+		world.items_source[ref] = pickle.dumps(world.item(item))
+		area_xml.remove(item)
 
-	except SAXParseException, msg:
-		log("FATAL", "XML Error: " + str(msg))
-		sys.exit(1)
+	for door in area_xml.findall('door'):
+		world.doors.append(world.door(door, area_name, len(world.doors)))
+		area_xml.remove(door)
 
-## Traverse a handler definition structure and create mappings.
-#
-#  @param f The handler node to process.
-def process_handlers(f):
-	try:
-		events = pulldom.parse(f)
-		for (event, node) in events:
-			if event == pulldom.START_ELEMENT:
-				if node.tagName == "handler":
-					if (not node.attributes.has_key("command")) or (not node.attributes.has_key("function")):
-						log("FATAL", "Error in <handler /> tag")
-						sys.exit(1)
-					command = node.attributes["command"].value
-					function = node.attributes["function"].value
-					if not handler.functions.has_key(function):
-						log("FATAL", "Handler maps non-existent function to command <" + command + ">")
-						sys.exit(1)
-					handler.mappings.append((command, handler.functions[function]))
-				if node.tagName == "special":
-					if (not node.attributes.has_key("type")) or (not node.attributes.has_key("rewrite")):
-						log("FATAL", "Error in <special /> tag")
-						sys.exit(1)
-					special_type = node.attributes["type"].value
-					rewrite = node.attributes["rewrite"].value
-					if not special_type in handler.specials.keys():
-						log("FATAL", "Special handler tag references unsupported type <" + special_type + ">")
-						sys.exit(1)
-					handler.specials[special_type] = rewrite.encode('ascii')
-	except SAXParseException, msg:
-		log("FATAL", "XML Error: " + str(msg))
-		sys.exit(1)
+	for populator in area_xml.findall('populator'):
+		denizen = required_attribute(populator, 'denizen')
+		target = required_attribute(populator, 'target')
+		world.populators.append(world.populator(populator, area_name, denizen, target))
+		area_xml.remove(populator)
 
-def process_calendar(f, name):
-	events = pulldom.parse(f)
-	for (event, node) in events:
-		if event == pulldom.START_ELEMENT:
-			if node.tagName == "calendar":
-				if not node.attributes.has_key("name"):
-					log("FATAL", "Error in <calendar> tag")
-					sys.exit(1)
+	for placement in area_xml.findall('placement'):
+		item = required_attribute(placement, 'item')
+		target = required_attribute(placement, 'target')
+		world.placements.append(world.placement(placement, area_name, item, target))
+		area_xml.remove(placement)
 
-				ref=node.attributes["name"].value
-				events.expandNode(node)
-				world.calendars.append(world.calendar(ref, node))
+	for child in area_xml.getchildren():
+		log('  *  ERROR', 'Ignoring unknown tag <%s> in area file [%s]' % (child.tag, area_name))
 
-def process_class(f):
-	events = pulldom.parse(f)
-	for (event, node) in events:
-		if event == pulldom.START_ELEMENT:
-			if node.tagName == "class":
-				events.expandNode(node)
-				new_class = creation.character_class(node)
-				creation.classes[new_class.name] = new_class
+def process_handlers(handlers_xml):
+	for handler_item in handlers_xml.findall('handler'):
+		command = required_attribute(handler_item, 'command')
+		function = required_attribute(handler_item, 'function')
+		if not handler.functions.has_key(function):
+			log('FATAL', 'Handler maps non-existent function <%s> to command <%s>' % (function, command), exit_code=1)
+		handler.mappings.append((command, handler.functions[function]))
 
+	for special in handlers_xml.findall('special'):
+		special_type = required_attribute(special, 'type')
+		rewrite = required_attribute(special, 'rewrite')
+		if not special_type in handler.specials.keys():
+			log('FATAL', 'Special handler tag references unsupported type <%s>' % special_type, exit_code=1)
+		handler.specials[special_type] = rewrite.encode('ascii')
+
+def process_class(class_xml):
+	for pclass_xml in class_xml.findall('class'):
+		new_class = creation.character_class(pclass_xml)
+		creation.classes[new_class.name] = new_class

@@ -1,46 +1,26 @@
-## @package world
-#  Contains data structures for objects and constructs within the environment.
+# Contains data structures for objects and constructs within the environment.
 
 import sys, libsigma
 from common import *
 
-## All players currently in game.
 players = []
-
-## All available rooms (mapped to area:name).
 rooms = {}
-
-## All denizens active in the game.
 denizens = {}
-
-## All items active in the game.
 items = {}
 
-
-## Denizen prototypes (for pickle).
 denizens_source = {}
-
-## Item prototypes (for pickle).
 items_source = {}
 
-## All populator objects (for placing denizens in rooms).
 populators = []
-
-## All placement objects (for placing items in game).
 placements = []
 
-#All Calendars in the game
 calendars = []
-
-#All Doors in the game
 
 doors = []
 
-#All instances of combat in game
-
 combats=[]
 
-## Map exit codes to room objects, reporting any mapping errors.
+# Map exit codes to room objects, reporting any mapping errors
 def resolve_links():
 	for current in rooms.values():		
 		for i in range(NUM_DIRS):
@@ -55,7 +35,7 @@ def resolve_links():
 				log("  *  ERROR", "Unresolved room exit linkage: " + current.exits[i] + " (" + current.location + ")")
 				current.exits[i] = None
 
-## Map populator references to template denizens, reporting any mapping errors.
+# Map populator references to template denizens, reporting any mapping errors
 def resolve_populators():
 	for current in populators:
 		if denizens_source.has_key(current.denizen):
@@ -72,7 +52,7 @@ def resolve_populators():
 		else:
 			log("  *  ERROR", "Unresolved target room reference: " + current.target)
 
-## Map placement references to template items, reporting any mapping errors.
+# Map placement references to template items, reporting any mapping errors
 def resolve_placements():
 	for current in placements:
 		if items_source.has_key(current.item):
@@ -89,192 +69,122 @@ def resolve_placements():
 		else:
 			log("  *  ERROR", "Unresolved target room reference: " + current.target)
 
-## Encapsulates an instruction to place a denizen in a certain location.
+
+# Encapsulates an instruction to place a denizen in a certain location
 class populator(object):
-	## Construct the populator object.
-	#
-	#  @param self The active instance.
-	#  @param node The XML node describing the populator.
-	#  @param area The name of the populator's area (for mapping).
-	def __init__(self, node, area):
-		## The denizen template to load.
-		self.denizen = node.attributes["denizen"].value
-		
-		## The destination room.
-		self.target = node.attributes["target"].value
-		
-		## The area containing the populator.
-		self.area = area
-		
-		## Any option flags applicable to the populator.
+	def __init__(self, node, area_name, denizen_id, target):
+		self.denizen = denizen_id
+		self.target = target
+		self.area = area_name
 		self.flags = []
-		
-		## Cache value to track the current instantiated denizen.
-		self.instance = None
-		
-		node.normalize()
-		for info_node in node.childNodes:
-			if info_node.nodeName == "flag":
-				self.flags.append(strip_whitespace(info_node.firstChild.data))
 
-## Encapsulates an instruction to place an item in a certain location.
+		self.instance = None
+
+		for flag in node.findall('flag'):
+			self.flags.append(strip_whitespace(flag.text))
+
+
+# Encapsulates an instruction to place an item in a certain location
 class placement(object):
-	## Construct the placement object.
-	#
-	#  @param self The active instance.
-	#  @param node The XML node describing the placement.
-	#  @param area The name of the placement's area (for mapping).
-	def __init__(self, node, area):
-		## The item template to load.
-		self.item = node.attributes["item"].value
-		
-		## The destination room or object.
-		self.target = node.attributes["target"].value
-		
-		## The area containing the placement.
-		self.area = area
-		
-		## Any option flags applicable to the placement.
+	def __init__(self, node, area_name, item_id, target):
+		self.item = item_id
+		self.target = target
+		self.area = area_name
 		self.flags = []
 		
-		## Cache value to track the current instantiated item.
 		self.instance = None
 		
-		node.normalize()
-		for info_node in node.childNodes:
-			if info_node.nodeName == "flag":
-				self.flags.append(strip_whitespace(info_node.firstChild.data))
+		for flag in node.findall('flag'):
+			self.flags.append(strip_whitespace(flag.text))
 
-## Encapsulates any entity within the world structure.
+
+# Encapsulates any entity within the world structure
 class entity(object):
-	## Construct the basic default entity.
-	#
-	#  @param self The active instance.
 	def __init__(self):
-		## The name of the entity.
-		self.name = ""
-		
-		## The long description of the entity.
-		self.desc = ""
-		
-		## Keywords applicable when searching for the entity.
+		self.name = ''
+		self.desc = ''
 		self.keywords = []
-		
-		## Contents of the entity.
 		self.contents = []
 		
-		## Capacity of the entity to hold contents.
 		self.capacity = 0
 		
-		## The entity's room location.
-		self.location = ""
+		self.location = ''
 
-		
-## Encapsulates a tangible object within the world.
+
+# Encapsulates a tangible object within the world
 class item(entity):
-  ## Construct the item from XML.
-  #
-  #  @param self The active instance.
-  #  @param node The XML node describing the item.
-  def __init__(self, node):
-    entity.__init__(self)
-    
-    self.weapon_type=NOT_A_WEAPON
-    self.worn = NOT_WORN
-    
-    node.normalize()
-    for info_node in node.childNodes:
-   		if info_node.nodeName == "name":
-			self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
-		elif info_node.nodeName == "keywords":
-			self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
-		elif info_node.nodeName == "short":
-			## The short description of the item.
-			self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
-		elif info_node.nodeName == "desc":
-			self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
-		elif info_node.nodeName == "worn":
-			self.worn = libsigma.txt2worn(strip_whitespace(info_node.firstChild.data))	
-  		elif info_node.nodeName == "weapon":
-  			if not info_node.attributes.has_key("type"):
-						log("FATAL", "Error in <weapon> tag in item " + name)
-						sys.exit(1)
-			self.weapon_type=libsigma.txt2val(info_node.attributes["type"].value,weapon_match_txt,weapon_match_val)
-  
-  def get_worn(self):
-	return self.worn
-  def set_worn(self, x):
-  	pass
-  
-  worn_position = property(get_worn, set_worn)
-  
-## Encapsulates a room within the world.
+	def __init__(self, node):
+		entity.__init__(self)
+		
+		self.weapon_type = NOT_A_WEAPON
+		self.worn = NOT_WORN
+
+		self.name = strip_whitespace(required_child(node, 'name').text)
+		self.short = wordwrap(strip_whitespace(required_child(node, 'short').text))
+		self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+
+		keywords = node.find('keywords')
+		if keywords != None:
+			self.keywords.extend(strip_whitespace(keywords.text).lower().split())
+		
+		worn = node.find('worn')
+		if worn != None:
+			self.worn = libsigma.txt2worn(strip_whitespace(worn.text))
+
+		weapon = node.find('weapon')
+		if weapon != None:
+			weapon_type = required_attribute(weapon, 'type')
+			self.weapon_type = libsigma.txt2val(weapon_type, weapon_match_txt, weapon_match_val)
+
+	def get_worn(self):
+		return self.worn
+
+	def set_worn(self, x):
+		pass
+
+	worn_position = property(get_worn, set_worn)
+
+
+# Encapsulates a valid position within the world
 class room(entity):
-	## Construct the room from XML.
-	#
-	#  @param self The active instance.
-	#  @param ref The reference code for the room.
-	#  @param node The XML node describing the room.
 	def __init__(self, ref, node):
 		entity.__init__(self)
 		self.location = ref
-		
-		## The characters (denizens and players) occupying the room.
 		self.characters = []
-
 		self.keywords = ["room"]
-		
-		## List of all exits, ultimately resolved to other room objects.
-		self.exits = [None] * NUM_DIRS
-		
-		## holds a list of alternate messaging that may be available for an exit
-		self.altmsg=[None]* NUM_DIRS
-		
-		## holds a list of door indices pointing to doors
-		self.doors=[None]*NUM_DIRS
-		
-		## Mapping of points of interest within the room.
-		self.foci = {}
-		
-		self.capacity = -1
 
-		node.normalize()
-		for info_node in node.childNodes:
-			if info_node.nodeName == "name":
-				self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
-			elif info_node.nodeName == "desc":
-				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
-			elif info_node.nodeName == "focus":
-				if not info_node.attributes.has_key("name"):
-					log("FATAL", "Error in <focus /> tag within <room />")
-					sys.exit(1)
-				name = info_node.attributes["name"].value
-				description = wordwrap(strip_whitespace(info_node.firstChild.data))
-				
-				self.foci[name] = description
-			elif info_node.nodeName == "exit":
-				if (not info_node.attributes.has_key("dir")) or (not info_node.attributes.has_key("target")):
-					log("FATAL", "Error in <room /> tag")
-					sys.exit(1)
-				direction = libsigma.txt2dir(info_node.attributes["dir"].value)
-				if direction == -1:
-					log("FATAL", "Bad exit direction: " + info_node.attributes["dir"].value)
-					sys.exit(1)
-				self.exits[direction] = info_node.attributes["target"].value
-				if (info_node.attributes.has_key("altmsg")):
-					self.altmsg[direction]=info_node.attributes["altmsg"].value
-					
-				
-	## Return the area portion of the room's location code.
-	#
-	#  @param self The active instance.
+		self.exits = [None] * NUM_DIRS
+		self.altmsg = [None] * NUM_DIRS
+		self.doors = [None] * NUM_DIRS
+
+		self.foci = {}
+
+		self.capacity = -1
+		
+		self.name = strip_whitespace(required_child(node, 'name').text)
+		self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+
+		for focus in node.findall('focus'):
+			name = required_attribute(focus, 'name')
+			description = wordwrap(strip_whitespace(focus.text))
+			self.foci[name] = description
+
+		for exit_node in node.findall('exit'):
+			exit_dir = required_attribute(exit_node, 'dir')
+			exit_target = required_attribute(exit_node, 'target')
+			direction = libsigma.txt2dir(exit_dir)
+			if direction == -1:
+				log('FATAL', "Bad exit direction: '%s'" % exit_dir, exit_code=1)
+			self.exits[direction] = exit_target
+			altmsg = exit_node.get('altmsg')
+			if altmsg:
+				self.altmsg[direction] = altmsg
+
 	def get_area(self):
 		return self.location[:self.location.find(":")]
 
-	## Provide a property structure to return the room's area.
 	area = property(get_area)
-	
-	#returns whether a character can go in a particular direction
+
 	def can_character_go(self, direction):
 		if self.exits[direction]!=None:
 			if self.doors[direction]==None:
@@ -282,117 +192,93 @@ class room(entity):
 			if doors[self.doors[direction]].is_open():
 				return True
 		return False
-	
+
 	def open_door(self, direction):
 		if self.doors[direction]!=None:
 			doors[self.doors[direction]].status=DOOR_OPEN
-	
+
 	def close_door(self, direction):
 		if self.doors[direction]!=None:
 			doors[self.doors[direction]].status=DOOR_CLOSED		
-	
+
 	def is_door_closed(self,direction):
 		if direction != -1:
 			if self.doors[direction]!=None:
 				return doors[self.doors[direction]].is_closed()
 		return False
-## Encapsulates an abstract denizen or player within the world.
+
+
+# Encapsulates an abstract denizen or player within the world
 class character(entity):
-	## Construct the abstract character.
-	#
-	#  @param self The active instance.
 	def __init__(self):
 		entity.__init__(self)
+		
 		self.gender = GENDER_NEUTRAL
 		self.race = RACE_NEUTRAL
 		self.stats = {}
-		for stat in stats:
-			self.stats[stat]=DEFAULT_STAT
-		self.points_to_allocate=0
-		self.equipped_weapon = []
-		self.equipped_shield=None
-		self.worn_items = []
-		self.HP=0
-		self.flags=  []
-		self.combats = []
-		## States defined in common module, determines processing context of input.
-		self.state = STATE_NULL
 		
-	## Abstract function to simulate sending a prompt string to a player.
-	#
-	#  @param self The active instance.
+		for stat in stats:
+			self.stats[stat] = DEFAULT_STAT
+		
+		self.points_to_allocate = 0
+		self.equipped_weapon = []
+		self.equipped_shield = None
+		self.worn_items = []
+		self.HP = 0
+		self.flags = []
+		self.combats = []
+		
+		# States defined in common module, determines processing context of input
+		self.state = STATE_NULL
+
 	def send_prompt(self): pass
 
-	## Abstract function to send data to the character.
-	#
-	#  @param self The active instance.
-	#  @param s The data to send.
 	def send(self, s = ""): pass
 
-	## Abstract convenience function to send a line of data to the character.
-	#
-	#  @param self The active instance.
-	#  @param s The data to send.
-	#  @param breaks The number of breaks to send, following \c s.
 	def send_line(self, s = "", breaks = 1): pass
 
-
-		
 	def get_preferred_weapon_range(self):
-		pwr=MELEE_RANGE
+		pwr = MELEE_RANGE
 		for w in self.equipped_weapon:
 			if preferred_range[w.weapon_type] > pwr:
-				pwr=preferred_range[w.weapon_type]
+				pwr = preferred_range[w.weapon_type]
 		return pwr
-## Encapsulates a denizen (non-playing character) within the world.
+
+
+# Encapsulates a denizen (non-playing character) within the world
 class denizen(character):
-	## Construct the denizen.
-	#
-	#  @param self The active instance.
-	#  @param node The XML node describing the denizen.
 	def __init__(self, node):
 		character.__init__(self)
-
+		
 		self.state = STATE_PLAYING
 		
-		node.normalize()
-		for info_node in node.childNodes:
-			if info_node.nodeName == "name":
-				self.name = wordwrap(strip_whitespace(info_node.firstChild.data))
-			elif info_node.nodeName == "keywords":
-				self.keywords.extend(strip_whitespace(info_node.firstChild.data).lower().split())
-			elif info_node.nodeName == "short":
-				## The short description of the denizen.
-				self.short = wordwrap(strip_whitespace(info_node.firstChild.data))
-			elif info_node.nodeName == "desc":
-				self.desc = wordwrap(strip_whitespace(info_node.firstChild.data))
-			elif info_node.nodeName == "flag":
-				self.flags.append(strip_whitespace(info_node.firstChild.data))
-## Encapsulates a player (with a socket connection) within the world.
+		self.name = strip_whitespace(required_child(node, 'name').text)
+		self.short = wordwrap(strip_whitespace(required_child(node, 'short').text))
+		self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+		
+		keywords = node.find('keywords')
+		if keywords != None:
+			self.keywords.extend(strip_whitespace(keywords.text).lower().split())
+
+		for flag in node.findall('flag'):
+			self.flags.append(strip_whitespace(flag.text))
+
+
+# Encapsulates a player (with a socket connection) within the world
 class player(character):
-	## Construct the player.
-	#
-	#  @param self The active instance.
-	#  @param s The player's socket object.
 	def __init__(self, s):
 		character.__init__(self)
 		
-		## Holds savegame data from archive.
+		# Holds savegame data from archive
 		self.proto = None
 		
-		## Holds player password.
 		self.password = None
-		
-		## Holds the client socket for the player.
 		self.socket = None
 		self.state = STATE_INIT
 
 		self.socket = s
 		self.send_prompt()
-	
-	## Send a prompt to the player.
-	#
-	#  @param self The active instance.
+
 	def send_prompt(self):
 		self.socket.push(prompts[self.state])
 
@@ -400,265 +286,224 @@ class player(character):
 			self.state = STATE_NAME
 			self.send_prompt()
 
-	## Send data to the player.
-	#
-	#  @param self The active instance.
-	#  @param s The data to send.
 	def send(self, s = ""):
 		self.socket.push(s)
 
-	## Convenience function to send a line of data to the player.
-	#
-	#  @param self The active instance.
-	#  @param s The data to send.
-	#  @param breaks The number of breaks to send, following \c s.
 	def send_line(self, s = "", breaks = 1):
 		self.send(s)
 		self.send("\r\n" * breaks)
 
 	def send_combat_status(self):
 		self.send_line("[HP: " + str(self.HP) + "/" + str(self.calculate_HP_max()) + "]")
-	## Overloaded function to return search keywords for the player.
-	#
-	#  @param self The active instance.
+
 	def get_keywords(self):
 		return [self.name.lower()]
-	
-	## Blank function to complete the property() assignment to keywords.
-	#
-	#  @param self The active instance.
-	#  @param data (Not processed) the provided data.
+
+	# Blank function to complete the property() assignment to keywords.
 	def set_keywords(self, data):
 		pass
-	
+
 	keywords = property(get_keywords, set_keywords)
-	
-	## Returns a short description of the player.
-	#
-	#  @param self The active instance.
+
 	def get_short(self):
 		return self.name + " is here."
-	
-	## The short description of the player (using player name).
+
 	short = property(get_short)
-	
+
 	def calculate_HP_max(self):
 		return 4*self.stats["strength"] + 2*self.stats["discipline"]
+
+
 class calendar(object):
-    ## Construct a calendar from xml
-	#
-	#  @param self The active instance.
-	#  @param ref The reference code for the room.
-	#  @param node The XML node describing the room.
-    def __init__(self,cname, node):
-    	self.name=cname
-    	self.daylength=0 # measured in RL hours
-    	self.yearlength=0 # measured in IG Days
-    	self.days_of_week = []
-    	self.months={}
-    	self.monthlist= []
-    	self.holidays={}
-    	self.watershed_name=""
-    	self.watershed_date=""
-     	node.normalize()
-     	## Bunch of calendar compliance checks below
-    	for info_node in node.childNodes:
-			if info_node.nodeName == "IGDayLengthInHours":
-				try:
-					self.daylength = int(wordwrap(strip_whitespace(info_node.firstChild.data)))
-				except ValueError:
-					log("FATAL", "IGDayLengthInHours property must be an integer")
-					sys.exit(1)
-				if(self.daylength < 1 or self.daylength > 24):
-					log("FATAL", "IGDayLengthInHours property must be between 1 and 24 inclusive")
-					sys.exit(1)
-			
-			elif info_node.nodeName== "month":
-				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("days")):
-					log("FATAL", "Error in <month /> tag")
-					sys.exit(1)
-				if(self.months.has_key(info_node.attributes["name"].value)):
-				   	log("FATAL", "Duplicate month name found. Month names must be unique")
-				   	sys.exit(1)
-				try:
-					self.months[info_node.attributes["name"].value]=int(info_node.attributes["days"].value)
-					self.monthlist.append(info_node.attributes["name"].value)
-				except ValueError:
-					log("FATAL", "days property must be an integer")
-					sys.exit(1)
-				if(self.months[info_node.attributes["name"].value] < 1):
-					log("FATAL", "days must be greater than 0")
-					sys.exit(1)
-			
-			elif info_node.nodeName=="day":		
-					self.days_of_week.append(strip_whitespace(info_node.firstChild.data))
+	def __init__(self, node, cname):
+		self.name = cname
+		self.daylength = 0  # measured in RL hours
+		self.yearlength = 0  # measured in IG Days
+		self.days_of_week = []
+		self.months = {}
+		self.monthlist = []
+		self.holidays = {}
+		self.watershed_name = ''
+		self.watershed_date = ''
+		
+		dlength = node.find('IGDayLengthInHours')
+		if dlength != None:
+			try:
+				self.daylength = int(strip_whitespace(dlength.text))
+			except ValueError:
+				log("FATAL", "IGDayLengthInHours property must be an integer", exit_code=1)
 
-			elif info_node.nodeName=="holiday":
-				holiday_compliance=True
-				if (not info_node.attributes.has_key("name")) or (not info_node.attributes.has_key("month_day")) or (not info_node.attributes.has_key("month")):
-					log("FATAL", "Error in <holiday /> tag")
-					sys.exit(1)
-				if(self.holidays.has_key(info_node.attributes["name"].value)):
-				   	log("FATAL", "Duplicate holiday name found. Holiday names must be unique")
-				   	sys.exit(1)
-				try:
-					int(info_node.attributes["month_day"].value)
-				except ValueError:
-					log("FATAL", "month_day property must be an integer")
-					sys.exit(1)
-				if(not self.months.has_key(info_node.attributes["month"].value)):
-					holiday_compliance=False
-				else:
-					if(int(info_node.attributes["month_day"].value) > self.months[info_node.attributes["month"].value] or int(info_node.attributes["month_day"].value) < 1):
-						   holiday_compliance=False
-					
-				if(holiday_compliance):
-					self.holidays[info_node.attributes["name"].value]={info_node.attributes["month"].value:int(info_node.attributes["month_day"].value)}
-				else:
-					log("ERROR", "Cannot create " + info_node.attributes["name"].value + " holiday")
+		for month in node.findall('month'):
+			month_name = required_attribute(month, 'name')
+			month_days = required_attribute(month, 'days')
 			
-			elif info_node.nodeName=="WatershedEvent": ## TODO add Compliance to Watershed Event values
-				if(not info_node.attributes.has_key("title") or not info_node.attributes.has_key("date")  ):
-					log("FATAL", "Error in <Watershed Event /> tag")
-					sys.exit(1)
-				self.watershed_name=info_node.attributes["title"].value
-				self.watershed_date=info_node.attributes["date"].value  + " 00:00:00"
-    	for m in self.months:
-    		self.yearlength+=self.months[m]
-    
-    	
-    def get_current_IG_DateTime(self):
-    	return self.get_IG_DateTime(date_time_string())
-    
-    def get_IG_DateTime(self,date_time):    	
-     	date_diff=self.get_date_diff(date_time)
-     	    	
-    	IG_days_diff= self.get_IG_days_diff(date_diff)
-    	    	
-    	IG_date = self.get_IG_date(IG_days_diff)
-      	
-      	IG_date["day_of_week"] = self.get_day_of_week(IG_days_diff)
-       	
-     	IG_date["hour"]= self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["hours"] 
-       	IG_date["minute"]=self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["minutes"] 
+			try:
+				self.months[month_name] = int(month_days)
+				self.monthlist.append(month_name)
+			except ValueError:
+				log("FATAL", "days property must be an integer", exit_code=1)
+			
+			if self.months[month_name] < 1:
+				log("FATAL", "days must be greater than 0", exit_code=1)
 
-       	
-       	return IG_date
-           
-    # returns a RL time breakdown between a given time and the watershed date  
-    def get_date_diff(self,given_time): 
-    	ret={}
-    	c_y,c_m,c_d,c_h,c_M,c_s=self.unpackDate(given_time)
-    	z_y,z_m,z_d,z_h,z_M,z_s=self.unpackDate(self.watershed_date)	    	
-    	given_date=datetime.datetime(int(c_y),int(c_m),int(c_d),int(c_h),int(c_M),int(c_s))
-    	zero_date=datetime.datetime(int(z_y),int(z_m),int(z_d),int(z_h),int(z_M),int(z_s))
-       
-    	diff= given_date-zero_date;
-    	ret["days"]=diff.days
-     	ret["hours"]=diff.seconds/3600
-    	remainder=diff.seconds%3600
-    	ret["minutes"]=int(remainder/60)
-    	ret["seconds"]=remainder%60
-    
-     	return ret
-    
-    def get_IG_days_diff(self, date_diff):
-    	return int((date_diff["days"]*24 + date_diff["hours"])/self.daylength)
+		for day in node.findall('day'):
+			self.days_of_week.append(strip_whitespace(day.text))
 
-    def get_IG_time(self, hours, mins, seconds):
-    	ret={}
-     	remainder=(hours%self.daylength) * 3600 + (mins*60) + seconds     	
-     	IGHourlength_in_seconds=self.daylength*150 # 3600 / 24...
-     	ret["hours"] = int(remainder/IGHourlength_in_seconds)
-     	remainder%=IGHourlength_in_seconds
-     	ret["minutes"]= int(remainder/(IGHourlength_in_seconds/60))
-     	return ret
-     
-     
-    # given a difference in days since watershed, give the day of the week
-    def get_day_of_week(self, IG_days_diff):
-     	IG_day_of_week_index=IG_days_diff % len(self.days_of_week)
-      	return self.days_of_week[IG_day_of_week_index]
-    
-    # returns a dictionary of years, months, days
-    def get_IG_date(self,IGdays):
-    	ret={}
-    	ret["year"]=IGdays/self.yearlength;
-      	IGdays_remainder=IGdays%self.yearlength
-      	
-      	for month in self.monthlist:
-      		if(IGdays_remainder>self.months[month]):
-      		 	IGdays_remainder-=int(self.months[month])
-      		else:
-      			ret["month"]=month
-      			ret["day"]=IGdays_remainder
-      			break
-      		
-      	return ret
-    
-    # returns list in format [month, day, year, hours, mins, seconds]
-    def unpackDate(self, date):
-    	t_date=date.replace(" ", "/")
-    	t_date=t_date.replace(":", "/")
-    	sp = t_date.split("/")
-    	for x in sp:
-    	  x=int(x)		
-    	return sp;
-	  
+		holidays = node.findall('holiday')
+		if holidays:
+			holiday_compliance = True
+		for holiday in holidays:
+			holiday_name = required_attribute(holiday, 'name')
+			holiday_mday = required_attribute(holiday, 'month_day')
+			holiday_month = required_attribute(holiday, 'month')
+			
+			if self.holidays.has_key(holiday_name):
+				log("FATAL", "Duplicate holiday name found.  Holiday names must be unique.", exit_code=1)
+			
+			try:
+				holiday_mday = int(holiday_mday)
+			except ValueError:
+				log("FATAL", "month_day property must be an integer", exit_code=1)
+			
+			if not self.months.has_key(holiday_month):
+				holiday_compliance = False
+			elif holiday_mday > self.months[holiday_month] or holiday_mday < 1:
+				holiday_compliance = False
+			
+			if (holiday_compliance):
+				self.holidays[holiday_name] = { holiday_month : holiday_mday }
+			else:
+				log("ERROR", "Cannot create %s holiday" % holiday_name)
+		
+		watershed = node.find('WatershedEvent')
+		if watershed != None:
+			ws_title = required_attribute(watershed, 'title')
+			ws_date = required_attribute(watershed, 'date')
+			self.watershed_name = ws_title
+			self.watershed_date = ws_date + " 00:00:00"
+
+		self.yearlength = reduce(lambda x, y: x + y, self.months.values())
+
+	def get_current_IG_DateTime(self):
+		return self.get_IG_DateTime(date_time_string())
+
+	def get_IG_DateTime(self, date_time):
+		date_diff=self.get_date_diff(date_time)
+		IG_days_diff= self.get_IG_days_diff(date_diff)
+		IG_date = self.get_IG_date(IG_days_diff)
+		IG_date["day_of_week"] = self.get_day_of_week(IG_days_diff)
+		IG_date["hour"]= self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["hours"] 
+		IG_date["minute"]=self.get_IG_time(date_diff["hours"],date_diff["minutes"],date_diff["seconds"])["minutes"] 
+		return IG_date
+
+	# returns a RL time breakdown between a given time and the watershed date  
+	def get_date_diff(self,given_time): 
+		ret={}
+		
+		c_y,c_m,c_d,c_h,c_M,c_s = self.unpackDate(given_time)
+		z_y,z_m,z_d,z_h,z_M,z_s = self.unpackDate(self.watershed_date)
+		given_date = datetime.datetime(int(c_y),int(c_m),int(c_d),int(c_h),int(c_M),int(c_s))
+		zero_date = datetime.datetime(int(z_y),int(z_m),int(z_d),int(z_h),int(z_M),int(z_s))
+		diff = given_date - zero_date
+		
+		ret["days"] = diff.days
+		ret["hours"] = diff.seconds / 3600
+		remainder = diff.seconds % 3600
+		ret["minutes"] = int(remainder / 60)
+		ret["seconds"] = remainder % 60
+		return ret
+
+	def get_IG_days_diff(self, date_diff):
+		return int((date_diff["days"]*24 + date_diff["hours"]) / self.daylength)
+
+	def get_IG_time(self, hours, mins, seconds):
+		ret={}
+		remainder = (hours%self.daylength) * 3600 + (mins*60) + seconds     	
+		IGHourlength_in_seconds = self.daylength * 150  # 3600 / 24...
+		
+		ret["hours"] = int(remainder/IGHourlength_in_seconds)
+		remainder%=IGHourlength_in_seconds
+		ret["minutes"]= int(remainder/(IGHourlength_in_seconds/60))
+		return ret
+
+	# given a difference in days since watershed, give the day of the week
+	def get_day_of_week(self, IG_days_diff):
+		IG_day_of_week_index = IG_days_diff % len(self.days_of_week)
+		return self.days_of_week[IG_day_of_week_index]
+
+	# returns a dictionary of years, months, days
+	def get_IG_date(self, IGdays):
+		ret = {}
+		ret["year"] = IGdays / self.yearlength
+		IGdays_remainder = IGdays % self.yearlength
+		
+		for month in self.monthlist:
+			if IGdays_remainder > self.months[month]:
+				IGdays_remainder -= int(self.months[month])
+			else:
+				ret["month"] = month
+				ret["day"] = IGdays_remainder
+				break
+		
+		return ret
+
+	# returns list in format [month, day, year, hours, mins, seconds]
+	def unpackDate(self, date):
+		t_date = date.replace(" ", "/")
+		t_date = t_date.replace(":", "/")
+		sp = t_date.split("/")
+		for x in sp:
+			x = int(x)
+		return sp;
+
 class door(object):
-    ## Construct a calendar from xml
-	#
-	#  @param self The active instance.
-	#  @param ref The reference code for the room.
-	#  @param node The XML node describing the room.				
-	def __init__(self, node,area_name,index):
+	def __init__(self, node, area_name, index):
 		self.exits = {}
-		self.status=DOOR_CLOSED
-		self.lockable=False
-		self.keys={}
-		node.normalize()
-		for info_node in node.childNodes:
-			if info_node.nodeName == "exit":
-				if (not info_node.attributes.has_key("room")) or (not info_node.attributes.has_key("dir")):
-					log("FATAL", "Error in <door /> tag")
-					sys.exit(1)
-				if(info_node.attributes["room"].value.find(":") != -1):
-					room_id=info_node.attributes["room"].value
-				else:
-					room_id=area_name+":"+info_node.attributes["room"].value
-				if(not rooms.has_key(room_id)):
-					log("FATAL", "Invalid room value in door tag")
-					sys.exit(1)
-				elif rooms[room_id].exits[libsigma.txt2dir(info_node.attributes["dir"].value)]==None:
-					log("FATAL", "Invalid dir value in door tag ")
-					sys.exit(1)
-				rooms[room_id].doors[libsigma.txt2dir(info_node.attributes["dir"].value)]=index
+		self.status = DOOR_CLOSED
+		self.lockable = False
+		self.keys = {}
+		
+		for door_exit in node.findall('exit'):
+			exit_room = required_attribute(door_exit, 'room')
+			exit_dir = required_attribute(door_exit, 'dir')
+			
+			if exit_room.find(':') != -1:
+				room_id = exit_room
+			else:
+				room_id = '%s:%s' % (area_name, exit_room)
+			
+			if not rooms.has_key(room_id):
+				log("FATAL", "Invalid room value in door tag", exit_code=1)
+			elif rooms[room_id].exits[libsigma.txt2dir(exit_dir)] == None:
+				log("FATAL", "Invalid dir value in door tag", exit_code=1)
+			
+			rooms[room_id].doors[libsigma.txt2dir(exit_dir)] = index
+
 	def is_open(self):
-		if self.status==DOOR_OPEN:
-			return True
-		return False
+		return self.status == DOOR_OPEN
+
 	def is_closed(self):
-		if self.status==DOOR_CLOSED or self.is_locked():
-			return True
-		return False
+		return self.status == DOOR_CLOSED or self.is_locked()
+
 	def is_locked(self):
-		if self.status==DOOR_LOCKED:
-			return True
-		return False
-	
-class combat(object): ## class which stores an instance of combat and its attributes
-	def __init__(self, combatant1,combatant2): ## an instance of combat is between two characters.
-		self.combatant1=combatant1 # combatant1 is assumed the aggressor. He is assumed
-								   # to be engaged in this combat, as s/he instigated it
-		self.combatant2=combatant2
-		self.combatant1_engaged=True
-		self.combatant2_engaged=None
-		self.combatant1_action=None # may not be used,putting in for now...
-		self.combatant2_action=None
-		self.first_striker=None
-		self.second_striker=None
-		self.combatant1_preferred_weapon_range=combatant1.get_preferred_weapon_range()
-		self.combatant2_preferred_weapon_range=combatant2.get_preferred_weapon_range()
-		self.combat_state=COMBAT_STATE_INITIALIZING
-		range=NOT_IN_COMBAT
-		return
+		return self.status == DOOR_LOCKED
+
+
+# Stores an instance of combat and its attributes
+class combat(object):
+	def __init__(self, combatant1, combatant2):
+		# combatant1 is assumed the aggressor. He is assumed
+		# to be engaged in this combat, as s/he instigated it
+		self.combatant1 = combatant1
+		
+		self.combatant2 = combatant2
+		self.combatant1_engaged = True
+		self.combatant2_engaged = None
+		self.combatant1_action = None  # may not be used, putting in for now...
+		self.combatant2_action = None
+		self.first_striker = None
+		self.second_striker = None
+		self.combatant1_preferred_weapon_range = combatant1.get_preferred_weapon_range()
+		self.combatant2_preferred_weapon_range = combatant2.get_preferred_weapon_range()
+		self.combat_state = COMBAT_STATE_INITIALIZING
+		range = NOT_IN_COMBAT

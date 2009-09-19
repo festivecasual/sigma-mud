@@ -259,13 +259,13 @@ def open(data):
 	if len(args) < 2:
 		speaker.send_line(str(args[0]).title() + " what?")
 	else: ## support currently only for doors! Open will most likely also deal with containers later
-   		direction=txt2dir(args[1])
-   	 	if(speaker.location.is_door_closed(direction)):
-	   	  	speaker.location.open_door(direction)
-	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("open","opens"))
-	   	   	announce(ROOM, speaker.location.exits[direction],"The door opens.")
-	 	else:
-	 		speaker.send_line("You can't open that.")
+		direction=txt2dir(args[1])
+		if(speaker.location.is_door_closed(direction)):
+			speaker.location.open_door(direction)
+			report(SELF | ROOM, "$actor $verb the door.", speaker, ("open","opens"))
+			announce(ROOM, speaker.location.exits[direction],"The door opens.")
+		else:
+			speaker.send_line("You can't open that.")
 
 @ handler
 def close(data):
@@ -275,15 +275,14 @@ def close(data):
 	if len(args) < 2:
 		speaker.send_line(str(args[0]).title() + " what?")
 	else: ## support currently only for doors! Close will most likely also deal with containers later
-   		direction=txt2dir(args[1])
-   	 	if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None and direction !=-1):
-	   	  	speaker.location.close_door(direction)
-	   	   	report(SELF | ROOM, "$actor $verb the door.", speaker, ("close","closes"))
-	   	   	announce(ROOM, speaker.location.exits[direction],"The door closes shut.")
-	 	else: 
-	 		speaker.send_line("You can't close that.")
-	 		
-	 		
+		direction=txt2dir(args[1])
+		if(not speaker.location.is_door_closed(direction) and speaker.location.doors[direction]!=None and direction !=-1):
+			speaker.location.close_door(direction)
+			report(SELF | ROOM, "$actor $verb the door.", speaker, ("close","closes"))
+			announce(ROOM, speaker.location.exits[direction],"The door closes shut.")
+		else: 
+			speaker.send_line("You can't close that.")
+
 @ handler
 def wear(data):
 	speaker=data["speaker"]
@@ -299,7 +298,7 @@ def wear(data):
 					return
 				if(at_capacity(speaker, item.worn_position)):
 					speaker.send_line("You can't wear anything else on your " +worn2txt(item.worn)+".")
-			 		return
+					return
 				report(SELF | ROOM, "$actor $verb on " +item.name+ ".", speaker, ("put","puts"))
 				transfer_item(item, speaker.contents,speaker.worn_items)
 				return
@@ -387,5 +386,5 @@ def engage(data):
 	world.combats.append(c)
 	speaker.combats.append(c)
 	engagee.combats.append(c)
-   	report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee) 
+	report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee) 
 	return

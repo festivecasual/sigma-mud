@@ -8,14 +8,11 @@
 
 import time, datetime, hashlib, os.path, sys
 
-## Construct a log entry for the server console.
-#
-#  @param label The type of log message.
-#  @param text The log message to display.
-#  @param trivial Set to True when the log message should be shown only in "verbose" mode.
-def log(label, text, trivial = False):
+def log(label, text, trivial=False, exit_code=None):
 	if not (trivial and (options["verbose"] == "no")):
 		print "%-10s | %s" % (label, text)
+	if exit_code != None:
+		sys.exit(exit_code)
 
 ## Return a formatted string to indicate the current time.
 def time_string():
@@ -84,6 +81,19 @@ def ordinals(int_val):
 def sigma_path():
 	sigma_command = os.path.dirname(sys.argv[0])
 	return os.path.abspath(sigma_command)
+
+def required_attribute(element, attribute):
+	return element.get(attribute, False) or log(
+		"FATAL",
+		"<%s> element requires attribute '%s'" % (element.tag, attribute),
+		exit_code=1)
+
+def required_child(element, tag):
+	match = element.find(tag)
+	if match != None:
+		return match
+	else:
+		log("FATAL", "<%s> element requires child node '%s'" % (element.tag, tag), exit_code=1)
 
 ## Ignorable whitespace (used by strip_whitespace)
 #

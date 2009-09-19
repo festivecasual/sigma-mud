@@ -160,14 +160,14 @@ def process_commands():
 			prompt=True
 		
 		elif speaker.state == STATE_CONFIG_CHAR:
-			 if(not configplayer.check_choice(speaker, message.lstrip())):
+			if(not configplayer.check_choice(speaker, message.lstrip())):
 				speaker.send_line("Please make a valid choice.")
-			 if(configplayer.is_configured(speaker)):
-			 	for stat in stats:
-						if speaker.stats[stat]==DEFAULT_STAT:
-							speaker.stats[stat]=3
+			if(configplayer.is_configured(speaker)):
+				for stat in stats:
+					if speaker.stats[stat]==DEFAULT_STAT:
+						speaker.stats[stat]=3
 				libsigma.add_points(speaker,5)
-			 	world.players.append(speaker)			
+				world.players.append(speaker)
 				libsigma.enter_room(speaker, world.rooms[options["default_start"]])
 				libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
 				speaker.send_line("", 2)
@@ -175,10 +175,9 @@ def process_commands():
 				speaker.HP=speaker.calculate_HP_max()
 				speaker.state = STATE_PLAYING
 				prompt=True
-			 else:
-			 	configplayer.send_options(speaker)
+			else:
+				configplayer.send_options(speaker)
 		
-			 	
 		elif speaker.state == STATE_PLAYING:
 			if not run_command(speaker, message):
 				speaker.send_line("What?")

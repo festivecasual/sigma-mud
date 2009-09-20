@@ -266,7 +266,7 @@ class denizen(character):
 
 # Encapsulates a player (with a socket connection) within the world
 class player(character):
-	def __init__(self, s):
+	def __init__(self, s=None):
 		character.__init__(self)
 		
 		# Holds savegame data from archive
@@ -277,7 +277,8 @@ class player(character):
 		self.state = STATE_INIT
 
 		self.socket = s
-		self.send_prompt()
+		if self.socket is not None:
+			self.send_prompt()
 
 	def send_prompt(self):
 		self.socket.push(prompts[self.state])

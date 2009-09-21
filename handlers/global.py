@@ -4,12 +4,14 @@ from libsigma import *
 from world import *
 from common import *
 
+
 @handler
 def time(data):
     speaker = data["speaker"]
     date_time = calendars[0].get_current_IG_DateTime()
     speaker.send_line( "It is "+ date_time["day_of_week"] +", the " + ordinals(date_time["day"]) + " of " + str(date_time["month"]) + ", " + str(date_time["year"]) + " years since the " + calendars[0].watershed_name + "." )
     speaker.send_line("It is " + string.zfill(date_time["hour"], 2) + ":" + string.zfill(date_time["minute"], 2) + ".")
+
 
 @handler
 def statistics(data):
@@ -20,11 +22,13 @@ def statistics(data):
         speaker.send_line("\r\nPoints not yet allocated: " + str(speaker.points_to_allocate))
     return
 
+
 @handler
 def health(data):
     speaker = data["speaker"]
-    speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.calculate_HP_max()))    
-# more stuff about status affects to come
+    speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.calculate_HP_max()))
+    # more stuff about status affects to come
+
 
 @handler
 def allocate(data):
@@ -49,7 +53,7 @@ def allocate(data):
                     return
             if alloc_am <= speaker.points_to_allocate and alloc_am >=0:
                 if raise_stat(speaker, s, alloc_am):
-                    speaker.send_line("Your " + s + " has been increased by " +str(alloc_am) + ".") 
+                    speaker.send_line("Your " + s + " has been increased by " +str(alloc_am) + ".")
                     remove_points(speaker,alloc_am)
                     return
                 else:
@@ -59,6 +63,3 @@ def allocate(data):
                 speaker.send_line("You can't allocate that many points.")
                 return
     speaker.send_line("Please indicate a valid stat to allocate.")
-    
-    
-            

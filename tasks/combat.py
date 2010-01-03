@@ -3,7 +3,7 @@ import libsigma
 from common import *
 
 
-## Proper name of task
+# Proper name of task
 name = 'Combat Manager'
 interval = 2
 

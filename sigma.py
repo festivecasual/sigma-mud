@@ -15,6 +15,9 @@ from common import *
 def main():
     log("SYSTEM", "Startup in progress")
 
+    log("SYSTEM", "Initializing database")
+    archive.initialize()
+
     log("MODULES", "Inspecting task modules")
     task.load_tasks()
 
@@ -63,6 +66,7 @@ def main():
 
 def players():
     log("SCRIPT", "Booting core server functionality")
+    archive.initialize()
     handler.load_handlers()
     importer.process_xml()
     log("SCRIPT", "Finished loading core functionality")

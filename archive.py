@@ -1,6 +1,15 @@
 import pickle
+import os.path
 
 from common import *
+
+
+def initialize():
+    if not os.path.exists(options["players_db"]):
+        player_db = {}
+        player_file = open(options["players_db"], "wb")
+        pickle.dump(player_db, player_file)
+        player_file.close()
 
 
 def player_load(name):

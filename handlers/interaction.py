@@ -81,7 +81,7 @@ def look(data):
         objective = args[1]
 
         if objective == "self":
-            speaker.send_line("You see yourself.")  # TODO
+            speaker.send_line(speaker.desc)
             return
 
         direction = txt2dir(objective)
@@ -104,6 +104,9 @@ def look(data):
         if focus_text:
             speaker.send_line(focus_text)
             return
+
+        speaker.send_line("You don't see that.")
+        return
 
     speaker.send_line(speaker.location.name)
     speaker.send_line(speaker.location.desc)

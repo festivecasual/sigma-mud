@@ -297,7 +297,7 @@ def d100():
     return random.randint(1,100)
 
 
-class Sentence:
+class Sentence(object):
     def __init__(self, args, args_consumed = 1, matches = []):
         self.arglist = args[args_consumed:]
         self.matchlist = matches

@@ -92,63 +92,17 @@ class placement(object):
             self.flags.append(strip_whitespace(flag.text))
 
 
-class entity(object):
-    def __init__(self):
-        self.name = ''
-        self.desc = ''
-        self.keywords = []
-        self.contents = []
-        self.capacity = 0
-        self.location = ''
-
-
-class item(entity):
-    def __init__(self, node):
-        entity.__init__(self)
-
-        self.weapon_type = NOT_A_WEAPON
-        self.worn = NOT_WORN
-
-        self.name = strip_whitespace(required_child(node, 'name').text)
-        self.short = wordwrap(strip_whitespace(required_child(node, 'short').text))
-        self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
-
-        keywords = node.find('keywords')
-        if keywords != None:
-            self.keywords.extend(strip_whitespace(keywords.text).lower().split())
-
-        worn = node.find('worn')
-        if worn != None:
-            self.worn = libsigma.txt2worn(strip_whitespace(worn.text))
-
-        weapon = node.find('weapon')
-        if weapon != None:
-            weapon_type = required_attribute(weapon, 'type')
-            self.weapon_type = libsigma.txt2val(weapon_type, weapon_match_txt, weapon_match_val)
-
-    def get_worn(self):
-        return self.worn
-
-    def set_worn(self, x):
-        pass
-
-    worn_position = property(get_worn, set_worn)
-
-
-class room(entity):
+class room(object):
     def __init__(self, ref, node):
-        entity.__init__(self)
         self.location = ref
         self.characters = []
-        self.keywords = ["room"]
-
         self.exits = [None] * NUM_DIRS
         self.altmsg = [None] * NUM_DIRS
         self.doors = [None] * NUM_DIRS
-
         self.foci = {}
+        self.contents = []
+        self.capacity = 0
 
-        self.capacity = -1
 
         self.name = strip_whitespace(required_child(node, 'name').text)
         self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
@@ -169,10 +123,9 @@ class room(entity):
             if altmsg:
                 self.altmsg[direction] = altmsg
 
-    def get_area(self):
+    @property
+    def area(self):
         return self.location[:self.location.find(":")]
-
-    area = property(get_area)
 
     def can_character_go(self, direction):
         if self.exits[direction]!=None:
@@ -195,6 +148,56 @@ class room(entity):
             if self.doors[direction]!=None:
                 return doors[self.doors[direction]].is_closed()
         return False
+
+
+class entity(object):
+    def __init__(self):
+        self.name = ''
+        self.contents = []
+        self.capacity = 0
+        self.location = ''
+
+        self._desc = ''
+        self._keywords = []
+        self._short = ''
+
+    @property
+    def desc(self):
+        return self._desc
+
+    @property
+    def short(self):
+        return self._short
+
+    @property
+    def keywords(self):
+        return self._keywords
+
+
+class item(entity):
+    def __init__(self, node):
+        entity.__init__(self)
+
+        self.weapon_type = NOT_A_WEAPON
+        self.worn_position = NOT_WORN
+
+        self.name = strip_whitespace(required_child(node, 'name').text)
+
+        self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+        self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
+
+        keywords = node.find('keywords')
+        if keywords != None:
+            self._keywords.extend(strip_whitespace(keywords.text).lower().split())
+
+        worn = node.find('worn')
+        if worn != None:
+            self.worn_position = libsigma.txt2worn(strip_whitespace(worn.text))
+
+        weapon = node.find('weapon')
+        if weapon != None:
+            weapon_type = required_attribute(weapon, 'type')
+            self.weapon_type = libsigma.txt2val(weapon_type, weapon_match_txt, weapon_match_val)
 
 
 class character(entity):
@@ -239,12 +242,13 @@ class denizen(character):
         self.state = STATE_PLAYING
 
         self.name = strip_whitespace(required_child(node, 'name').text)
-        self.short = wordwrap(strip_whitespace(required_child(node, 'short').text))
-        self.desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+        self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
+
+        self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
 
         keywords = node.find('keywords')
         if keywords != None:
-            self.keywords.extend(strip_whitespace(keywords.text).lower().split())
+            self._keywords.extend(strip_whitespace(keywords.text).lower().split())
 
         for flag in node.findall('flag'):
             self.flags.append(strip_whitespace(flag.text))
@@ -264,6 +268,18 @@ class player(character):
         if self.socket is not None:
             self.send_prompt()
 
+    @property
+    def desc(self):
+        return self.name + " is here."
+
+    @property
+    def short(self):
+        return self.name + " is here."
+
+    @property
+    def keywords(self):
+        return [self.name.lower()]
+
     def send_prompt(self):
         self.socket.push(prompts[self.state])
 
@@ -280,20 +296,6 @@ class player(character):
 
     def send_combat_status(self):
         self.send_line("[HP: " + str(self.HP) + "/" + str(self.calculate_HP_max()) + "]")
-
-    def get_keywords(self):
-        return [self.name.lower()]
-
-    # Blank function to complete the property() assignment to keywords.
-    def set_keywords(self, data):
-        pass
-
-    keywords = property(get_keywords, set_keywords)
-
-    def get_short(self):
-        return self.name + " is here."
-
-    short = property(get_short)
 
     def calculate_HP_max(self):
         return 4*self.stats["strength"] + 2*self.stats["discipline"]

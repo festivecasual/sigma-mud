@@ -215,9 +215,11 @@ class character(entity):
         self.equipped_weapon = []
         self.equipped_shield = None
         self.worn_items = []
-        self.HP = 0
         self.flags = []
         self.combats = []
+        self.engaged = None
+
+        self._HP = 0
 
         self.state = STATE_NULL
 
@@ -227,12 +229,29 @@ class character(entity):
 
     def send_line(self, s = "", breaks = 1): pass
 
-    def get_preferred_weapon_range(self):
+    def send_combat_status(self): pass
+
+    def handle_death(self):
+        raise NotImplementedError
+
+    @property
+    def preferred_weapon_range(self):
         pwr = MELEE_RANGE
         for w in self.equipped_weapon:
             if preferred_range[w.weapon_type] > pwr:
                 pwr = preferred_range[w.weapon_type]
         return pwr
+
+    @property
+    def max_HP(self):
+        return 4*self.stats["strength"] + 2*self.stats["discipline"]
+
+    def set_HP(self, val):
+        self._HP = min(max(0, val), self.max_HP)
+        if self._HP == 0:
+            self.handle_death()
+
+    HP = property(lambda self: self._HP, set_HP)
 
 
 class denizen(character):
@@ -295,10 +314,10 @@ class player(character):
         self.send("\r\n" * breaks)
 
     def send_combat_status(self):
-        self.send_line("[HP: " + str(self.HP) + "/" + str(self.calculate_HP_max()) + "]")
+        self.send_line("[HP: " + str(self.HP) + "/" + str(self.max_HP) + "]")
 
-    def calculate_HP_max(self):
-        return 4*self.stats["strength"] + 2*self.stats["discipline"]
+    def handle_death(self):
+        pass
 
 
 class calendar(object):
@@ -480,18 +499,40 @@ class door(object):
 # Stores an instance of combat and its attributes
 class combat(object):
     def __init__(self, combatant1, combatant2):
-        # combatant1 is assumed the aggressor. He is assumed
-        # to be engaged in this combat, as s/he instigated it
+        # combatant1 is assumed the aggressor. He is assumed to be
+        # engaged initially in this combat, as s/he instigated it
         self.combatant1 = combatant1
-
         self.combatant2 = combatant2
-        self.combatant1_engaged = True
-        self.combatant2_engaged = None
+
         self.combatant1_action = None  # may not be used, putting in for now...
         self.combatant2_action = None
-        self.first_striker = None
-        self.second_striker = None
-        self.combatant1_preferred_weapon_range = combatant1.get_preferred_weapon_range()
-        self.combatant2_preferred_weapon_range = combatant2.get_preferred_weapon_range()
+
+        self.strike_queue = []
+
         self.combat_state = COMBAT_STATE_INITIALIZING
-        range = NOT_IN_COMBAT
+        self.range = NOT_IN_COMBAT
+
+    def release(self):
+        combats.remove(self)
+        self.combatant1.combats.remove(self)
+        self.combatant2.combats.remove(self)
+        if self.combatant1.engaged==self:
+            self.combatant1.engaged=None
+        if self.combatant2.engaged==self:
+            self.combatant2.engaged=None
+
+    def queue_strikes(self):
+        # section needs work. Defaults to attack, need to do more checks
+        self.combatant1_action=COMBAT_ACTION_ATTACKING
+        self.combatant2_action=COMBAT_ACTION_ATTACKING
+        agil_diff=self.combatant1.stats["agility"] - self.combatant2.stats["agility"]
+        percent_success=min(max(agil_diff*5 + 50, 20), 80)
+        roll_for_first_strike=libsigma.d100()
+        if roll_for_first_strike <= percent_success:
+            self.strike_queue.append((self.combatant1, self.combatant2))
+            self.strike_queue.append((self.combatant2, self.combatant1))
+        else:
+            self.strike_queue.append((self.combatant2, self.combatant1))
+            self.strike_queue.append((self.combatant1, self.combatant2))
+        # end section
+

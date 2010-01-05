@@ -26,7 +26,7 @@ def statistics(data):
 @handler
 def health(data):
     speaker = data["speaker"]
-    speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.calculate_HP_max()))
+    speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.max_HP))
     # more stuff about status affects to come
 
 

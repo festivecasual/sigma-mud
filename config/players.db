@@ -3,8 +3,12 @@ S'Brandar'
 p1
 S"(S'\\x15\\x80\\xadU\\xa8\\x8f.\\xa7~\\xb6\\x1c\\xcb\\xfa\\xde0SHd\\xe4g'\np0\n(lp1\nccopy_reg\n_reconstructor\np2\n(cworld\nitem\np3\nc__builtin__\nobject\np4\nNtp5\nRp6\n(dp7\nS'capacity'\np8\nI0\nsS'name'\np9\nS'a delicious chocolate chunk cookie'\np10\nsS'_keywords'\np11\n(lp12\nS'cookie'\np13\nasS'_short'\np14\nS'A delicious cholocate chunk cookie sits here.'\np15\nsS'worn_position'\np16\nI0\nsS'location'\np17\nS''\np18\nsS'weapon_type'\np19\nI0\nsS'contents'\np20\n(lp21\nsS'desc'\np22\nS'The cookie has a delicious, gooey smell of freshly-baked\\r\\ndough.'\np23\nsba(lp24\ng2\n(g3\ng4\nNtp25\nRp26\n(dp27\nS'capacity'\np28\nI0\nsS'name'\np29\nS'a solid blue polo shirt'\np30\nsS'_keywords'\np31\n(lp32\nS'shirt'\np33\nasS'_short'\np34\nS'A solid blue polo shirt is here.'\np35\nsS'worn_position'\np36\nI3\nsS'location'\np37\ng18\nsS'weapon_type'\np38\nI0\nsS'contents'\np39\n(lp40\nsS'desc'\np41\nS'The shirt looks only slightly worn, but otherwise is in\\r\\ngood condition.'\np42\nsba(lp43\n(dp44\nS'discipline'\np45\nI3\nsS'agility'\np46\nI3\nsS'strength'\np47\nI3\nsS'intelligence'\np48\nI3\nsS'charisma'\np49\nI3\nsS'perception'\np50\nI3\nsI5\nS'Male'\np51\nS'Wyvernfolk'\np52\nI3\ntp53\n."
 p2
-sS'Kristar'
+sS'Alpha'
 p3
-S"(S'\\x1c  a\\xb8XHbZ\\xb5\\xa6\\xc7\\xdd\\x8bG\\xd2\\x8fj\\xc9o'\np0\n(lp1\n(lp2\n(lp3\n(dp4\nS'discipline'\np5\nI3\nsS'agility'\np6\nI3\nsS'strength'\np7\nI3\nsS'intelligence'\np8\nI3\nsS'charisma'\np9\nI3\nsS'perception'\np10\nI3\nsI5\nS'Female'\np11\nS'Elf'\np12\nI0\ntp13\n."
+S"(S'u\\x05\\xd6JT\\xe0a\\xb7\\xac\\xd5L\\xcdX\\xb4\\x9d\\xc45\\x00\\xb65'\np0\n(lp1\n(lp2\n(lp3\n(dp4\nS'discipline'\np5\nI3\nsS'agility'\np6\nI3\nsS'strength'\np7\nI3\nsS'intelligence'\np8\nI3\nsS'charisma'\np9\nI3\nsS'perception'\np10\nI3\nsI5\nS'Male'\np11\nS'Human'\np12\nI18\ntp13\n."
 p4
+sS'Kristar'
+p5
+S"(S'\\x1c  a\\xb8XHbZ\\xb5\\xa6\\xc7\\xdd\\x8bG\\xd2\\x8fj\\xc9o'\np0\n(lp1\n(lp2\n(lp3\n(dp4\nS'discipline'\np5\nI3\nsS'agility'\np6\nI3\nsS'strength'\np7\nI3\nsS'intelligence'\np8\nI3\nsS'charisma'\np9\nI3\nsS'perception'\np10\nI3\nsI5\nS'Female'\np11\nS'Elf'\np12\nI12\ntp13\n."
+p6
 s.

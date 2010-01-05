@@ -70,14 +70,13 @@ telnet localhost 4000
 
 <p>The standard distribution of Sigma contains a default user account, under the name <strong>Alpha</strong>, with the password <strong>default</strong>.  This player account will allow you to access the default Sigma installation and inspect its operations.</p>
 
-<p><strong class="important">For obvious security reasons, you should create a new user account for yourself, and you should delete the Alpha account before proceeding.</strong>  You may do so by using the following commands from the base Sigma directory:</p>
+<p><strong class="important">For obvious security reasons, you should create a new user account for yourself, and you should delete the Alpha account before proceeding.</strong>  You may do so by using the following command from the base Sigma directory:</p>
 
 <pre>
-sigma-ctl.py add_player UserName secret-password
-sigma-ctl.py delete_player Alpha
+python sigma.py players
 </pre>
 
-<p><code>sigma-ctl.py</code> is a semi-autonomous script used to perform various administrative tasks associated with running the Sigma server.</p>
+<p>The distributed <strong>config/players.db</strong> file can also simply be deleted, as it will be regenerated upon server startup.</p>
 
 <h3>Shutting Down the Server</h3>
 

@@ -153,7 +153,7 @@ def process_commands():
                 libsigma.report(libsigma.ROOM, "$actor has entered the game.", speaker)
                 speaker.send_line("", 2)
                 libsigma.queue_command(speaker, "look")
-                speaker.HP=speaker.calculate_HP_max()
+                speaker.HP=speaker.max_HP
                 speaker.state = STATE_PLAYING
                 prompt=True
             else:

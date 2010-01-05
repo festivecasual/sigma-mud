@@ -367,8 +367,10 @@ def engage(data):
     #first argument should be person/character
     speaker=data["speaker"]
     args=data["args"]
+    command=data["mapped"]
+
     if len(args) < 2:
-        speaker.send_line(str(args[0]).title() + " what?")
+        speaker.send_line(command.title() + " what?")
         return
 
     engagee = character_in_room(args[1], speaker.location, speaker)

@@ -12,13 +12,13 @@ tasks = {}
 
 
 def load_tasks():
-    task_modules = glob.glob(directories["tasks_root"] + "/*.py")
+    task_modules = glob.glob(os.path.join(directories["tasks_root"], "*.py"))
     for task_file in task_modules:
         source = os.path.basename(task_file)
         module_name = "task_" + os.path.splitext(source)[0]
 
         try:
-            imp.load_source(module_name, directories["tasks_root"] + "/" + source)
+            imp.load_source(module_name, os.path.join(directories["tasks_root"], source))
 
             task_name = sys.modules[module_name].name
             task_interval = sys.modules[module_name].interval

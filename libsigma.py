@@ -166,9 +166,10 @@ def transfer_item(item, from_collection, to_collection):
         return False
 
 
-def phi(stat_initial, level_maturity):
-    alpha = math.exp((-1 * math.log(0.05 / (1 - stat_initial))) / level_maturity)
-    return lambda L: stat_initial + (1 - stat_initial) * (1 - alpha ** (-1 * L))
+def transfer_money(amount, origin, destination):
+    to_transfer = min(origin.money, amount)
+    origin.money -= to_transfer
+    destination.money += to_transfer
 
 
 def queue_command(character, text):
@@ -273,6 +274,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
         announce(NEAR, actor.location, out)
 
     return out
+
 
 # room based report. Does not originate at a person, rather at a room.
 # Since the room is the target, this is the messaging that is used

@@ -5,6 +5,7 @@ import pickle
 import archive
 import command
 import handler
+import persona
 import importer
 import network
 import task
@@ -20,6 +21,9 @@ def main():
 
     log("MODULES", "Inspecting task modules")
     task.load_tasks()
+
+    log("MODULES", "Inspecting persona modules")
+    persona.load_personas()
 
     log("MODULES", "Inspecting handler modules")
     handler.load_handlers()

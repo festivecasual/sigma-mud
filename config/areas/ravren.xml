@@ -50,8 +50,11 @@
   </item>
   
   <denizen id="penguin">
-    <name>a penguin</name>
+    <name>the penguin</name>
     <keywords>penguin</keywords>
+    <stats level="5">
+      <stat name="strength" value="7" />
+    </stats>
     <short>A penguin waddles around your feet.</short>
     <desc>
       The penguin is waddling about, looking for attention from wherever

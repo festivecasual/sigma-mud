@@ -20,10 +20,9 @@ def task_execute():  # moves all combats through states through its lifecycle
             c.combatant2.send_combat_status()
             c.combat_state = COMBAT_STATE_ENGAGING
 
-            if c.combatant2.engaged and c.combatant2.engaged != c:
-                libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb advancing toward $direct!",c.combatant1,("are","is"),c.combatant2)
-            elif not c.combatant2.engaged:
-                libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb advancing toward an anticipating $direct!",c.combatant1,("are","is"),c.combatant2)
+            libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb advancing toward $direct!",c.combatant1,("are","is"),c.combatant2)
+            if not c.combatant2.engaged:
+                libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb $direct for the attack!",c.combatant2,("ready","readies"),c.combatant2)
                 c.combatant2.engaged = c
 
         elif c.combat_state == COMBAT_STATE_ENGAGING:
@@ -51,6 +50,7 @@ def task_execute():  # moves all combats through states through its lifecycle
 
             c.combat_state=COMBAT_STATE_FIGHTING
             break
+
         elif c.combat_state == COMBAT_STATE_FIGHTING:
             # Strange case when strike queue is empty at this point
             if not c.strike_queue:

@@ -94,7 +94,7 @@
   
     <item id="shirt">
     <name>a solid blue polo shirt</name>
-    <keywords>shirt</keywords>
+    <keywords>shirt polo</keywords>
     <worn>torso</worn>
     <short>A solid blue polo shirt is here.</short>
     <desc>
@@ -125,7 +125,7 @@
   	</item>
   
    <denizen id="killer_penguin">
-    <name>a killer penguin</name>
+    <name>the killer penguin</name>
     <keywords>penguin</keywords>
     <short>A killer penguin roams about, looking for its next victim.</short>
     <desc>

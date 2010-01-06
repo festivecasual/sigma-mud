@@ -360,6 +360,7 @@ options = {
     "verbose" : "yes",  # Display "trivial" log entries?
     "debug" : "no",  # Halt on errors from safe_mode?
     "root_dir" : sigma_path(),  # Where to look for designer modules and XML files
+    "currency" : "gold",  # Currency unit
     }
 
 # Defines the relative root for all file access.
@@ -367,8 +368,9 @@ root_dir = "."
 
 # Defines system directories.
 directories = {
-    "xml_root" : options["root_dir"] + "/config",  # XML root directory and location of server.xml
-    "tasks_root" : options["root_dir"] + "/tasks",  # Root directory for task modules
-    "handlers_root" : options["root_dir"] + "/handlers",  # Root directory for handler modules
-    "orders_root" : options["root_dir"] + "/classes",  # Root directory for order modules
+    "xml_root" : os.path.join(options["root_dir"], "config"),  # XML root directory and location of server.xml
+    "tasks_root" : os.path.join(options["root_dir"], "tasks"),  # Root directory for task modules
+    "handlers_root" : os.path.join(options["root_dir"], "handlers"),  # Root directory for handler modules
+    "orders_root" : os.path.join(options["root_dir"], "classes"),  # Root directory for order modules
+    "personas_root" : os.path.join(options["root_dir"], "personas"),  # Root directory for persona modules
     }

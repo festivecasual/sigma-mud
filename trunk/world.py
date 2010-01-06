@@ -14,7 +14,7 @@ populators = []
 placements = []
 calendars = []
 doors = []
-combats=[]
+combats = []
 
 
 def resolve_links():
@@ -156,6 +156,7 @@ class entity(object):
         self.contents = []
         self.capacity = 0
         self.location = ''
+        self.money = 0
 
         self._desc = ''
         self._keywords = []
@@ -206,8 +207,9 @@ class character(entity):
 
         self.gender = GENDER_NEUTRAL
         self.race = RACE_NEUTRAL
-        self.stats = {}
+        self.level = 0
 
+        self.stats = {}
         for stat in stats:
             self.stats[stat] = DEFAULT_STAT
 
@@ -220,6 +222,7 @@ class character(entity):
         self.engaged = None
 
         self._HP = 0
+        self._XP = 0
 
         self.state = STATE_NULL
 
@@ -233,6 +236,9 @@ class character(entity):
 
     def handle_death(self):
         raise NotImplementedError
+
+    def check_level(self):
+        pass
 
     @property
     def preferred_weapon_range(self):
@@ -253,6 +259,13 @@ class character(entity):
 
     HP = property(lambda self: self._HP, set_HP)
 
+    def set_XP(self, val):
+        # This allows for passive level-up checking for players
+        self._XP = val
+        self.check_level()
+
+    XP = property(lambda self: self._XP, set_XP)
+
 
 class denizen(character):
     def __init__(self, node):
@@ -271,6 +284,27 @@ class denizen(character):
 
         for flag in node.findall('flag'):
             self.flags.append(strip_whitespace(flag.text))
+
+        stat_info = node.find('stats')
+        if stat_info != None:
+            try:
+                self.level = int(required_attribute(stat_info, 'level'))
+            except ValueError:
+                log("FATAL", "<stats /> level attribute must be an integer", exit_code=1)
+
+            for stat in stats:
+                # Obviously needs sophistication
+                self.stats[stat] = self.level * 2
+
+            for forced_stat in stat_info.findall('stat'):
+                try:
+                    self.stats[required_attribute(forced_stat, 'name')] = int(required_attribute(forced_stat, 'value'))
+                except KeyError:
+                    log("FATAL", "<stat /> name attribute references an invalid statistic", exit_code=1)
+                except ValueError:
+                    log("FATAL", "<stat /> value attribute must be an integer", exit_code=1)
+
+        self.HP = self.max_HP
 
 
 class player(character):

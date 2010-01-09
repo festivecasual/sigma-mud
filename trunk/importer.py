@@ -71,7 +71,7 @@ def process_xml():
         server_xml.remove(handlers)
 
     for child in server_xml.getchildren():
-        log("  *  ERROR", "Ignoring unknown tag <%s> in server.xml" % child.tag)
+        log("ERROR", "Ignoring unknown tag <%s> in server.xml" % child.tag, problem=True)
 
 
 def process_area(area_xml, area_name):
@@ -110,7 +110,7 @@ def process_area(area_xml, area_name):
         area_xml.remove(placement)
 
     for child in area_xml.getchildren():
-        log('  *  ERROR', 'Ignoring unknown tag <%s> in area file [%s]' % (child.tag, area_name))
+        log('ERROR', 'Ignoring unknown tag <%s> in area file [%s]' % (child.tag, area_name), problem=True)
 
 
 def process_handlers(handlers_xml):

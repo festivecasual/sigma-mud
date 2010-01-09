@@ -8,7 +8,7 @@
 	<area name="ravren" file="areas/ravren.xml" />
 	<area name="testland" file="areas/testland.xml" />	
 	
-	<calendar name="main" file="calendar.xml" /> 
+	<calendar name="Ravren Standard" file="calendar.xml" /> 
 	
 	<class file="classes/fighter.xml" />
 	

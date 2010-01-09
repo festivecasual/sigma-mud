@@ -1,4 +1,4 @@
-<calendar name="Ravren Standard">	 
+<calendar>	 
 <!--When defining holidays, ensure that they come after the month is defined !-->
 <!--IG day length should be readily divisible by 24 in this version of calendar !-->
 	 <IGDayLengthInHours>

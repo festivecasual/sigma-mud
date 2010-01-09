@@ -3,7 +3,8 @@
   <special type="apostrophe" rewrite="say" />
   <special type="comma" rewrite="emote" />
 
-  <handler command="allocate" function="allocate"/>	
+  <handler command="accept" function="accept" />
+  <handler command="allocate" function="allocate" />
 	
   <handler command="cackle" function="emote" />
   <handler command="close" function="close"/>	
@@ -40,11 +41,14 @@
   <handler command="northwest" function="go" />
   <handler command="nw" function="go" />
 
-  <handler command="open" function="open"/>	
+  <handler command="open" function="open" />
+  <handler command="offer" function="give" />
   	
   <handler command="quit" function="player_quit" />
 
   <handler command="remove" function="remove" />
+  <handler command="refuse" function="accept" />
+  <handler command="reject" function="accept" />
   
   <handler command="south" function="go" />
   <handler command="say" function="say" />
@@ -70,4 +74,5 @@
   <handler command="wink" function="emote" />
   <handler command="wield" function="equip"/>	
   <handler command="yell" function="yell" />
+
 </handlers>

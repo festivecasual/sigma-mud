@@ -200,35 +200,86 @@ def give(data):
     speaker = data["speaker"]
     args = data["args"]
 
-    if len(args) == 2:
+    if len(args) < 2:
+        speaker.send_line("Give what?")
+        return
+    elif len(args) < 3:
         speaker.send_line("Give to whom?")
         return
-    elif len(args) != 3:
-        speaker.send_line("You can't do that.")
-        return
 
-    target = None
-    for item in speaker.contents:
-        for keyword in item.keywords:
-            if keyword.startswith(args[1]):
-                target = item
-                break
+    source = Sentence(args)
+    result = source.ItemInInventory(speaker).Allow('to').CharacterInRoom(speaker.location, speaker)
+    
+    if result.CompleteMatch():
+        target = result[0]
+        recipient = result[1]
 
-    if not target:
+        if speaker == recipient:
+            speaker.send_line("You already have it.")
+        elif target in [o.transfer_item for o in recipient.offers]:
+            speaker.send_line("You have already offered that to %s." % recipient.name)
+        else:
+            offer_item(target, speaker, recipient)
+            report(SELF | ROOM, "$actor $verb $direct to $indirect.", speaker, ("offer", "offers"), target, recipient)
+    elif not result[0]:
         speaker.send_line("You don't have that.")
-        return
-
-    recipient = character_in_room(args[2], speaker.location, speaker)
-    if not recipient:
+    elif not result[1]:
         speaker.send_line("They're not here.")
+    else:
+        speaker.send_line("You can't do that.")
+
+
+@handler
+def accept(data):
+    speaker = data["speaker"]
+    args = data["args"]
+    tail = data["tail"]
+    mapped = data["mapped"]
+
+    if len(speaker.offers) == 0:
+        speaker.send_line("You have not been offered anything recently.")
+        return
+    elif len(speaker.offers) == 1:
+        offer = speaker.offers[0]
+    else:
+        offer = None
+        for search in speaker.offers:
+            for keyword in search.transfer_item.keywords:
+                if tail and keyword.startswith(tail):
+                    offer = search
+
+    if not offer or len(args) == 0:
+        speaker.send_line("Current offers:")
+        for o in speaker.offers:
+            speaker.send_line("    %s (from %s)" % (o.transfer_item.name, o.from_character.name))
         return
 
-    if recipient == speaker:
-        speaker.send_line("You cannot give to yourself.")
+    if not offer.check_valid():
+        offer.dequeue()
         return
 
-    transfer_item(target, speaker.contents, recipient.contents)
-    report(SELF | ROOM, "$actor $verb $direct to $indirect.", speaker, ("give", "gives"), target, recipient)
+    offer.to_character.offers.remove(offer)
+
+    if mapped == "accept":
+        transfer_item(offer.transfer_item, offer.from_character.contents, offer.to_character.contents)
+        report(
+                SELF | ROOM,
+                "$actor $verb $direct from $indirect.",
+                speaker,
+                ("accept", "accepts"),
+                offer.transfer_item,
+                offer.from_character
+                )
+    else:
+        report(
+                SELF | ROOM,
+                "$actor $verb $direct from $indirect.",
+                speaker,
+                ("reject", "rejects"),
+                offer.transfer_item,
+                offer.from_character
+                )
+
 
 
 @handler
@@ -245,7 +296,7 @@ def inventory(data):
     if len(speaker.worn_items) > 0:
         speaker.send_line("You are wearing:")
         for i in speaker.worn_items:
-            speaker.send_line( "   " + i.name)
+            speaker.send_line("    " + i.name)
 
 
 @handler

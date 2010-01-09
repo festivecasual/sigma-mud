@@ -15,23 +15,24 @@ def load_tasks():
     task_modules = glob.glob(os.path.join(directories["tasks_root"], "*.py"))
     for task_file in task_modules:
         source = os.path.basename(task_file)
-        module_name = "task_" + os.path.splitext(source)[0]
+        module_name = 'task_' + os.path.splitext(source)[0]
 
-        try:
-            imp.load_source(module_name, os.path.join(directories["tasks_root"], source))
-
-            task_name = sys.modules[module_name].name
-            task_interval = sys.modules[module_name].interval
-
-            f_init = sys.modules[module_name].task_init
-            f_execute = sys.modules[module_name].task_execute
-            f_deinit = sys.modules[module_name].task_deinit
-        except:
-            log("  *  ERROR", "Task module [" + source + "] is not functional")
+        t = libsigma.safe_mode(imp.load_source, module_name, task_file)
+        if not t:
+            log('TASK', 'Not loading [%s]: errors detected' % source, problem=True)
             continue
 
-        log("TASK", "Loading task [" + task_name + "]")
-        tasks[task_name] = (sys.modules[module_name], 0, task_interval, -1)
+        try:
+            task_name = t.name
+            task_interval = t.interval
+            f_init = t.task_init
+            f_execute = t.task_execute
+            f_deinit = t.task_deinit
+        except AttributeError:
+            log("TASK", "Task module [%s] is missing one or more required members" % source, problem=True)
+        else:
+            tasks[task_name] = (t, 0, task_interval, -1)
+            log("TASK", "Loaded task [%s]" % task_name)
 
 
 def init_tasks():

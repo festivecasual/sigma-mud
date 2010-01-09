@@ -28,7 +28,7 @@ def resolve_links():
             elif rooms.has_key(current.area + ":" + current.exits[i]):
                 current.exits[i] = rooms[current.area + ":" + current.exits[i]]
             else:
-                log("  *  ERROR", "Unresolved room exit linkage: " + current.exits[i] + " (" + current.location + ")")
+                log("ERROR", "Unresolved room exit linkage: " + current.exits[i] + " (" + current.location + ")", problem=True)
                 current.exits[i] = None
 
 
@@ -39,14 +39,14 @@ def resolve_populators():
         elif denizens_source.has_key(current.area + ":" + current.denizen):
             current.denizen = denizens_source[current.area + ":" + current.denizen]
         else:
-            log("  *  ERROR", "Unresolved denizen reference: " + current.denizen)
+            log("ERROR", "Unresolved denizen reference: " + current.denizen, problem=True)
 
         if rooms.has_key(current.target):
             current.target = rooms[current.target]
         elif rooms.has_key(current.area + ":" + current.target):
             current.target = rooms[current.area + ":" + current.target]
         else:
-            log("  *  ERROR", "Unresolved target room reference: " + current.target)
+            log("ERROR", "Unresolved target room reference: " + current.target, problem=True)
 
 
 def resolve_placements():
@@ -56,14 +56,14 @@ def resolve_placements():
         elif items_source.has_key(current.area + ":" + current.item):
             current.item = items_source[current.area + ":" + current.item]
         else:
-            log("  *  ERROR", "Unresolved item reference: " + current.item)
+            log("ERROR", "Unresolved item reference: " + current.item, problem=True)
 
         if rooms.has_key(current.target):
             current.target = rooms[current.target]
         elif rooms.has_key(current.area + ":" + current.target):
             current.target = rooms[current.area + ":" + current.target]
         else:
-            log("  *  ERROR", "Unresolved target room reference: " + current.target)
+            log("ERROR", "Unresolved target room reference: " + current.target, problem=True)
 
 
 class populator(object):
@@ -201,6 +201,51 @@ class item(entity):
             self.weapon_type = libsigma.txt2val(weapon_type, weapon_match_txt, weapon_match_val)
 
 
+class offer(object):
+    def __init__(self, transfer_item, from_character, to_character):
+        self.transfer_item, self.from_character, self.to_character = transfer_item, from_character, to_character
+
+    def warning(self):
+        if self not in self.to_character.offers:
+            return
+
+        if not self.check_valid():
+            self.dequeue()
+            return
+
+        self.to_character.send_line(
+                'You have yet to accept or refuse the offer of %s by %s.' % (
+                        self.transfer_item.name,
+                        self.from_character.name,
+                        )
+                )
+
+        libsigma.insert_task(self.to_character.name + '_transfer_dequeue', self.dequeue, 30, 1)
+
+    def dequeue(self):
+        if self not in self.to_character.offers:
+            return
+
+        self.to_character.offers.remove(self)
+        self.to_character.send_line('The offer of %s from %s can no longer be accepted.' % (
+                self.transfer_item.name,
+                self.from_character.name,
+                ))
+        self.from_character.send_line('Your offer of %s to %s has been abandoned.' % (
+                self.transfer_item.name,
+                self.from_character.name,
+                ))
+
+    def check_valid(self):
+        if self.to_character.location != self.from_character.location:
+            return False
+
+        if self.transfer_item not in self.from_character.contents:
+            return False
+
+        return True
+
+
 class character(entity):
     def __init__(self):
         entity.__init__(self)
@@ -213,11 +258,15 @@ class character(entity):
         for stat in stats:
             self.stats[stat] = DEFAULT_STAT
 
+        self.offers = []
+
         self.points_to_allocate = 0
         self.equipped_weapon = []
         self.equipped_shield = None
         self.worn_items = []
+
         self.flags = []
+
         self.combats = []
         self.engaged = None
 
@@ -413,7 +462,7 @@ class calendar(object):
             if (holiday_compliance):
                 self.holidays[holiday_name] = { holiday_month : holiday_mday }
             else:
-                log("ERROR", "Cannot create %s holiday" % holiday_name)
+                log("ERROR", "Cannot create %s holiday" % holiday_name, problem=True)
 
         watershed = node.find('WatershedEvent')
         if watershed != None:

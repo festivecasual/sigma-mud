@@ -5,8 +5,10 @@ import os.path
 import sys
 
 
-def log(label, text, trivial=False, exit_code=None):
+def log(label, text, trivial=False, problem=False, exit_code=None):
     if not (trivial and (options["verbose"] == "no")):
+        if exit_code or problem:
+            label = '-  ' + label
         print "%-10s | %s" % (label, text)
     if exit_code != None:
         sys.exit(exit_code)
@@ -350,23 +352,22 @@ prompts = {
     STATE_CONFIG_STATS : "Pick a number: "
     }
 
+
 # Basic configurable options (and default values).
 options = {
     "bind_address" : "",  # "" is a special system identifier for * (all)
     "bind_port" : "4000",  # The server's listening port
-    "players_db" : "./config/players.db",  # Location of players database
     "default_start" : "system:default",  # Default starting room
     "wrap_size" : "60",  # Default word-wrap line length
     "verbose" : "yes",  # Display "trivial" log entries?
     "debug" : "no",  # Halt on errors from safe_mode?
     "root_dir" : sigma_path(),  # Where to look for designer modules and XML files
+    "players_db" : os.path.join(sigma_path(), "config", "players.db"),  # Location of player database
     "currency" : "gold",  # Currency unit
     }
 
-# Defines the relative root for all file access.
-root_dir = "."
 
-# Defines system directories.
+# Defines system directories for items that are searched dynamically.
 directories = {
     "xml_root" : os.path.join(options["root_dir"], "config"),  # XML root directory and location of server.xml
     "tasks_root" : os.path.join(options["root_dir"], "tasks"),  # Root directory for task modules

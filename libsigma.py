@@ -4,15 +4,18 @@ import command
 import time
 import math
 import random
+import os.path
 from string import Template
 
 import task
+import world
+import handler as _handler
 from common import *
 
 
-def handler(function):
-    function.__handler__ = 'handler'
-    return function
+def handler(f):
+    _handler.functions[f.__name__] = f
+    return f
 
 
 def safe_mode(function, *args):
@@ -23,24 +26,23 @@ def safe_mode(function, *args):
 
     try:
         ret = function(*args)
-    except:
+    except Exception as e:
         tb = sys.exc_info()[2]
         last = traceback.extract_tb(tb)[-1]
-        log("  *  ERROR", last[0] + ":" + str(last[1]) + " (" + last[2] + ")")
+        log("ERROR", "%s:%d  %s" % (os.path.basename(last[0]), last[1], e), problem=True)
 
     return ret
 
 
 def alert(text):
-    log("  *  ALERT", text)
+    log("ALERT", text)
 
 
 def is_player(object):
     return hasattr(object, "socket")
 
 
-def noop():
-    pass
+def noop(): pass
 
 
 class inserted_task(object):
@@ -149,12 +151,21 @@ def item_in_room(name, room):
     return None
 
 
+item_in_inventory = item_in_room
+
+
 def focus_in_room(name, room):
     for key, text in room.foci.items():
         if key.startswith(name):
             return text
 
     return None
+
+
+def offer_item(item, from_character, to_character):
+    tx = world.offer(item, from_character, to_character)
+    to_character.offers.append(tx)
+    insert_task(to_character.name + '_transfer_warning', tx.warning, 30, 1)
 
 
 def transfer_item(item, from_collection, to_collection):
@@ -178,7 +189,7 @@ def queue_command(character, text):
 
 def run_command(character, text):
     if not command.run_command(character, text):
-        log("  *  ERROR", "Command <" + text + "> unsuccessful")
+        log("ERROR", "Command <" + text + "> unsuccessful", problem=True)
 
 
 def at_capacity(character,worn_spot):
@@ -204,6 +215,7 @@ def remove_points(character,number):
 def raise_stat(character,stat, number):
     character.stats[stat] = character.stats[stat] + number
     return True
+
 
 # Report function recipient: the acting player.
 SELF =  1
@@ -251,6 +263,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
     if SELF & recipients:
         out = s.safe_substitute(self_mapping)
         out = out[0].upper() + out[1:]
+        actor.send_line()
         actor.send_line(out)
 
     out = s.safe_substitute(mapping)
@@ -259,7 +272,7 @@ def report(recipients, template, actor, verbs = None, direct = None, indirect = 
     if ROOM & recipients:
         for search in actor.location.characters:
             if search != actor:
-                search.send_line("")
+                search.send_line()
                 if search == direct:
                     out_special = s.safe_substitute(mapping, direct = "you")
                     out_special = out_special[0].upper() + out_special[1:]
@@ -325,11 +338,11 @@ class Sentence(object):
         else:
             return Sentence(self.arglist, 0, self.matchlist)
 
-    def CharacterInRoom(self, room):
+    def CharacterInRoom(self, room, self_character=None):
         if not self.arglist:
             return Sentence([], 0, self.matchlist + [False])
 
-        result = character_in_room(self.arglist[0], room)
+        result = character_in_room(self.arglist[0], room, self_character)
         if result:
             return Sentence(self.arglist, 1, self.matchlist + [result])
 
@@ -340,6 +353,16 @@ class Sentence(object):
             return Sentence([], 0, self.matchlist + [False])
 
         result = item_in_room(self.arglist[0], room)
+        if result:
+            return Sentence(self.arglist, 1, self.matchlist + [result])
+
+        return Sentence([], 0, self.matchlist + [False])
+
+    def ItemInInventory(self, character):
+        if not self.arglist:
+            return Sentence([], 0, self.matchlist + [False])
+
+        result = item_in_inventory(self.arglist[0], character)
         if result:
             return Sentence(self.arglist, 1, self.matchlist + [result])
 

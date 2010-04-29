@@ -2,10 +2,309 @@
   <room id="beginning">
     <name>The Beginning Room</name>
     <desc>
-      You are in a dark room.
+      You are in a dark room. To the west there is a portal that leads to Ravren.
+      You're pretty sure it is one way.
     </desc>
     <exit dir="e" target="second" />
+    <exit dir="w" target="fountain" />
   </room>
+  
+   <room id="fountain">
+    <name>Ravren -- Central Fountain Plaza</name>
+    <desc>
+      Settled in the center of the large plaza, the three-tiered onyx and marble fountain
+      stands as a stark symbol of the city's wealth and status. A few children play freely
+      around the fountain, seemingly oblivious to the endless crowds of people shuffling 
+      to whatever location they need to be. 
+    </desc>
+    <focus name="fountain">
+    The fountain is masterfully crafted in onyx and marble, with natural underground water
+    providing and endless stream of water for the populace to enjoy.
+    </focus>
+    <exit dir="nw" target="lewtane1" />
+  </room>
+  
+   <room id="lewtane1">
+    <name>Ravren -- Lewtane Way</name>
+    <desc>
+      The narrow road wends southeasterly, and looking that direction, glimpses of the 
+      Central fountain are visible. bookending the streets are commoner's shops and
+      guildhalls of the many craftsmen that live in Ravren. Dilapidation seemingly has
+      gripped those shops, but with the proximity of the establishments to the Central 
+      Fountain probably means that the halls are not struggling, despite apperances.
+      Caravans and townsfolk travel to and fro down this road, some travelling toward
+      work, and others just finishing it.        
+    </desc>
+    <focus name="guildhalls">
+    Several guildhalls line the road. From what you can see, there is a prominent cobbler
+    hall here. You doubt that the wares are sold here, however.
+    </focus>
+    
+    <exit dir="nw" target="lewtane2" />
+    <exit dir="se" target="fountain" />
+  </room>
+  
+  <room id="lewtane2">
+    <name>Ravren -- Lewtane Way</name>
+    <desc>
+     Small buildings and shops dot this road. To the northwest is the busy intersection
+     on Regent's Road. The cityscape thins significantly as the road continues southeast,
+     though it still bears the signs of urban life.        
+    </desc>
+    <exit dir="nw" target="regent_mages_lewtane" />
+    <exit dir="se" target="lewtane1" />
+  </room>
+  
+  <room id="regent_mages_lewtane">
+    <name>Ravren -- Regent's Boulevard</name>
+    <desc>
+     The chaotic scene of one of the busiest intersections in Ravren is a sight to behold.
+     The smell of caravans' pack animals pervades the area, as the crowds move to and fro
+     in waves in each direction. Several heavily armed guards are visible, flanking the 
+     several entrances to the Great Bank of Ravren, which lies off the south, on Mage's
+     Street.        
+    </desc>
+    <focus name="bank">
+  	 The building is built from red brick. It stands two stories, and is heavily guarded.
+    </focus>
+    <!--exit dir="w" target="regent5" /-->
+    <!--exit dir="e" target="regent6" /-->
+    <exit dir="se" target="lewtane2" />
+    <exit dir="s" target="mages5"/>
+    <exit dir="n" target="mages4"/>
+    <!--exit dir="sw" target="bankentrance" /-->
+  </room>
+  
+  
+  <room id="mages1">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  The area is sparsely populated, undoubtedly because of the presence of the Necromanse
+  standing around. Surrounding the smallish building is the student's animal graveyard, 
+  where the initiates learn to manipulate the recently deceased pets and vermin from
+  around the city. 
+  </desc>
+  <exit dir="n" target="mages_wall"/>
+  <exit dir="s" target="mages2"/>
+  <exit dir="nw" target ="necro_graveyard"/>
+  </room>
+  
+  <room id="mages_wall">
+  <name>Ravren -- Northern Wall Road</name>
+  <desc>
+  Mage's Road terminates here, with the towering wall blocking any further movement 
+  northward. Tufts of grass poke through the decaying road, as the traffic of soldiers
+  guarding the north segment of the wall pass by, their heavy footsteps wearing the road 
+  down.
+  </desc>
+  <exit dir="s" target="mages1"/>
+  <exit dir="w" target="nwall3"/>
+  </room>
+  
+  <room id="nwall3">
+  <name>Ravren -- Northern Wall Road</name>
+  <desc>
+  A guard tower rises into the air, patrolled by an archer and elemancer, vigilant against
+  any threats from outside the walls. Workers and soldiers amble by, seemingly less tense
+  than other parts of the city, due to the proximity of the patrol.
+  </desc>
+  <exit dir="e" target="mages_wall"/>
+  </room>
+  
+  
+  <room id="necro_graveyard">
+  <name>Ravren -- Necromanse Graveyard </name>
+  <desc>
+  The ground all around is recently disturbed, and the skeletal remains of all kinds of
+  animals are strewn about. Several darkly clad figures are categorizing the bones and
+  sinew by animal and body part. In the middle of the mess stands the Necromanse,
+  a stately building of grey brick. 
+  </desc>
+  <exit dir="se" target ="mages1"/>
+  <exit dir="enter" target ="necromanse"/>
+  </room>
+  
+  <room id="necromanse">
+  <name>Ravren -- Inside the Necromanse</name>
+  <desc>
+  The inside of the Necromanse is plain and unadorned, though there is a pervading stench
+  of death. The room is unlit, with the exception of a single candle .n each corner of this 
+  hexagonal room. Barely visible is a stairway that spirals downward into a dark abyss.
+  </desc>
+  <exit dir="leave" target ="necro_graveyard"/>
+  <!--exit dir="d" target="necro_underground"/-->
+  </room>
+  
+  
+  <room id="mages2">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  The entrance to the de-facto northern district of the commoners is on this illustrious 
+  Mage's Street, though, this particular segment shows little of the shine found southward.
+  Workers, fresh from their employ trudge home, as their replacements move in the opposite 
+  direction. Even the condition of the road suffers here; pot holes and animal waste dot
+  the ground below.
+  </desc>
+  <exit dir="n" target="mages1"/>
+  <exit dir="s" target="mages3"/>
+  <exit dir="w" target="twain3"/>
+  </room>
+  
+  <room id="mages3">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  Dilapidated houses and shops line the street, though the people here do not look especially
+  poor. One shop in particular, Charana's Elixirs &amp; Tinctures, is situated in a building in 
+  particularly bad condition, but based on the apparent patronage, is doing financially well. 
+  </desc>
+  <exit dir="n" target="mages2"/>
+  <exit dir="s" target="mages4"/> 
+  <exit dir="enter" target="charana"/>
+  </room>
+  
+  <room id="mages4">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  The fanfare heard from the south is a stark contrast to the ponderous sounds of common life
+  heard here. Workers build homes here, which based on the material and construction, will 
+  be for the ever-burgeoning commoner population. Traders, which can be seen southward, appear
+  to avoid this area, keeping the traffic to a minimum. 
+  </desc>
+  <exit dir="n" target="mages3"/>
+  <exit dir="s" target="regent_mages_lewtane"/> 
+  </room>
+  
+  <room id="mages5">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  Commotion from the intersection with Regent's can be heard from the north, while traffic
+  to and from the Great Bank keeps the thoroughfare congested. Well-to-do residents live
+  in this segment of Mage's, as can be seen by the stately edifices that face the streets.
+  Facades of multi-colored bricks and ivy are encompassed by high fences and highly paid
+  guards.  
+  </desc>
+  <exit dir="n" target="regent_mages_lewtane"/>
+  <exit dir="s" target="mages6"/> 
+  </room>
+  
+  <room id="mages6">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  Homes line this main corridor of Ravren, yet the road remains lively. Caravans transporting
+  goods from the docks on the Derana head northward, eagerly awaiting delivery. Barring the
+  caravans, the area is fairly quiet, as if the townsfolk do not wish to disturb the learned
+  folk who congregate just down the street. 
+ </desc>
+  <exit dir="n" target="mages5"/>
+  <exit dir="s" target="mages7"/>
+  </room>
+  
+  <room id="mages7">
+  <name>Ravren -- Mage's Street</name>
+  <desc>
+  Scholars amble around the Ravren Institute and Library on the west side of the street.
+  Across the road lie the living quarters for visiting scholars and acolytes. Southward,
+  the temple can be seen from here, but based on what is visible, it is still quite a bit
+  to the south. 
+ </desc>
+  <exit dir="n" target="mages6"/>
+  <!--exit dir="s" target="mages7"/-->
+  <!--exit dir="w" target="library_entrance"/-->
+  </room>
+  
+  <room id="kezzrah">
+  <name>Ravren -- Kezzrah's Odds N' Ends</name>
+  <desc>
+  The little shop is dusty, with small trinkets and pouches strewn all around a crowded
+  counter. Several clocks tick noisily on the wall. Repair tools hang on the wall behind the
+  counter, both apparently for sale and for use by the proprietor.
+  </desc>
+  <exit dir="leave" target="twain1"/>
+  </room>
+  
+  <room id="twain1">
+  <name>Ravren -- Twain Lane</name>
+  <desc>
+  An aged, sprawling oak tree parts the road, a remnant of a time long past. As the street narrows
+  as it wends eastward, several shops sit in the shadow of the giant oak. Kezzrah's Odds
+  N' Ends is one of those shops, a smallish building off of the north side of the giant
+  tree.
+  </desc>
+  <exit dir="e" target="twain2"/>
+  <exit dir="enter" target="kezzrah"/>
+  <!--exit dir="w" target="windfire2"/-->
+  </room>
+  
+  <room id="twain2">
+  <name>Ravren -- Twain Lane</name>
+  <desc>
+  Abandoned buildings dot the road. Silhouettes of people can been seen in the shattered
+  windows, more than likely squatters and other folk involved in illict activities. The 
+  cutthroat would feel at home here, as it is unlikely any witnesses would report a
+  crime to authorities. 
+  </desc>
+  <exit dir="e" target="twain3"/>
+  <exit dir="w" target="twain1"/>
+  </room>
+  
+  <room id="twain3">
+  <name>Ravren -- Twain Lane</name>
+  <desc>
+  Very few people frequent this segment of street, but those that do seem to of the shadier
+  sort. Nobody really looks at anyone else, yet glances are exchanged when the other party
+  is not looking. Also here is Widdershins Tavern, a seemingly nondescript building with
+  a simple sign.
+  </desc>
+  <exit dir="e" target="mages2"/>
+  <exit dir="w" target="twain2"/>
+  <exit dir="enter" target="widdershins"/>
+  </room>
+  
+  <room id="widdershins">
+  <name>Ravren -- Widdershins Tavern</name>
+  <desc>
+  The main room of the tavern smells of cheap booze and broken dreams. Several regulars
+  are hunched at the bar, drinking heavily from their swill. You wonder if they ever
+  leave their seats. Several unsavory looking characters are speaking near the stairs 
+  in hushed tones, though you doubt they will ever go upstairs. 
+  </desc>
+  <exit dir="up" target="widdershins_upstairs"/>
+  <exit dir="leave" target="twain3"/>
+  </room>
+  
+  <room id="widdershins_upstairs">
+  <name>Ravren -- Widdershins Upstairs</name>
+  <desc>
+  The second floor of the tavern is a narrow, dank hall. To the north and south are the
+  rooms for paying guests. From here, you cannot tell the condition of the rooms, but
+  they are unlikely to be of any great quality.
+  </desc>
+  <exit dir="down" target="widdershins"/>
+  </room>
+  
+  
+  
+  
+  <room id="charana">
+  <name>Ravren -- Charana's Elixirs &amp; Tinctures</name>
+  <desc>
+  The aromas of numerous spices and herbs are present in the air. The inside of this
+  rather cozy shop are lined with shelves containing potions and mixtures of all kinds,
+  some which look downright disgusting. There is a cauldron in the corner, filled with 
+  some viscous, bubbling and metallic concoction.
+  </desc>
+ <focus name="cauldron">
+  The cauldron is cast iron, and looks as if it could hold several gallons of liquid. It's 
+  currently filled with a metallic liquid, and feels quite hot to the touch.
+ </focus> 
+ <focus name="concoction">
+  The concoction looks to be boiling quicksilver. Noting this, you take a step back 
+  and do not examine it further.
+ </focus>
+  <exit dir="leave" target="mages3"/>
+  </room>
+  
+  
   
   <room id="second">
     <name>The Second Room</name>
@@ -22,6 +321,7 @@
     <exit dir="sw" target="testland:bonfire"/>
     <exit dir="u" target="treetop" />
     <exit dir="enter" target="waterfall" altmsg="into the waterfall" />
+   
   </room>
   
   <room id="treetop">

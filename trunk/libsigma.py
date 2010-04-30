@@ -135,7 +135,7 @@ def enter_room(character, room):
 def character_in_room(name, room, self_character = None):
     for search in room.characters:
         for keyword in search.keywords:
-            if keyword.startswith(name):
+            if keyword.startswith(name) and not search.hidden:
                 return search
     if "self".startswith(name):
         return self_character
@@ -311,6 +311,8 @@ def announce(recipients,room, message):
 def d100():
     return random.randint(1,100)
 
+def roll_for_success(score_1,score_2, minimum_success, maximum_success, delta_multiplier,skew):
+    return d100() < min(max((score_1-score_2) * delta_multiplier + skew, minimum_success), maximum_success)
 
 class Sentence(object):
     def __init__(self, args, args_consumed = 1, matches = []):

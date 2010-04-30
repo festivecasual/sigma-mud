@@ -273,6 +273,8 @@ class character(entity):
         self._HP = 0
         self._XP = 0
 
+        self.hidden=False
+        
         self.state = STATE_NULL
 
     def send_prompt(self): pass
@@ -284,7 +286,7 @@ class character(entity):
     def send_combat_status(self): pass
 
     def handle_death(self):
-        raise NotImplementedError
+        pass
 
     def check_level(self):
         pass

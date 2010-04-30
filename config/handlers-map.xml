@@ -27,6 +27,7 @@
   
   <handler command="health" function="health"/>
   <handler command="hp" function="health"/>
+  <handler command="hide" function="hide"/>
   
   <handler command="inventory" function="inventory" />
 
@@ -67,6 +68,7 @@
 			
   <handler command="up" function="go" />
   <handler command="unequip" function="unequip"/>
+  <handler command="unhide" function="unhide"/>
 
   <handler command="west" function="go" />
   <handler command="wave" function="emote" />

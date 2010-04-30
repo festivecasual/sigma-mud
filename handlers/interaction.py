@@ -117,7 +117,7 @@ def look(data):
     speaker.send_line("")
 
     for character in speaker.location.characters:
-        if character != speaker:
+        if character != speaker and not character.hidden:
             speaker.send_line(character.short)
 
     for item in speaker.location.contents:
@@ -444,3 +444,11 @@ def engage(data):
     engagee.combats.append(c)
     report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee)
     return
+
+@handler
+def search(data):
+    pass
+
+@handler
+def reveal(data):
+    pass

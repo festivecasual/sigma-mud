@@ -320,6 +320,10 @@ pronoun_object={}
 pronoun_object[GENDER_MALE] = "him"
 pronoun_object[GENDER_FEMALE] = "her"
 pronoun_object[GENDER_NEUTRAL] = "it"
+pronoun_possessive={}
+pronoun_possessive[GENDER_MALE] ="his"
+pronoun_possessive[GENDER_FEMALE] ="her"
+pronoun_possessive[GENDER_NEUTRAL] ="its"
 
 # Enumerates genders for processing for character configuration
 # 0 is the default gender

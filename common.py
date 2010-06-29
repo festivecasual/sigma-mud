@@ -114,6 +114,8 @@ COMBAT_STATE_INTERMISSION = 4
 #Combat actions
 COMBAT_ACTION_ATTACKING = 1
 
+#Infinity Value
+INFINITE = -999
 
 # Directions
 DIR_NORTH = 0
@@ -324,6 +326,10 @@ pronoun_possessive={}
 pronoun_possessive[GENDER_MALE] ="his"
 pronoun_possessive[GENDER_FEMALE] ="her"
 pronoun_possessive[GENDER_NEUTRAL] ="its"
+
+#Priorities
+HIGHEST_PRIORITY=0
+WALKING_PRIORITY=4
 
 # Enumerates genders for processing for character configuration
 # 0 is the default gender

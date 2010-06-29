@@ -2,7 +2,7 @@ from libsigma import *
 import world
 
 
-@handler
+@handler()
 def say(data):
     speaker = data["speaker"]
     tail = data["tail"]
@@ -10,7 +10,7 @@ def say(data):
     report(SELF | ROOM, "$actor $verb, '" + tail + "'", speaker, ("say", "says"))
 
 
-@handler
+@handler()
 def yell(data):
     speaker = data["speaker"]
     tail = data["tail"]
@@ -30,7 +30,7 @@ emote_mappings = {
         }
 
 
-@handler
+@handler()
 def emote(data):
     speaker = data["speaker"]
     tail = data["tail"]
@@ -72,7 +72,7 @@ def emote(data):
         alert("Emote command <" + mapped + "> references an unknown emote_mapping")
 
 
-@handler
+@handler()
 def look(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -124,7 +124,7 @@ def look(data):
         speaker.send_line(item.short)
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def go(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -139,6 +139,8 @@ def go(data):
     if direction == -1:
         speaker.send_line("Where do you want to go?")
     elif speaker.location.can_character_go(direction):
+        if(speaker.hidden):
+            run_command(speaker, "unhide")
         if speaker.location.altmsg[direction]!=None: # checks first for any alternate messaging
             report(ROOM, "$actor just went " + speaker.location.altmsg[direction]  + "." , speaker)
         elif dir2txt(direction) =="leave":
@@ -154,7 +156,7 @@ def go(data):
         speaker.send_line("There is no exit in that direction.")
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def get(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -173,7 +175,7 @@ def get(data):
         speaker.send_line("You can't find it.")
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def drop(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -195,7 +197,7 @@ def drop(data):
     speaker.send_line("You don't have that.")
 
 
-@handler
+@handler()
 def give(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -229,7 +231,7 @@ def give(data):
         speaker.send_line("You can't do that.")
 
 
-@handler
+@handler()
 def accept(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -282,7 +284,7 @@ def accept(data):
 
 
 
-@handler
+@handler()
 def inventory(data):
     speaker = data["speaker"]
 
@@ -299,7 +301,7 @@ def inventory(data):
             speaker.send_line("    " + i.name)
 
 
-@handler
+@handler()
 def open(data):
     speaker=data["speaker"]
     args=data["args"]
@@ -316,7 +318,7 @@ def open(data):
             speaker.send_line("You can't open that.")
 
 
-@handler
+@handler()
 def close(data):
     speaker=data["speaker"]
     args=data["args"]
@@ -333,7 +335,7 @@ def close(data):
             speaker.send_line("You can't close that.")
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def wear(data):
     speaker=data["speaker"]
     args=data["args"]
@@ -356,7 +358,7 @@ def wear(data):
     speaker.send_line("You don't have anything like that in your inventory.")
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def remove(data): # note, does not take into account capacity of the character yet. Still work to do.
     speaker=data["speaker"]
     args=data["args"]
@@ -373,7 +375,7 @@ def remove(data): # note, does not take into account capacity of the character y
     speaker.send_line("You're not wearing anything like that.       ")
 
 
-@handler
+@handler()
 def equip(data):
     speaker=data["speaker"]
     args=data["args"]
@@ -396,7 +398,7 @@ def equip(data):
     return
 
 
-@handler
+@handler()
 def unequip(data):
     speaker=data["speaker"]
     args=data["args"]
@@ -413,7 +415,7 @@ def unequip(data):
     speaker.send_line("You're not wielding anything like that.      ")
 
 
-@handler
+@handler()
 def engage(data):
     #first argument should be person/character
     speaker=data["speaker"]
@@ -445,10 +447,10 @@ def engage(data):
     report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee)
     return
 
-@handler
+@handler(WALKING_PRIORITY)
 def search(data):
     pass
 
-@handler
+@handler(WALKING_PRIORITY)
 def reveal(data):
     pass

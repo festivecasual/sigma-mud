@@ -13,10 +13,17 @@ import handler as _handler
 from common import *
 
 
-def handler(f):
-    _handler.functions[f.__name__] = f
-    return f
+def handler(val=INFINITE):
+    def handler_dec(f):
+        f.priority = val
+        _handler.functions[f.__name__] = f
+        return f
+    return handler_dec
 
+
+#def handler(f):
+ #   _handler.functions[f.__name__] = f
+ #   return f
 
 def safe_mode(function, *args):
     ret = False

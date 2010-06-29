@@ -38,13 +38,17 @@ def run_command(speaker, message):
     if len(tokens):
         for (command, function) in handler.mappings:
             if command.startswith(tokens[0]):
-                libsigma.safe_mode(function, {
-                        "speaker" : speaker,
-                        "args" : tokens,
-                        "message" : message,
-                        "tail" : tail,
-                        "mapped" : command
-                        })
+                x=speaker.has_waits(function.priority)
+                if(not x):
+                    libsigma.safe_mode(function, {
+                                                  "speaker" : speaker,
+                                                  "args" : tokens,
+                                                  "message" : message,
+                                                  "tail" : tail,
+                                                  "mapped" : command        
+                                                  })
+                else:         
+                    speaker.send_line("Please wait " + str(x) + " second" + ("s" if x!=1 else "") + ".")
                 return True
         return False
     else:

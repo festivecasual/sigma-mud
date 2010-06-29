@@ -264,7 +264,7 @@ class character(entity):
         self.equipped_weapon = []
         self.equipped_shield = None
         self.worn_items = []
-
+        self.waits=[]
         self.flags = []
 
         self.combats = []
@@ -404,7 +404,17 @@ class player(character):
     def handle_death(self):
         pass
 
-
+    def has_waits(self,prior=HIGHEST_PRIORITY):
+        for w in self.waits:
+            if (not w.duration_expired()) and w.priority <= prior:
+                return w.remaining_time()
+        return False
+    
+    def add_wait(self,p,d):
+        self.waits.append(wait(p,d))
+        self.send_line("[This action adds a " +str(d)+ " second wait]")
+        return
+    
 class calendar(object):
     def __init__(self, node, cname):
         self.name = cname
@@ -621,3 +631,23 @@ class combat(object):
             self.strike_queue.append((self.combatant1, self.combatant2))
         # end section
 
+class duration(object):
+    def __init__(self):
+        self.start_time=time.time()
+        self.duration_in_secs=0
+        self.infinite=False
+    def remaining_time(self):
+        if self.duration_in_secs==INFINITE:
+            return INFINITE    
+        else: 
+            return max(self.duration_in_secs - int((time.time()-self.start_time)),0)
+    
+    def duration_expired(self):
+        return (self.remaining_time()==0 and not self.infinite)
+    
+class wait(duration):
+    def __init__(self, p,d):
+        duration.__init__(self)
+        self.duration_in_secs=d
+        self.priority=p
+    

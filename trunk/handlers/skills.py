@@ -1,10 +1,10 @@
 from libsigma import *
-#import world
+import world
 
 
 
 
-@handler
+@handler(WALKING_PRIORITY)
 def hide(data):
     speaker = data["speaker"]
     args = data["args"]
@@ -22,9 +22,10 @@ def hide(data):
                 if(roll_for_success(c.stats["perception"],speaker.stats["charisma"]*.25 + speaker.stats["agility"]*.75, 0, 100,4,50)):
                     c.send_line("You glance at " + speaker.name + " finding a hiding spot.")
         speaker.hidden=True
+        speaker.add_wait(hide.priority,5)
     return
 
-@handler
+@handler(WALKING_PRIORITY)
 def unhide(data):
     
     speaker = data["speaker"]

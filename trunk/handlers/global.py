@@ -5,7 +5,7 @@ from world import *
 from common import *
 
 
-@handler
+@handler()
 def time(data):
     speaker = data["speaker"]
     date_time = calendars[0].get_current_IG_DateTime()
@@ -13,7 +13,7 @@ def time(data):
     speaker.send_line("It is " + string.zfill(date_time["hour"], 2) + ":" + string.zfill(date_time["minute"], 2) + ".")
 
 
-@handler
+@handler()
 def statistics(data):
     speaker = data["speaker"]
     for stat in stats:
@@ -23,14 +23,14 @@ def statistics(data):
     return
 
 
-@handler
+@handler()
 def health(data):
     speaker = data["speaker"]
     speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.max_HP))
     # more stuff about status affects to come
 
 
-@handler
+@handler()
 def allocate(data):
     speaker = data["speaker"]
     args =data ["args"]

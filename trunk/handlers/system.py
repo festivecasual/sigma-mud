@@ -2,7 +2,7 @@ import archive
 from libsigma import *
 
 
-@handler
+@handler()
 def player_quit(data):
     speaker = data["speaker"]
 
@@ -13,7 +13,7 @@ def player_quit(data):
         speaker.send_line("Only players can quit.")
 
 
-@handler
+@handler()
 def player_save(data):
     speaker = data["speaker"]
 

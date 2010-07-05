@@ -61,6 +61,7 @@
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
   <handler command="stats" function="statistics" />
+  <handler command="stance" function="stance"/>
   <handler command="sw" function="go" />
 
   <handler command="take" function="get" />
@@ -76,5 +77,7 @@
   <handler command="wink" function="emote" />
   <handler command="wield" function="equip"/>	
   <handler command="yell" function="yell" />
+
+  <handler command="gmgetstance" function="gmgetstance"/>
 
 </handlers>

@@ -5,6 +5,7 @@ from xml.etree import ElementTree
 import handler
 import world
 import creation
+import feats
 from common import *
 
 
@@ -23,6 +24,17 @@ def process_xml():
         options[name] = value
         log("CONFIG", "Option [%s] set to '%s'" % (name, value))
         server_xml.remove(option)
+
+    for s in server_xml.findall('stance'):
+        file = required_attribute(s, 'file')
+        log("STANCE", "Processing stances at %s" % (file))
+        try:
+            stance_path=os.path.join(directories["xml_root"], file)
+            stance_xml= ElementTree.parse(stance_path).getroot()
+        except:
+            log("FATAL", "Unable to parse stance file", exit_code=1)
+        process_stance(stance_xml)
+        server_xml.remove(s)
 
     for area in server_xml.findall('area'):
         file = required_attribute(area, 'file')
@@ -47,7 +59,7 @@ def process_xml():
             log("FATAL", "Unable to parse calendar file", exit_code=1)
         world.calendars.append(world.calendar(calendar_xml, name))
         server_xml.remove(calendar)
-
+              
     for cclass in server_xml.findall('class'):
         file = required_attribute(cclass, 'file')
         log("CLASS", "Processing class definition at %s" % file)
@@ -133,3 +145,11 @@ def process_class(class_xml):
     for pclass_xml in class_xml.findall('class'):
         new_class = creation.character_class(pclass_xml)
         creation.classes[new_class.name] = new_class
+        
+def process_stance(stance_xml):
+    for instance in stance_xml.findall('stance'):
+        new_stance=feats.stance(instance)
+        log ('STANCE', 'added new stance %s' %new_stance.name)
+        feats.stances[new_stance.name]=new_stance
+        if new_stance.default:
+            feats.default_stances.append(new_stance)

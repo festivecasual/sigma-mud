@@ -59,21 +59,43 @@ def task_execute():  # moves all combats through states through its lifecycle
 
             striker, defender = c.strike_queue[0]
             ## roll for hit -- Agility
-            agil_diff=striker.stats["agility"] - defender.stats["agility"]
+            striker_effective_agil=int(striker.stats["agility"]*balance_multiplier[striker.balance])
+            defender_effective_agil=int(defender.stats["agility"]*balance_multiplier[defender.balance]) 
+            agil_diff=striker_effective_agil - defender_effective_agil
+
             percent_success=min(max(agil_diff * 3 + 75, 40), 98)
             roll_for_hit=libsigma.d100()
             if roll_for_hit <= percent_success:
                 #hit
                 damage = calculate_damage(striker, defender)
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
+              
                 if (defender.HP - damage) <= 0:
                     libsigma.report(libsigma.SELF | libsigma.ROOM, "$actor $verb victorious over $direct!",striker,("are","is"),defender)
                     c.release()
                 defender.HP -= damage
+                striker_roll_for_balance=libsigma.d100()
+                defender_roll_for_balance=libsigma.d100()
+                if striker_roll_for_balance<striker.active_stance.balance["HitIncreasePercent"]:
+                    striker.balance += striker.active_stance.balance["HitIncreaseAmount"]
+                if defender_roll_for_balance<defender.active_stance.balance["HitReceivedIncreasePercent"]:
+                    defender.balance += defender.active_stance.balance["HitReceivedIncreaseAmount"]
+
+                        
             else:
                 #miss
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb in an attempt to attack $direct!" ,striker,("miss","misses"),defender)
+                striker_roll_for_balance=libsigma.d100()
+                defender_roll_for_balance=libsigma.d100()
+                if striker_roll_for_balance<striker.active_stance.balance["MissIncreasePercent"]:
+                    striker.balance += striker.active_stance.balance["MissIncreaseAmount"]
+                if defender_roll_for_balance<defender.active_stance.balance["DodgeIncreasePercent"]:
+                    defender.balance += defender.active_stance.balance["DodgeIncreaseAmount"]
 
+
+            striker.send_combat_status()
+            defender.send_combat_status()   
+            
             c.strike_queue = c.strike_queue[1:]
             if not c.strike_queue:
                 c.combat_state = COMBAT_STATE_INTERMISSION

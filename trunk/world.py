@@ -1,6 +1,7 @@
 import sys
-
+import feats
 import libsigma
+import feats
 from common import *
 
 
@@ -269,10 +270,18 @@ class character(entity):
 
         self.combats = []
         self.engaged = None
-
+        self.active_stance=None
+        self.default_stance = {}
+        
+        self.stances=[]
+        for s in feats.default_stances:
+            self.add_stance(s)
+        
+        self.active_stance=self.stances[0]
+        
+        self._balance=0
         self._HP = 0
         self._XP = 0
-
         self.hidden=False
         
         self.state = STATE_NULL
@@ -317,7 +326,27 @@ class character(entity):
 
     XP = property(lambda self: self._XP, set_XP)
 
+    def change_balance(self, val):
+        self._balance=min (max(val, MIN_BALANCE), MAX_BALANCE)
+        return
+    
+    balance = property(lambda self: self._balance, change_balance)
+    
+    def can_equip(self,w_type):
+        for s in self.stances:
+            if s.weapon_type==w_type: 
+                return True
+        return False
 
+    def add_stance(self,s):
+        for sta in self.stances:
+            if sta.name==s.name:
+                return False
+        if not self.default_stance.has_key(s.weapon_type):
+            self.default_stance[s.weapon_type]=s
+        self.stances.append(s)
+        return True
+    
 class denizen(character):
     def __init__(self, node):
         character.__init__(self)
@@ -399,7 +428,7 @@ class player(character):
         self.send("\r\n" * breaks)
 
     def send_combat_status(self):
-        self.send_line("[HP: " + str(self.HP) + "/" + str(self.max_HP) + "]")
+        self.send_line("[HP: " + str(self.HP) + "/" + str(self.max_HP) + " | Balance: " + balance_name[self.balance] +"]" )
 
     def handle_death(self):
         pass

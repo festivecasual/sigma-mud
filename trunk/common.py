@@ -247,15 +247,15 @@ SWORD=1
 MACE=2
 LONGBOW=3
 CROSSBOW=4
-KNIFE=4
-SPEAR=5
-STAFF=6
-GREATSWORD=7
-MALLET=8
-BARE_HAND=9
+KNIFE=5
+SPEAR=6
+STAFF=7
+GREATSWORD=8
+MALLET=9
+BARE_HAND=10
 
 weapon_match_val = (SWORD,MACE,LONGBOW,CROSSBOW,KNIFE,SPEAR,STAFF,GREATSWORD,MALLET, BARE_HAND)
-weapon_match_txt = ("sword","mace","longbow","knife","spear","staff","greatsword","mallet","bare handed")
+weapon_match_txt = ("sword","mace","longbow","crossbow","knife","spear","staff","greatsword","mallet","bare handed")
 
 
 #Combat Ranges. Difference between the integers is significant. Represents distance.
@@ -330,6 +330,62 @@ pronoun_possessive[GENDER_NEUTRAL] ="its"
 #Priorities
 HIGHEST_PRIORITY=0
 WALKING_PRIORITY=4
+
+#Balance ranges
+MIN_BALANCE=-11
+MAX_BALANCE=11
+
+#Balance messaging
+balance_name={}
+
+balance_name[-11]="Completely Unbalanced"
+balance_name[-10]="Wildly unbalanced (-)"
+balance_name[-9] ="Wildly unbalanced"
+balance_name[-8] ="Wildly unbalanced (+)"
+balance_name[-7] ="Unbalanced (-)"
+balance_name[-6] ="Unbalanced"
+balance_name[-5] ="Unbalanced (+)"
+balance_name[-4] ="Slightly unbalanced (-)"
+balance_name[-3] ="Slightly unbalanced"
+balance_name[-2] ="Slightly unbalanced (+)"
+balance_name[-1] = "Neutrally balanced (-)"
+balance_name[0]  = "Neutrally balanced"
+balance_name[1]  = "Neutrally balanced (+)"
+balance_name[2]  = "Better balanced (-)"
+balance_name[3]  = "Better balanced"
+balance_name[4]  = "Better balanced (+)"
+balance_name[5]  = "Well balanced (-)"
+balance_name[6]  = "Well balanced"
+balance_name[7]  = "Well balanced (+)"
+balance_name[8]  = "Superbly balanced (-)"
+balance_name[9]  = "Superbly balanced"
+balance_name[10] = "Superbly balanced (+)"
+balance_name[11] = "Indelibly balanced"
+
+balance_multiplier={}
+balance_multiplier[-11]=.5
+balance_multiplier[-10]=.7
+balance_multiplier[-9] =.7
+balance_multiplier[-8] =.7
+balance_multiplier[-7] =.8
+balance_multiplier[-6] =.8
+balance_multiplier[-5] =.8
+balance_multiplier[-4] =.9
+balance_multiplier[-3] =.9
+balance_multiplier[-2] =.9
+balance_multiplier[-1] = 1
+balance_multiplier[0]  = 1
+balance_multiplier[1] =  1
+balance_multiplier[2] =  1.1 
+balance_multiplier[3] =  1.1
+balance_multiplier[4] =  1.1
+balance_multiplier[5] =  1.2
+balance_multiplier[6] =  1.2
+balance_multiplier[7] =  1.2
+balance_multiplier[8] =  1.3
+balance_multiplier[9] =  1.3
+balance_multiplier[10]=  1.3
+balance_multiplier[11]=  1.5
 
 # Enumerates genders for processing for character configuration
 # 0 is the default gender

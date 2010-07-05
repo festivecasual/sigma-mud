@@ -391,8 +391,13 @@ def equip(data):
                 if len(speaker.equipped_weapon)==1: ## Editable for future multi-weapon equipping abilities
                     speaker.send_line("You can't wield anything else.")
                     return
+                if not speaker.can_equip(item.weapon_type):
+                    speaker.send_line("You can't wield a weapon like that!")
+                    return
                 transfer_item(item,speaker.contents,speaker.equipped_weapon)
+                speaker.active_stance=speaker.default_stance[item.weapon_type]
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("wield", "wields" ))
+                speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
                 return
     speaker.send_line("You don't have anything like that in your inventory.")
     return
@@ -410,9 +415,11 @@ def unequip(data):
             if keyword.startswith(args[1]):
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("unequip", "unequips" ))
                 transfer_item(item,speaker.equipped_weapon,speaker.contents)
+                speaker.active_stance=speaker.default_stance[BARE_HAND]
+                speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
                 return
 
-    speaker.send_line("You're not wielding anything like that.      ")
+    speaker.send_line("You're not wielding anything like that.")
 
 
 @handler()

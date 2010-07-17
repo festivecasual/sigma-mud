@@ -67,7 +67,7 @@ def task_execute():  # moves all combats through states through its lifecycle
             roll_for_hit=libsigma.d100()
             if roll_for_hit <= percent_success:
                 #hit
-                damage = calculate_damage(striker, defender)
+                damage = calculate_damage(striker, defender,c.range)
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
               
                 if (defender.HP - damage) <= 0:
@@ -109,5 +109,43 @@ def task_deinit():
     pass
 
 
-def calculate_damage(attacker, defender):
-    return attacker.stats["strength"]
+def calculate_damage(attacker, defender,combat_range):
+    damage = 0
+    attacker_damage={}
+    if  attacker.active_stance.weapon_type==BARE_HAND:
+
+        for damage_type in damage_match_val:
+            if attacker.active_stance.damage.has_key(damage_type):
+                attacker_damage[damage_type]=attacker.stats["strength"]
+                attacker_damage[damage_type]*=weapon_damage_multiplier[BARE_HAND]
+                attacker_damage[damage_type]*=weapon_range[BARE_HAND][combat_range]
+                attacker_damage[damage_type]*=attacker.active_stance.damage[damage_type]
+                
+                #defense calculations
+                attacker_damage[damage_type]*=defender.get_protection_multiplier(damage_type)
+                attacker_damage[damage_type]=max(attacker_damage[damage_type]-defender.get_absorption(damage_type),0)
+                damage+=attacker_damage[damage_type]
+            else:
+                attacker_damage[damage_type]=0     
+    else:  
+        for w in attacker.equipped_weapon:
+            for damage_type in damage_match_val:
+                if w.damage.has_key(damage_type):
+                    attacker_damage[damage_type]=attacker.stats["strength"]
+                    attacker_damage[damage_type]*=weapon_damage_multiplier[w.weapon_type]
+                    attacker_damage[damage_type]*=weapon_range[w.weapon_type][combat_range]
+                    attacker_damage[damage_type]*=w.damage[damage_type]
+                
+                    #defense calculations
+                    attacker_damage[damage_type]*=defender.get_protection_multiplier(damage_type)
+                    attacker_damage[damage_type]=max(attacker_damage[damage_type]-defender.get_absorption(damage_type),0)
+                    #log("TEST", str(defender.get_protection_multiplier(damage_type)) + " " + libsigma.val2txt(damage_type,damage_match_val,damage_match_txt))
+                    #log("TEST", str(defender.get_absorption(damage_type)) + " " + libsigma.val2txt(damage_type,damage_match_val,damage_match_txt))
+                    damage+=attacker_damage[damage_type]
+                else:
+                    attacker_damage[damage_type]=0   
+    
+    
+                
+                
+    return int(round(damage))

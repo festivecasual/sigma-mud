@@ -349,7 +349,7 @@ def wear(data):
                     speaker.send_line("You can't wear that.")
                     return
                 if(at_capacity(speaker, item.worn_position)):
-                    speaker.send_line("You can't wear anything else on your " +worn2txt(item.worn)+".")
+                    speaker.send_line("You can't wear anything else on your " +worn2txt(item.worn_position)+".")
                     return
                 report(SELF | ROOM, "$actor $verb on " +item.name+ ".", speaker, ("put","puts"))
                 transfer_item(item, speaker.contents,speaker.worn_items)

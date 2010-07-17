@@ -1,10 +1,6 @@
 (dp0
-S'Brandar'
+S'Remyn'
 p1
-S"(S'\\x15\\x80\\xadU\\xa8\\x8f.\\xa7~\\xb6\\x1c\\xcb\\xfa\\xde0SHd\\xe4g'\np0\n(lp1\nccopy_reg\n_reconstructor\np2\n(cworld\nitem\np3\nc__builtin__\nobject\np4\nNtp5\nRp6\n(dp7\nS'capacity'\np8\nI0\nsS'name'\np9\nS'a delicious chocolate chunk cookie'\np10\nsS'_keywords'\np11\n(lp12\nS'cookie'\np13\nasS'money'\np14\nI0\nsS'_desc'\np15\nS'The cookie has a delicious, gooey smell of freshly-baked\\r\\ndough.'\np16\nsS'worn_position'\np17\nI0\nsS'location'\np18\nS''\np19\nsS'_short'\np20\nS'A delicious cholocate chunk cookie sits here.'\np21\nsS'weapon_type'\np22\nI0\nsS'contents'\np23\n(lp24\nsbag2\n(g3\ng4\nNtp25\nRp26\n(dp27\nS'capacity'\np28\nI0\nsS'name'\np29\nS'a delicious chocolate chunk cookie'\np30\nsS'_keywords'\np31\n(lp32\nS'cookie'\np33\nasS'money'\np34\nI0\nsS'worn_position'\np35\nI0\nsS'_desc'\np36\nS'The cookie has a delicious, gooey smell of freshly-baked\\r\\ndough.'\np37\nsS'location'\np38\ng19\nsS'_short'\np39\nS'A delicious cholocate chunk cookie sits here.'\np40\nsS'weapon_type'\np41\nI0\nsS'contents'\np42\n(lp43\nsba(lp44\n(lp45\n(dp46\nS'discipline'\np47\nI3\nsS'agility'\np48\nI3\nsS'strength'\np49\nI3\nsS'intelligence'\np50\nI3\nsS'charisma'\np51\nI3\nsS'perception'\np52\nI3\nsI5\nS'Male'\np53\nS'Orc'\np54\nI18\ntp55\n."
+S"(S'5j\\x19+y\\x13\\xb0LTWM\\x18\\xc2\\x8dF\\xe69T(\\xab'\np0\n(lp1\n(lp2\n(lp3\n(dp4\nS'discipline'\np5\nI3\nsS'agility'\np6\nI3\nsS'strength'\np7\nI3\nsS'intelligence'\np8\nI6\nsS'charisma'\np9\nI3\nsS'perception'\np10\nI3\nsI2\nS'Male'\np11\nS'Human'\np12\nI18\n(lp13\nS'brawling'\np14\naS'doppelsoldner'\np15\naS'butcher'\np16\naS'jiujitsu'\np17\na(dp18\nI8\ng15\nsI10\ng17\nsI5\ng16\nsg14\ntp19\n."
 p2
-sS'Alpha'
-p3
-S"(S'u\\x05\\xd6JT\\xe0a\\xb7\\xac\\xd5L\\xcdX\\xb4\\x9d\\xc45\\x00\\xb65'\np0\n(lp1\nccopy_reg\n_reconstructor\np2\n(cworld\nitem\np3\nc__builtin__\nobject\np4\nNtp5\nRp6\n(dp7\nS'capacity'\np8\nI0\nsS'name'\np9\nS'a delicious chocolate chunk cookie'\np10\nsS'_keywords'\np11\n(lp12\nS'cookie'\np13\nasS'money'\np14\nI0\nsS'worn_position'\np15\nI0\nsS'_desc'\np16\nS'The cookie has a delicious, gooey smell of freshly-baked\\r\\ndough.'\np17\nsS'location'\np18\nS''\np19\nsS'_short'\np20\nS'A delicious cholocate chunk cookie sits here.'\np21\nsS'weapon_type'\np22\nI0\nsS'contents'\np23\n(lp24\nsba(lp25\n(lp26\n(dp27\nS'discipline'\np28\nI3\nsS'agility'\np29\nI3\nsS'strength'\np30\nI3\nsS'intelligence'\np31\nI3\nsS'charisma'\np32\nI3\nsS'perception'\np33\nI3\nsI5\nS'Male'\np34\nS'Human'\np35\nI18\ntp36\n."
-p4
 s.

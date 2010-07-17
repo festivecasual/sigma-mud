@@ -13,6 +13,7 @@ class stance(object):
         
         self.default=False
         
+        
         default_overwrite=strip_whitespace(node.find('default').text)
         if default_overwrite.lower() =="true":
             self.default=True
@@ -48,4 +49,17 @@ class stance(object):
         for child in node.find('balance'):
             if self.balance.has_key(child.tag):
                 self.balance[child.tag]=float(child.text)
+        
+        # damage modifiers
+        self.damage={}
+        self.critical_percent=5
+        
+        if self.weapon_type==BARE_HAND:
+            self.damage[IMPACT]=1.0
+            
+        for child in node.findall('damages'):
+            for d in child.findall('damage'):
+                damage_name = required_attribute(d, 'type')
+                damage_multiplier = required_attribute(d, 'multiplier')
+                self.damage[int(libsigma.txt2val(damage_name,damage_match_txt,damage_match_val))]=float(damage_multiplier)
                 

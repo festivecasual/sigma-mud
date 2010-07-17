@@ -149,7 +149,7 @@ def process_class(class_xml):
 def process_stance(stance_xml):
     for instance in stance_xml.findall('stance'):
         new_stance=feats.stance(instance)
-        log ('STANCE', 'added new stance %s' %new_stance.name)
+        log ('STANCE', 'Added new stance "%s"' %new_stance.name)
         feats.stances[new_stance.name]=new_stance
         if new_stance.default:
             feats.default_stances.append(new_stance)

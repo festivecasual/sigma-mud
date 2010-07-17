@@ -3,6 +3,7 @@ import world
 import handler
 import libsigma
 import configplayer
+import feats
 from common import *
 
 
@@ -104,6 +105,21 @@ def process_commands():
                         speaker.gender = speaker.proto[6]
                         speaker.race = speaker.proto[7]
                         speaker.HP = speaker.proto[8]
+                        
+                        for s in speaker.proto[9]:
+                            if feats.stances.has_key(s):
+                                if not feats.stances[s].default: # handled by character class constructor
+                                    speaker.stances.append(feats.stances[s])
+                            else:
+                                log("WARNING", "Couldn't load stance " + s + " for " + speaker.name +".")    
+                        
+                        for val in weapon_match_val:
+                            if speaker.proto[10].has_key(val):
+                                speaker.default_stance[val]=feats.stances[speaker.proto[10][val]]
+                        
+                        speaker.active_stance=feats.stances[speaker.proto[11]]
+                        
+                        
                     except IndexError:
                         log("WARNING", "Could not load entire player file for <" +speaker.name + ">")
 

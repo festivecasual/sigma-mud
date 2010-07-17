@@ -272,7 +272,7 @@ range_match_val=(MELEE_RANGE,SWORD_RANGE,POLE_RANGE,BOW_RANGE)
 weapon_range={}
 preferred_range={}
 
-#Damage multiplayers at differing ranges
+#Damage multipliers at differing ranges
 weapon_range[BARE_HAND]={MELEE_RANGE:1.0,SWORD_RANGE:.75}
 weapon_range[SWORD]={SWORD_RANGE:1.0,MELEE_RANGE:.75,POLE_RANGE:.25}
 weapon_range[MACE]={SWORD_RANGE:1.0,MELEE_RANGE:.60}
@@ -283,6 +283,20 @@ weapon_range[SPEAR]={POLE_RANGE:1.0,SWORD_RANGE:.70}
 weapon_range[STAFF]={POLE_RANGE:1.0,SWORD_RANGE:.95}
 weapon_range[GREATSWORD]={SWORD_RANGE:1.0,MELEE_RANGE:.30,POLE_RANGE:.80}
 weapon_range[MALLET]={SWORD_RANGE:1.0,POLE_RANGE:1.0}
+
+#General Damage multiplier for each weapon type.
+weapon_damage_multiplier={}
+
+weapon_damage_multiplier[BARE_HAND]=.75
+weapon_damage_multiplier[SWORD]=1.0
+weapon_damage_multiplier[MACE]=1.2
+weapon_damage_multiplier[LONGBOW]=.8
+weapon_damage_multiplier[CROSSBOW]=.4
+weapon_damage_multiplier[KNIFE]=.8
+weapon_damage_multiplier[SPEAR]=.9
+weapon_damage_multiplier[STAFF]=.5
+weapon_damage_multiplier[GREATSWORD]=1.4
+weapon_damage_multiplier[MALLET]=1.88
 
 preferred_range[BARE_HAND]=MELEE_RANGE
 preferred_range[SWORD]=SWORD_RANGE
@@ -386,6 +400,23 @@ balance_multiplier[8] =  1.3
 balance_multiplier[9] =  1.3
 balance_multiplier[10]=  1.3
 balance_multiplier[11]=  1.5
+
+
+#DAMAGE TYPES
+IMPACT=1
+PUNCTURE=2
+SLASH=3
+BURN=4
+COLD=5
+ELECTRIC=6
+DIVINE=7
+PROFANE=8
+
+damage_match_val = (IMPACT,PUNCTURE,SLASH,BURN,COLD,ELECTRIC,DIVINE,PROFANE)
+damage_match_txt = ("impact","puncture","slash","burn","cold","electric","divine","profane")
+
+
+
 
 # Enumerates genders for processing for character configuration
 # 0 is the default gender

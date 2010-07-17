@@ -30,6 +30,14 @@
 
 </balance>
 
+<damages>
+
+<damage type="impact" multiplier=".9"/>
+<damage type="puncture" multiplier=".1"/>
+
+</damages>
+
+
 </stance>
 
 <stance>
@@ -61,6 +69,10 @@
 <CriticalAmountModifier>2</CriticalAmountModifier>
 
 </balance>
+
+<damages>
+
+</damages>
 
 </stance>
 
@@ -124,6 +136,77 @@
 <CriticalAmountModifier>2</CriticalAmountModifier>
 
 </balance>
+
+
+</stance>
+
+<stance>
+<name>jiujitsu</name>
+
+<default>false</default>
+
+<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+
+<weapontype>bare handed</weapontype>
+
+<balance>
+
+<HitIncreasePercent>70</HitIncreasePercent>
+<HitIncreaseAmount>5</HitIncreaseAmount>
+
+<MissIncreasePercent>30</MissIncreasePercent>
+
+<MissIncreaseAmount>-1</MissIncreaseAmount>
+
+<HitReceivedIncreasePercent>35</HitReceivedIncreasePercent>
+<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+<DodgeIncreasePercent>55</DodgeIncreasePercent>
+<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+<CriticalChanceModifier>1.5</CriticalChanceModifier>
+<CriticalAmountModifier>2</CriticalAmountModifier>
+
+</balance>
+
+<damages>
+
+</damages>
+
+</stance>
+
+<stance>
+
+<name>penguin-fu</name>
+<default>false</default>
+<desc>A deadly martial art-form taught only on the shores of Antarctica</desc>
+<weapontype>bare handed</weapontype>
+
+<balance>
+
+<HitIncreasePercent>40</HitIncreasePercent>
+<HitIncreaseAmount>1</HitIncreaseAmount>
+
+<MissIncreasePercent>70</MissIncreasePercent>
+<MissIncreaseAmount>-1</MissIncreaseAmount>
+
+<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+<DodgeIncreasePercent>25</DodgeIncreasePercent>
+<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+<CriticalChanceModifier>1.5</CriticalChanceModifier>
+<CriticalAmountModifier>2</CriticalAmountModifier>
+
+</balance>
+
+<damages>
+
+<damage type="puncture" multiplier=".5"/>
+<damage type="impact" multiplier=".5"/>
+
+</damages>
 
 </stance>
 

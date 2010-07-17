@@ -181,8 +181,11 @@ class item(entity):
         entity.__init__(self)
 
         self.weapon_type = NOT_A_WEAPON
+        self.strength_multiplier=0.0
         self.worn_position = NOT_WORN
-
+        self.damage={}
+        self.protection={}
+        self.absorption={}
         self.name = strip_whitespace(required_child(node, 'name').text)
 
         self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
@@ -196,11 +199,27 @@ class item(entity):
         if worn != None:
             self.worn_position = libsigma.txt2worn(strip_whitespace(worn.text))
 
+        for d in node.findall('damage'):
+            damage_name = required_attribute(d, 'type')
+            damage_multiplier = required_attribute(d, 'multiplier')
+            
+            self.damage[int(libsigma.txt2val(damage_name,damage_match_txt,damage_match_val))]=float(damage_multiplier)
+            
         weapon = node.find('weapon')
         if weapon != None:
             weapon_type = required_attribute(weapon, 'type')
             self.weapon_type = libsigma.txt2val(weapon_type, weapon_match_txt, weapon_match_val)
 
+        for p in node.findall('protection'):
+            protection_type= required_attribute(p,'type')
+            protection_value= required_attribute(p,'amount')
+            self.protection[libsigma.txt2val(protection_type,damage_match_txt,damage_match_val)]=float(protection_value)
+            
+        for a in node.findall('absorption'):
+            absorption_type= required_attribute(a,'type')
+            absorption_value= required_attribute(a,'amount')
+            self.absorption[libsigma.txt2val(absorption_type,damage_match_txt,damage_match_val)]=int(absorption_value)
+        
 
 class offer(object):
     def __init__(self, transfer_item, from_character, to_character):
@@ -264,6 +283,8 @@ class character(entity):
         self.points_to_allocate = 0
         self.equipped_weapon = []
         self.equipped_shield = None
+        self._skin_protection= {}
+        self._skin_absorption ={}
         self.worn_items = []
         self.waits=[]
         self.flags = []
@@ -347,6 +368,26 @@ class character(entity):
         self.stances.append(s)
         return True
     
+    def get_protection_multiplier(self,damage_type):
+        protection_value=0
+        for w in self.worn_items:
+                if w.protection.has_key(damage_type):
+                    protection_value+=w.protection[damage_type]
+        if protection_value==0 and self._skin_protection.has_key(damage_type):
+            return 1.0 - self._skin_protection[damage_type]
+        
+        return 1.0 - protection_value
+    
+    def get_absorption(self,damage_type):
+        absorption_value=0
+        for w in self.worn_items:
+                if w.absorption.has_key(damage_type):
+                    absorption_value+=w.absorption[damage_type]
+        if absorption_value==0 and self._skin_absorption.has_key(damage_type):
+            return self._skin_absorption[damage_type]
+        
+        return absorption_value
+    
 class denizen(character):
     def __init__(self, node):
         character.__init__(self)
@@ -385,8 +426,24 @@ class denizen(character):
                     log("FATAL", "<stat /> value attribute must be an integer", exit_code=1)
 
         self.HP = self.max_HP
-
-
+        
+        for p in node.findall('protection'):
+            protection_type= required_attribute(p,'type')
+            protection_value= required_attribute(p,'amount')
+            self._skin_protection[libsigma.txt2val(protection_type,damage_match_txt,damage_match_val)]=float(protection_value)
+            
+        for a in node.findall('absorption'):
+            absorption_type= required_attribute(a,'type')
+            absorption_value= required_attribute(a,'amount')
+            self._skin_absorption[libsigma.txt2val(absorption_type,damage_match_txt,damage_match_val)]=int(absorption_value)
+            
+        for s in node.findall('stance'):
+            name = required_attribute(s,'name')
+            active= s.get('active')
+            self.add_stance(feats.stances[name])
+            if str(active)=="true":
+                self.active_stance=feats.stances[name]
+               
 class player(character):
     def __init__(self, s=None):
         character.__init__(self)
@@ -680,3 +737,6 @@ class wait(duration):
         self.duration_in_secs=d
         self.priority=p
     
+class damage():
+    def __init__(self):
+        return

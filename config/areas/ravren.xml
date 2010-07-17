@@ -355,6 +355,13 @@
     <stats level="5">
       <stat name="strength" value="7" />
     </stats>
+    
+    <protection type="puncture" amount=".05"/>
+    <protection type="impact" amount=".07"/>
+    <absorption type="slash" amount="3"/>
+    
+    <stance name="penguin-fu" active="true"/>
+    
     <short>A penguin waddles around your feet.</short>
     <desc>
       The penguin is waddling about, looking for attention from wherever

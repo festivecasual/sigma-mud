@@ -93,12 +93,14 @@
   </door>
   
     <item id="shirt">
-    <name>a solid blue polo shirt</name>
+    <name>a puffy blue polo shirt</name>
     <keywords>shirt polo</keywords>
     <worn>torso</worn>
-    <short>A solid blue polo shirt is here.</short>
+    <short>A puffy blue polo shirt is here.</short>
+    <protection type="slash" amount=".12"/>
+    <absorption type="puncture" amount= "4"/>
     <desc>
-      The shirt looks only slightly worn, but otherwise is in good condition.
+      The shirt looks only slightly worn and exceedingly puffy, but otherwise is in good condition.
     </desc>
   </item>
   
@@ -107,6 +109,9 @@
   	<keywords>longsword</keywords>
   	<short>a gleaming longsword is here.</short>
   	<weapon type="sword"/>
+  	<damage type="puncture" multiplier =".15"/>
+  	<damage type="slash" multiplier= ".70"/>
+  	<damage type="impact" multiplier=".15"/>
 	<desc>
 	The longsword gleams from a fresh polish.
 	</desc>  	
@@ -117,11 +122,38 @@
   	<keywords>razor</keywords>
   	<short>Occam's razor lies here.</short>
   	<weapon type="knife"/>
+  	<damage type="puncture" multiplier=".1"/>
+  	<damage type="slash" multiplier =".9"/>
 	<desc>
 	 You think it may be an axiom that governs the chances of a complex
 	 theory over a simpler one, but its probably just a good weapon
 	 for giving an adversary an extremely close shave.
-	</desc>  	
+	</desc>
+	</item>
+	
+	<item id="spear">
+	<name> a wooden spear</name>
+	<keywords>spear</keywords>
+	<short>a wooden spear lies here.</short>
+	<weapon type="spear"/>
+  	<damage type="puncture" multiplier="1"/>
+  	<desc>
+  	A simple wooden spear with a pointed tip. Not much for ornamentation
+  	but certainly enough to skewer an adversary at quite a distance.
+  	</desc>	
+  	</item>
+  	
+  	<item id="claymore">
+	<name> an ordinary claymore</name>
+	<keywords>claymore</keywords>
+	<short>an ordinary claymore lies here.</short>
+	<weapon type="greatsword"/>
+  	<damage type="puncture" multiplier=".3"/>
+  	<damage type="slash" multiplier="1.2"/>
+  	<desc>
+  	The claymore is ordinary, but massive. Taking too many strikes from this
+  	will hurt something fierce.
+  	</desc>	
   	</item>
   
    <denizen id="killer_penguin">
@@ -138,7 +170,8 @@
     <placement item="shirt" target="insidetree" />
     <placement item="razor" target="armory" />
     <placement item="longsword" target="armory" />
-    
+    <placement item="spear" target="armory"/>
+    <placement item="claymore" target="armory"/>
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>

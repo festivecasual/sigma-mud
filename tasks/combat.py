@@ -45,7 +45,10 @@ def task_execute():  # moves all combats through states through its lifecycle
             libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor and $direct clash into combat at " + libsigma.val2txt(c.range,range_match_val,range_match_txt) +" range!",c.combatant1,None,c.combatant2)
             c.combatant1.send_combat_status()
             c.combatant2.send_combat_status()
+            
 
+            c.in_range_set_action()
+            
             c.queue_strikes()
 
             c.combat_state=COMBAT_STATE_FIGHTING
@@ -56,47 +59,87 @@ def task_execute():  # moves all combats through states through its lifecycle
             if not c.strike_queue:
                 c.combat_state = COMBAT_STATE_INTERMISSION
                 break
-
-            striker, defender = c.strike_queue[0]
+            
+            striker, defender, striker_state,striker_preferred_range = c.strike_queue[0]
             ## roll for hit -- Agility
-            striker_effective_agil=int(striker.stats["agility"]*balance_multiplier[striker.balance])
-            defender_effective_agil=int(defender.stats["agility"]*balance_multiplier[defender.balance]) 
-            agil_diff=striker_effective_agil - defender_effective_agil
-
-            percent_success=min(max(agil_diff * 3 + 75, 40), 98)
-            roll_for_hit=libsigma.d100()
-            if roll_for_hit <= percent_success:
-                #hit
-                damage = calculate_damage(striker, defender,c.range)
-                libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
-              
-                if (defender.HP - damage) <= 0:
-                    libsigma.report(libsigma.SELF | libsigma.ROOM, "$actor $verb victorious over $direct!",striker,("are","is"),defender)
-                    c.release()
-                defender.HP -= damage
-                striker_roll_for_balance=libsigma.d100()
-                defender_roll_for_balance=libsigma.d100()
-                if striker_roll_for_balance<striker.active_stance.balance["HitIncreasePercent"]:
-                    striker.balance += striker.active_stance.balance["HitIncreaseAmount"]
-                if defender_roll_for_balance<defender.active_stance.balance["HitReceivedIncreasePercent"]:
-                    defender.balance += defender.active_stance.balance["HitReceivedIncreaseAmount"]
-
-                        
-            else:
-                #miss
-                libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb in an attempt to attack $direct!" ,striker,("miss","misses"),defender)
-                striker_roll_for_balance=libsigma.d100()
-                defender_roll_for_balance=libsigma.d100()
-                if striker_roll_for_balance<striker.active_stance.balance["MissIncreasePercent"]:
-                    striker.balance += striker.active_stance.balance["MissIncreaseAmount"]
-                if defender_roll_for_balance<defender.active_stance.balance["DodgeIncreasePercent"]:
-                    defender.balance += defender.active_stance.balance["DodgeIncreaseAmount"]
-
-
+            if striker_state==COMBAT_ACTION_ATTACKING:
+                striker_effective_agil=int(striker.stats["agility"]*balance_multiplier[striker.balance])
+                defender_effective_agil=int(defender.stats["agility"]*balance_multiplier[defender.balance]) 
+                agil_diff=striker_effective_agil - defender_effective_agil
+    
+                percent_success=min(max(agil_diff * 3 + 75, 40), 98)
+                roll_for_hit=libsigma.d100()
+                if roll_for_hit <= percent_success:
+                    #hit
+                    damage = calculate_damage(striker, defender,c.range)
+                    libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
+                  
+                    if (defender.HP - damage) <= 0:
+                        libsigma.report(libsigma.SELF | libsigma.ROOM, "$actor $verb victorious over $direct!",striker,("are","is"),defender)
+                        c.release()
+                    defender.HP -= damage
+                    striker_roll_for_balance=libsigma.d100()
+                    defender_roll_for_balance=libsigma.d100()
+                    if striker_roll_for_balance<striker.active_stance.balance["HitIncreasePercent"]:
+                        striker.balance += striker.active_stance.balance["HitIncreaseAmount"]
+                    if defender_roll_for_balance<defender.active_stance.balance["HitReceivedIncreasePercent"]:
+                        defender.balance += defender.active_stance.balance["HitReceivedIncreaseAmount"]
+    
+                            
+                else:
+                    #miss
+                    libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb in an attempt to attack $direct!" ,striker,("miss","misses"),defender)
+                    striker_roll_for_balance=libsigma.d100()
+                    defender_roll_for_balance=libsigma.d100()
+                    if striker_roll_for_balance<striker.active_stance.balance["MissIncreasePercent"]:
+                        striker.balance += striker.active_stance.balance["MissIncreaseAmount"]
+                    if defender_roll_for_balance<defender.active_stance.balance["DodgeIncreasePercent"]:
+                        defender.balance += defender.active_stance.balance["DodgeIncreaseAmount"]
+           
+            elif striker_state==COMBAT_ACTION_IDLE:
+                libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
+                if type(striker)==world.denizen:
+                    if striker.preferred_weapon_range < c.range:
+                        libsigma.run_command(striker, "advance")
+                    else:
+                        libsigma.run_command(striker, "withdraw")
+            elif striker_state==COMBAT_ACTION_ADVANCING:
+                agil_diff=striker.stats["agility"] - defender.stats["agility"]
+                range_request_diff=striker_preferred_range - c.range
+                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (10*c.churn), 5), 95)
+                roll_for_range=libsigma.d100()
+                
+                if roll_for_range  <= percent_success:
+                    c.range=striker_preferred_range
+                    c.churn=0
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb into " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("close", "closes"), defender)
+                    c.in_range_set_action()
+                    c.strike_queue=[]
+                else:                
+                    c.churn+=1
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to close into a closer range with $direct, but cannot!",striker,("try", "tries"), defender)
+                
+            elif striker_state==COMBAT_ACTION_WITHDRAWING:
+                agil_diff=striker.stats["agility"] - defender.stats["agility"]
+                range_request_diff= c.range-striker_preferred_range
+                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (10*c.churn), 5), 95)
+                roll_for_range=libsigma.d100()
+                
+                if roll_for_range  <= percent_success:
+                    c.range=striker_preferred_range
+                    c.churn=0
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("withdraw", "withdraws"), defender)
+                    c.in_range_set_action()
+                    c.strike_queue=[]
+                else:                
+                    c.churn+=1
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to withdraw to a further range with $direct, but cannot!",striker,("try", "tries"), defender)
+                
             striker.send_combat_status()
             defender.send_combat_status()   
             
-            c.strike_queue = c.strike_queue[1:]
+            if c.strike_queue:    
+                c.strike_queue = c.strike_queue[1:]
             if not c.strike_queue:
                 c.combat_state = COMBAT_STATE_INTERMISSION
 

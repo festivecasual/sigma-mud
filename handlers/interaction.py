@@ -299,7 +299,12 @@ def inventory(data):
         speaker.send_line("You are wearing:")
         for i in speaker.worn_items:
             speaker.send_line("    " + i.name)
-
+    speaker.send_line("You have equipped:")
+    if len(speaker.equipped_weapon) > 0:
+        for j in speaker.equipped_weapon:
+            speaker.send_line("    " + j.name)
+    else:
+        speaker.send_line("    nothing")
 
 @handler()
 def open(data):
@@ -453,6 +458,88 @@ def engage(data):
     engagee.combats.append(c)
     report(SELF | ROOM,"$actor $verb ready to engage $direct in combat!",speaker,("appear", "appears"),engagee)
     return
+
+@handler(WALKING_PRIORITY)
+def advance(data):
+    args=data["args"]
+    speaker=data["speaker"]
+    pwr=None
+   
+    if len(args) > 2:
+        speaker.send_line("I don't understand.")
+        return
+    
+    if not speaker.engaged:
+        speaker.send_line("But you're not in combat!")
+        return
+    
+    if len(args) == 2:
+        for range in range_match_txt:
+            if range.startswith(args[1]):
+                pwr=txt2val(range,range_match_txt,range_match_val)
+                break
+        if not pwr:
+            speaker.send_line(args[1].capitalize() + " is not a range.")
+            return
+
+    if not pwr:
+        pwr = preferred_range[BARE_HAND if not speaker.equipped_weapon else speaker.equipped_weapon[0].weapon_type]
+    
+   
+    if pwr >= speaker.engaged.range:
+        speaker.send_line("You can't advance, you are already at " + val2txt(speaker.engaged.range,range_match_val,range_match_txt) + " range with " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + "!" )
+        return
+   
+    if speaker==speaker.engaged.combatant1:
+        speaker.engaged.combatant1_override_range=pwr
+        speaker.engaged.combatant1_action=COMBAT_ACTION_ADVANCING
+    elif speaker==speaker.engaged.combatant2:
+        speaker.engaged.combatant2_override_range=pwr
+        speaker.engaged.combatant2_action=COMBAT_ACTION_ADVANCING
+        
+    speaker.send_line("You will attempt to advance upon " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
+   
+        
+@handler(WALKING_PRIORITY)        
+def withdraw(data):
+    args=data["args"]
+    speaker=data["speaker"]
+    pwr=None
+   
+    if len(args) > 2:
+        speaker.send_line("I don't understand.")
+        return
+    
+    if not speaker.engaged:
+        speaker.send_line("But you're not in combat!")
+        return
+    
+    if len(args) == 2:
+        for range in range_match_txt:
+            if range.startswith(args[1]):
+                pwr=txt2val(range,range_match_txt,range_match_val)
+                break
+        if not pwr:
+            speaker.send_line(args[1].capitalize() + " is not a range.")
+            return
+
+    if not pwr:
+        pwr = preferred_range[BARE_HAND if not speaker.equipped_weapon else speaker.equipped_weapon[0].weapon_type]
+    
+   
+    if pwr <= speaker.engaged.range:
+        speaker.send_line("You can't withdraw, you are already at " + val2txt(speaker.engaged.range,range_match_val,range_match_txt) + " range with " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + "!" )
+        return
+   
+    if speaker==speaker.engaged.combatant1:
+        speaker.engaged.combatant1_override_range=pwr
+        speaker.engaged.combatant1_action=COMBAT_ACTION_WITHDRAWING
+    elif speaker==speaker.engaged.combatant2:
+        speaker.engaged.combatant2_override_range=pwr
+        speaker.engaged.combatant2_action=COMBAT_ACTION_WITHDRAWING
+        
+    speaker.send_line("You will attempt to withdraw from " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
+   
 
 @handler(WALKING_PRIORITY)
 def search(data):

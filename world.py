@@ -388,6 +388,9 @@ class character(entity):
         
         return absorption_value
     
+    def has_waits(self,prior=HIGHEST_PRIORITY):
+        return False
+    
 class denizen(character):
     def __init__(self, node):
         character.__init__(self)
@@ -485,6 +488,7 @@ class player(character):
         self.send("\r\n" * breaks)
 
     def send_combat_status(self):
+        
         self.send_line("[HP: " + str(self.HP) + "/" + str(self.max_HP) + " | Balance: " + balance_name[self.balance] +"]" )
 
     def handle_death(self):
@@ -685,8 +689,13 @@ class combat(object):
         self.combatant1 = combatant1
         self.combatant2 = combatant2
 
-        self.combatant1_action = None  # may not be used, putting in for now...
+        self.combatant1_action = None  
         self.combatant2_action = None
+
+        self.churn=0
+        
+        self.combatant1_override_range=None
+        self.combatant2_override_range=None
 
         self.strike_queue = []
 
@@ -704,19 +713,45 @@ class combat(object):
 
     def queue_strikes(self):
         # section needs work. Defaults to attack, need to do more checks
-        self.combatant1_action=COMBAT_ACTION_ATTACKING
-        self.combatant2_action=COMBAT_ACTION_ATTACKING
-        agil_diff=self.combatant1.stats["agility"] - self.combatant2.stats["agility"]
-        percent_success=min(max(agil_diff*5 + 50, 20), 80)
-        roll_for_first_strike=libsigma.d100()
-        if roll_for_first_strike <= percent_success:
-            self.strike_queue.append((self.combatant1, self.combatant2))
-            self.strike_queue.append((self.combatant2, self.combatant1))
-        else:
-            self.strike_queue.append((self.combatant2, self.combatant1))
-            self.strike_queue.append((self.combatant1, self.combatant2))
-        # end section
-
+        c_1_range = self.combatant1_override_range if self.combatant1_override_range else self.combatant1.preferred_weapon_range
+        c_2_range = self.combatant2_override_range if self.combatant2_override_range else self.combatant2.preferred_weapon_range
+        
+        if self.combatant1_action == COMBAT_ACTION_ATTACKING and self.combatant2_action != COMBAT_ACTION_ATTACKING:  
+            self.strike_queue.append((self.combatant1,self.combatant2,self.combatant1_action,c_1_range))
+            self.strike_queue.append((self.combatant2,self.combatant1,self.combatant2_action,c_2_range))
+            return
+        elif self.combatant2_action == COMBAT_ACTION_ATTACKING and self.combatant1_action != COMBAT_ACTION_ATTACKING:
+            self.strike_queue.append((self.combatant2,self.combatant1,self.combatant2_action,c_2_range))
+            self.strike_queue.append((self.combatant1,self.combatant2,self.combatant1_action,c_1_range))
+            return
+        else:    
+            agil_diff=self.combatant1.stats["agility"] - self.combatant2.stats["agility"]
+            percent_success=min(max(agil_diff*5 + 50, 20), 80)
+            roll_for_first_strike=libsigma.d100()
+            if roll_for_first_strike <= percent_success:
+                self.strike_queue.append((self.combatant1, self.combatant2,self.combatant1_action,c_1_range))
+                self.strike_queue.append((self.combatant2, self.combatant1,self.combatant2_action,c_2_range))
+            else:
+                self.strike_queue.append((self.combatant2, self.combatant1,self.combatant2_action,c_2_range))
+                self.strike_queue.append((self.combatant1, self.combatant2,self.combatant1_action,c_1_range))
+            # end section
+    def in_range_set_action(self):
+        
+        weapon_type1 = BARE_HAND if len(self.combatant1.equipped_weapon)==0 else self.combatant1.equipped_weapon[0].weapon_type
+        weapon_type2 = BARE_HAND if len(self.combatant2.equipped_weapon)==0 else self.combatant2.equipped_weapon[0].weapon_type
+        
+        if weapon_range[weapon_type1].has_key(self.range):
+            self.combatant1_action = COMBAT_ACTION_ATTACKING
+        else: 
+            self.combatant1_action = COMBAT_ACTION_IDLE
+    
+        if weapon_range[weapon_type2].has_key(self.range):
+            self.combatant2_action = COMBAT_ACTION_ATTACKING
+        else: 
+            self.combatant2_action = COMBAT_ACTION_IDLE
+        
+        return
+        
 class duration(object):
     def __init__(self):
         self.start_time=time.time()

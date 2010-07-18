@@ -53,7 +53,7 @@
 <balance>
 
 <HitIncreasePercent>70</HitIncreasePercent>
-<HitIncreaseAmount>5</HitIncreaseAmount>
+<HitIncreaseAmount>1</HitIncreaseAmount>
 
 <MissIncreasePercent>30</MissIncreasePercent>
 
@@ -205,6 +205,39 @@
 
 <damage type="puncture" multiplier=".5"/>
 <damage type="impact" multiplier=".5"/>
+
+</damages>
+
+</stance>
+<stance>
+<name>lancer</name>
+<default>false</default>
+<desc>Basic stance for pole-arm weapons, focusing on piercing the enemy's skin</desc>
+<weapontype>spear</weapontype>
+
+<balance>
+
+<HitIncreasePercent>40</HitIncreasePercent>
+<HitIncreaseAmount>1</HitIncreaseAmount>
+
+<MissIncreasePercent>70</MissIncreasePercent>
+<MissIncreaseAmount>-1</MissIncreaseAmount>
+
+<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+<DodgeIncreasePercent>25</DodgeIncreasePercent>
+<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+<CriticalChanceModifier>1.5</CriticalChanceModifier>
+<CriticalAmountModifier>2</CriticalAmountModifier>
+
+</balance>
+
+<damages>
+
+<damage type="puncture" multiplier="1.0"/>
+
 
 </damages>
 

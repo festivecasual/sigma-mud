@@ -4,6 +4,7 @@
   <special type="comma" rewrite="emote" />
 
   <handler command="accept" function="accept" />
+  <handler command="advance" function="advance"/>
   <handler command="allocate" function="allocate" />
 	
   <handler command="cackle" function="emote" />
@@ -76,6 +77,7 @@
   <handler command="wear" function="wear" />
   <handler command="wink" function="emote" />
   <handler command="wield" function="equip"/>	
+  <handler command="withdraw" function="withdraw"/>
   <handler command="yell" function="yell" />
 
   <handler command="gmgetstance" function="gmgetstance"/>

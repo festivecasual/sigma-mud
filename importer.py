@@ -118,7 +118,9 @@ def process_area(area_xml, area_name):
     for placement in area_xml.findall('placement'):
         item = required_attribute(placement, 'item')
         target = required_attribute(placement, 'target')
-        world.placements.append(world.placement(placement, area_name, item, target))
+        q = placement.get('quantity')
+        quantity = 1 if not q else q
+        world.placements.append(world.placement(placement, area_name, item, target, quantity))
         area_xml.remove(placement)
 
     for child in area_xml.getchildren():

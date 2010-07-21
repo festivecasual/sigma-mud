@@ -81,12 +81,13 @@ class populator(object):
 
 
 class placement(object):
-    def __init__(self, node, area_name, item_id, target):
+    def __init__(self, node, area_name, item_id, target,quantity):
         self.item = item_id
         self.target = target
         self.area = area_name
         self.flags = []
-
+        self.quantity= quantity
+        
         self.instance = None
 
         for flag in node.findall('flag'):
@@ -181,19 +182,27 @@ class item(entity):
         entity.__init__(self)
 
         self.weapon_type = NOT_A_WEAPON
+        self.ammo_type = NOT_AMMO
         self.strength_multiplier=0.0
         self.worn_position = NOT_WORN
         self.damage={}
         self.protection={}
         self.absorption={}
         self.name = strip_whitespace(required_child(node, 'name').text)
-
+        self._quantity=INFINITE
+        self.max_quantity=1
+        self.stackable=False
         self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
         self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
+        self._short_multiple = ''
 
         keywords = node.find('keywords')
         if keywords != None:
             self._keywords.extend(strip_whitespace(keywords.text).lower().split())
+
+        sm = node.find('short_multiple')
+        if sm !=None:
+            self._short_multiple=(strip_whitespace(sm.text))
 
         worn = node.find('worn')
         if worn != None:
@@ -220,7 +229,32 @@ class item(entity):
             absorption_value= required_attribute(a,'amount')
             self.absorption[libsigma.txt2val(absorption_type,damage_match_txt,damage_match_val)]=int(absorption_value)
         
+        s = node.find('stackable')
+        if s != None:
+            self.stackable=True
+            self.max_quantity=int(required_attribute(s,'max'))
+        
+        a = node.find('ammo')
+        if a != None:
+            a_t=required_attribute(a,'type')
+            self.ammo_type=libsigma.txt2val(a_t,ammo_match_txt,ammo_match_val)
+    @property
+    def short(self):
+        if not self.stackable or self.quantity==1:
+            return self._short
+        else:
+            return self._short_multiple
 
+
+    def set_quantity(self, val):
+        val=int(val) ## not putting this is causing lots of consternation. Not sure why.
+        self._quantity = val
+       
+        if val > self.max_quantity:
+            self._quantity=self.max_quantity
+            
+    quantity = property(lambda self: self._quantity, set_quantity)
+            
 class offer(object):
     def __init__(self, transfer_item, from_character, to_character):
         self.transfer_item, self.from_character, self.to_character = transfer_item, from_character, to_character

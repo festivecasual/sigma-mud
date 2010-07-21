@@ -9,6 +9,7 @@
 	
   <handler command="cackle" function="emote" />
   <handler command="close" function="close"/>	
+  <handler command="count" function="count"/>
 
   <handler command="down" function="go" />
   <handler command="drop" function="drop" />

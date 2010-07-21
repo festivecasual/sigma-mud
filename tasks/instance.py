@@ -27,7 +27,7 @@ def task_execute():
     for current in world.placements:
         if not id(current.instance) in [id(i) for i in current.target.contents]:
             current.instance = pickle.loads(current.item)
-
+            current.instance.quantity=current.quantity
             world.items[id(current.instance)] = current.instance
             current.target.contents.append(current.instance)
 

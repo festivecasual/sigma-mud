@@ -155,6 +155,32 @@
   	will hurt something fierce.
   	</desc>	
   	</item>
+  	
+  	<item id="longbow">
+  	<name>a simple longbow</name>
+  	<keywords>longbow</keywords>
+  	<short>a simple longbow lies here</short>
+  	<weapon type="bow"/>
+  	<accuracy multiplier=".7"/>
+  	<desc>
+  	The longbow is created out of a non-specific wood, and is tied together
+  	rather plainly.
+  	</desc>
+  	</item>
+  	
+  	<item id="arrow">
+  	<name>a crudely fashioned arrow</name>
+  	<keywords>arrows</keywords>
+  	<short>a crudely fashioned arrow lies here</short>
+  	<short_multiple>some crudely fashioned arrows lie here</short_multiple>
+  	<ammo type="arrow"/>
+  	<damage type= "puncture" multiplier="1.0"/>
+  	<stackable max="99"/>
+  	<desc>
+  	The arrow looks crudely fashioned.
+  	</desc>
+  	</item>
+  	
   
    <denizen id="killer_penguin">
     <name>the killer penguin</name>
@@ -172,6 +198,8 @@
     <placement item="longsword" target="armory" />
     <placement item="spear" target="armory"/>
     <placement item="claymore" target="armory"/>
+    <placement item="arrow" target="armory" quantity="10"/>
+    <placement item="arrow" target="training_room" quantity="1"/>
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>

@@ -259,9 +259,15 @@ MALLET=9
 BARE_HAND=10
 
 weapon_match_val = (SWORD,MACE,LONGBOW,CROSSBOW,KNIFE,SPEAR,STAFF,GREATSWORD,MALLET, BARE_HAND)
-weapon_match_txt = ("sword","mace","longbow","crossbow","knife","spear","staff","greatsword","mallet","bare handed")
+weapon_match_txt = ("sword","mace","bow","crossbow","knife","spear","staff","greatsword","mallet","bare handed")
 
+#Ammunition Types
+NOT_AMMO=0
+ARROW=1
+QUARREL=2
 
+ammo_match_val= (ARROW,QUARREL)
+ammo_match_txt= ("arrow", "quarrel")
 #Combat Ranges. Difference between the integers is significant. Represents distance.
 NOT_IN_COMBAT=0
 MELEE_RANGE=1

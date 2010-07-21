@@ -294,7 +294,7 @@ def inventory(data):
         speaker.send_line("    nothing");
     else:
         for item in speaker.contents:
-            speaker.send_line("   " + item.name)
+            speaker.send_line("   " + item.name + ("" if not item.stackable else (" x " + str(item.quantity))))
     if len(speaker.worn_items) > 0:
         speaker.send_line("You are wearing:")
         for i in speaker.worn_items:
@@ -540,6 +540,28 @@ def withdraw(data):
         
     speaker.send_line("You will attempt to withdraw from " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
    
+@handler()
+def count(data):
+    speaker = data["speaker"]
+    args = data["args"]
+
+    if len(args) == 1:
+        speaker.send_line(args[0].title() + " what?")
+        return
+
+    source = Sentence(args)
+    result = source.ItemInRoom(speaker.location)
+
+    if result.CompleteMatch():
+        stri="You see that there "
+        if result[0].quantity > 1:
+            stri+=("are " + str(result[0].quantity) + " of ")
+        else:
+            stri+="is one of "
+        stri+=(result[0].name + ".")
+        speaker.send_line(stri)  
+    else:
+        speaker.send_line("You can't find it.")
 
 @handler(WALKING_PRIORITY)
 def search(data):

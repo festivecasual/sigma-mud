@@ -302,7 +302,7 @@ def inventory(data):
     speaker.send_line("You have equipped:")
     if len(speaker.equipped_weapon) > 0:
         for j in speaker.equipped_weapon:
-            speaker.send_line("    " + j.name)
+            speaker.send_line("    " + j.name+ ("" if not j.stackable else (" x " + str(j.quantity))))
     else:
         speaker.send_line("    nothing")
 
@@ -390,9 +390,24 @@ def equip(data):
     for item in speaker.contents:
         for keyword in item.keywords:
             if keyword.startswith(args[1]):
-                if item.weapon_type==NOT_A_WEAPON:
+                if item.weapon_type==NOT_A_WEAPON and item.ammo_type==NOT_AMMO:
                     speaker.send_line("You can't wield that.")
                     return
+                if item.ammo_type != NOT_AMMO:
+                    if len(speaker.equipped_weapon)>1:
+                        speaker.send_line("You can't wield anything else.")
+                        return
+                    elif len(speaker.equipped_weapon)<1:
+                        speaker.send_line("You must have an proper weapon equipped before equipping this." )
+                        return
+                    elif ammo_weapon_type[item.ammo_type]==speaker.equipped_weapon[0].weapon_type:
+                        transfer_item(item,speaker.contents,speaker.equipped_weapon)
+                        report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("wield", "wields" ))
+                        return
+                    else:    
+                        speaker.send_line("You must have an proper weapon equipped before equipping this.")
+                    return
+                
                 if len(speaker.equipped_weapon)==1: ## Editable for future multi-weapon equipping abilities
                     speaker.send_line("You can't wield anything else.")
                     return
@@ -420,10 +435,18 @@ def unequip(data):
             if keyword.startswith(args[1]):
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("unequip", "unequips" ))
                 transfer_item(item,speaker.equipped_weapon,speaker.contents)
-                speaker.active_stance=speaker.default_stance[BARE_HAND]
-                speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
+                
+                for i2 in speaker.equipped_weapon:
+                    if i2.ammo_type!=NOT_AMMO:
+                        if ammo_weapon_type[i2.ammo_type]==item.weapon_type:
+                            run_command(speaker, args[0] + " " + i2.name)
+                
+                if(item.weapon_type!=NOT_A_WEAPON):
+                    speaker.active_stance=speaker.default_stance[BARE_HAND]
+                    speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
                 return
-
+               
+                
     speaker.send_line("You're not wielding anything like that.")
 
 

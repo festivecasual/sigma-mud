@@ -200,6 +200,7 @@
     <placement item="claymore" target="armory"/>
     <placement item="arrow" target="armory" quantity="10"/>
     <placement item="arrow" target="training_room" quantity="1"/>
+    <placement item="longbow" target="armory" />
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>

@@ -184,6 +184,7 @@ class item(entity):
         self.weapon_type = NOT_A_WEAPON
         self.ammo_type = NOT_AMMO
         self.strength_multiplier=0.0
+        self.accuarcy_multiplier=1.0
         self.worn_position = NOT_WORN
         self.damage={}
         self.protection={}
@@ -192,6 +193,7 @@ class item(entity):
         self._quantity=INFINITE
         self.max_quantity=1
         self.stackable=False
+        self.two_handed=False
         self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
         self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
         self._short_multiple = ''
@@ -213,6 +215,13 @@ class item(entity):
             damage_multiplier = required_attribute(d, 'multiplier')
             
             self.damage[int(libsigma.txt2val(damage_name,damage_match_txt,damage_match_val))]=float(damage_multiplier)
+        
+        for ac in node.findall('accuracy'):            
+            accuracy_multiplier = required_attribute(ac, 'multiplier')
+            
+            self.accuracy_multiplier = float(accuracy_multiplier)
+       
+
             
         weapon = node.find('weapon')
         if weapon != None:
@@ -252,7 +261,8 @@ class item(entity):
        
         if val > self.max_quantity:
             self._quantity=self.max_quantity
-            
+        val=max(0,val)
+        
     quantity = property(lambda self: self._quantity, set_quantity)
             
 class offer(object):
@@ -359,8 +369,9 @@ class character(entity):
     def preferred_weapon_range(self):
         pwr = MELEE_RANGE
         for w in self.equipped_weapon:
-            if preferred_range[w.weapon_type] > pwr:
-                pwr = preferred_range[w.weapon_type]
+            if w.weapon_type!=NOT_A_WEAPON:
+                if preferred_range[w.weapon_type] > pwr:
+                    pwr = preferred_range[w.weapon_type]
         return pwr
 
     @property
@@ -731,12 +742,15 @@ class combat(object):
         self.combatant1_override_range=None
         self.combatant2_override_range=None
 
+        self.combatant1_discard=[]
+        self.combatant2_discard=[]
+
         self.strike_queue = []
 
         self.combat_state = COMBAT_STATE_INITIALIZING
         self.range = NOT_IN_COMBAT
 
-    def release(self):
+    def release(self,victor):
         combats.remove(self)
         self.combatant1.combats.remove(self)
         self.combatant2.combats.remove(self)
@@ -744,7 +758,37 @@ class combat(object):
             self.combatant1.engaged=None
         if self.combatant2.engaged==self:
             self.combatant2.engaged=None
-
+        if victor==self.combatant1:
+            for d in self.combatant1_discard:
+                if d.stackable==True:
+                    d_a=0
+                    for a in range(d.quantity):
+                        roll=libsigma.d100()
+                        if roll<=75:
+                            d_a+=1
+                    libsigma.transfer_item(d,self.combatant1_discard,self.combatant1.contents,d_a)
+                    self.combatant2.send_line("You recover " + str(d_a) + " of " + d.name + "!")
+                else:
+                    roll=libsigma.d100()
+                    if roll<=80:
+                        libsigma.transfer_item(d,self.combatant1_discard,self.combatant1.contents)
+                        self.combatant1.send_line("You recover " + d.name + "!")
+        elif victor==self.combatant2:
+            for d in self.combatant2_discard:
+                if d.stackable==True:
+                    d_a=0
+                    for a in range(d.quantity):
+                        roll=libsigma.d100()
+                        if roll<=75:
+                            d_a+=1
+                    libsigma.transfer_item(d,self.combatant2_discard,self.combatant2.contents,d_a)
+                    self.combatant2.send_line("You recover " + str(d_a) + " of " + d.name + "!")
+                else:
+                    roll=libsigma.d100()
+                    if roll<=80:
+                        libsigma.transfer_item(d,self.combatant2_discard,self.combatant2.contents)
+                        self.combatant2.send_line("You recover " + d.name + "!")
+                                                
     def queue_strikes(self):
         # section needs work. Defaults to attack, need to do more checks
         c_1_range = self.combatant1_override_range if self.combatant1_override_range else self.combatant1.preferred_weapon_range
@@ -785,6 +829,9 @@ class combat(object):
             self.combatant2_action = COMBAT_ACTION_IDLE
         
         return
+
+    def get_discard(self,playr):
+        return self.combatant1_discard if self.combatant1==playr else self.combatant2_discard
         
 class duration(object):
     def __init__(self):

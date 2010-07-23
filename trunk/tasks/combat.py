@@ -63,39 +63,59 @@ def task_execute():  # moves all combats through states through its lifecycle
             striker, defender, striker_state,striker_preferred_range = c.strike_queue[0]
             ## roll for hit -- Agility
             if striker_state==COMBAT_ACTION_ATTACKING:
-                striker_effective_agil=int(striker.stats["agility"]*balance_multiplier[striker.balance])
-                defender_effective_agil=int(defender.stats["agility"]*balance_multiplier[defender.balance]) 
-                agil_diff=striker_effective_agil - defender_effective_agil
-    
-                percent_success=min(max(agil_diff * 3 + 75, 40), 98)
-                roll_for_hit=libsigma.d100()
-                if roll_for_hit <= percent_success:
-                    #hit
-                    damage = calculate_damage(striker, defender,c.range)
-                    libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
-                  
-                    if (defender.HP - damage) <= 0:
-                        libsigma.report(libsigma.SELF | libsigma.ROOM, "$actor $verb victorious over $direct!",striker,("are","is"),defender)
-                        c.release()
-                    defender.HP -= damage
-                    striker_roll_for_balance=libsigma.d100()
-                    defender_roll_for_balance=libsigma.d100()
-                    if striker_roll_for_balance<striker.active_stance.balance["HitIncreasePercent"]:
-                        striker.balance += striker.active_stance.balance["HitIncreaseAmount"]
-                    if defender_roll_for_balance<defender.active_stance.balance["HitReceivedIncreasePercent"]:
-                        defender.balance += defender.active_stance.balance["HitReceivedIncreaseAmount"]
-    
-                            
+                ammo=None
+                can_strike=False
+                if not (striker.active_stance.weapon_type in ammo_required_weapons):
+                    can_strike=True
                 else:
-                    #miss
-                    libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb in an attempt to attack $direct!" ,striker,("miss","misses"),defender)
-                    striker_roll_for_balance=libsigma.d100()
-                    defender_roll_for_balance=libsigma.d100()
-                    if striker_roll_for_balance<striker.active_stance.balance["MissIncreasePercent"]:
-                        striker.balance += striker.active_stance.balance["MissIncreaseAmount"]
-                    if defender_roll_for_balance<defender.active_stance.balance["DodgeIncreasePercent"]:
-                        defender.balance += defender.active_stance.balance["DodgeIncreaseAmount"]
-           
+                    for w in striker.equipped_weapon:
+                        if w.ammo_type!=NOT_AMMO:
+                            if ammo_weapon_type[w.ammo_type] == striker.active_stance.weapon_type:
+                                can_strike=True
+                                ammo=w
+                                                                
+                            
+                if can_strike:
+                    striker_effective_agil=int(striker.stats["agility"]*balance_multiplier[striker.balance])
+                    defender_effective_agil=int(defender.stats["agility"]*balance_multiplier[defender.balance]) 
+                    agil_diff= striker_effective_agil - defender_effective_agil
+        
+                    percent_success=min(max(agil_diff * 3 + 75, 40), 98)
+                    roll_for_hit=libsigma.d100()
+                   
+                    if roll_for_hit <= percent_success:
+                        #hit
+                        damage = calculate_damage(striker, defender,c.range,ammo)
+                        if(striker.active_stance.weapon_type in ammo_required_weapons):
+                            libsigma.transfer_item(ammo,striker.equipped_weapon,c.get_discard(striker),1)
+                        libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor successfully $verb $direct for " + str(damage) +" damage!", striker,("hit","hits"), defender)
+                      
+                        if (defender.HP - damage) <= 0:
+                            libsigma.report(libsigma.SELF | libsigma.ROOM, "$actor $verb victorious over $direct!",striker,("are","is"),defender)
+                            c.release(striker)
+                        defender.HP -= damage
+                        striker_roll_for_balance=libsigma.d100()
+                        defender_roll_for_balance=libsigma.d100()
+                        if striker_roll_for_balance<striker.active_stance.balance["HitIncreasePercent"]:
+                            striker.balance += striker.active_stance.balance["HitIncreaseAmount"]
+                        if defender_roll_for_balance<defender.active_stance.balance["HitReceivedIncreasePercent"]:
+                            defender.balance += defender.active_stance.balance["HitReceivedIncreaseAmount"]
+        
+                                
+                    else:
+                        #miss
+                        if(striker.active_stance.weapon_type in ammo_required_weapons):
+                            libsigma.transfer_item(ammo,striker.equipped_weapon,striker.location.contents,1,True)
+                        libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb in an attempt to attack $direct!" ,striker,("miss","misses"),defender)
+                        striker_roll_for_balance=libsigma.d100()
+                        defender_roll_for_balance=libsigma.d100()
+                        if striker_roll_for_balance<striker.active_stance.balance["MissIncreasePercent"]:
+                            striker.balance += striker.active_stance.balance["MissIncreaseAmount"]
+                        if defender_roll_for_balance<defender.active_stance.balance["DodgeIncreasePercent"]:
+                            defender.balance += defender.active_stance.balance["DodgeIncreaseAmount"]
+                else:
+                        libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
+                    
             elif striker_state==COMBAT_ACTION_IDLE:
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
                 if type(striker)==world.denizen:
@@ -106,7 +126,7 @@ def task_execute():  # moves all combats through states through its lifecycle
             elif striker_state==COMBAT_ACTION_ADVANCING:
                 agil_diff=striker.stats["agility"] - defender.stats["agility"]
                 range_request_diff=striker_preferred_range - c.range
-                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (10*c.churn), 5), 95)
+                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
                 roll_for_range=libsigma.d100()
                 
                 if roll_for_range  <= percent_success:
@@ -122,9 +142,9 @@ def task_execute():  # moves all combats through states through its lifecycle
             elif striker_state==COMBAT_ACTION_WITHDRAWING:
                 agil_diff=striker.stats["agility"] - defender.stats["agility"]
                 range_request_diff= c.range-striker_preferred_range
-                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (10*c.churn), 5), 95)
+                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
                 roll_for_range=libsigma.d100()
-                
+                                
                 if roll_for_range  <= percent_success:
                     c.range=striker_preferred_range
                     c.churn=0
@@ -152,7 +172,7 @@ def task_deinit():
     pass
 
 
-def calculate_damage(attacker, defender,combat_range):
+def calculate_damage(attacker, defender,combat_range,ammo):
     damage = 0
     attacker_damage={}
     if  attacker.active_stance.weapon_type==BARE_HAND:
@@ -172,21 +192,27 @@ def calculate_damage(attacker, defender,combat_range):
                 attacker_damage[damage_type]=0     
     else:  
         for w in attacker.equipped_weapon:
-            for damage_type in damage_match_val:
-                if w.damage.has_key(damage_type):
-                    attacker_damage[damage_type]=attacker.stats["strength"]
-                    attacker_damage[damage_type]*=weapon_damage_multiplier[w.weapon_type]
-                    attacker_damage[damage_type]*=weapon_range[w.weapon_type][combat_range]
-                    attacker_damage[damage_type]*=w.damage[damage_type]
-                
-                    #defense calculations
-                    attacker_damage[damage_type]*=defender.get_protection_multiplier(damage_type)
-                    attacker_damage[damage_type]=max(attacker_damage[damage_type]-defender.get_absorption(damage_type),0)
-                    #log("TEST", str(defender.get_protection_multiplier(damage_type)) + " " + libsigma.val2txt(damage_type,damage_match_val,damage_match_txt))
-                    #log("TEST", str(defender.get_absorption(damage_type)) + " " + libsigma.val2txt(damage_type,damage_match_val,damage_match_txt))
-                    damage+=attacker_damage[damage_type]
-                else:
-                    attacker_damage[damage_type]=0   
+            if w.weapon_type!=NOT_A_WEAPON:
+                for damage_type in damage_match_val:
+                    if w.damage.has_key(damage_type) or ammo:
+                        attacker_damage[damage_type]=attacker.stats["strength"]
+                        attacker_damage[damage_type]*=weapon_damage_multiplier[w.weapon_type]
+                        attacker_damage[damage_type]*=weapon_range[w.weapon_type][combat_range]
+                      
+                        if not ammo:
+                            attacker_damage[damage_type]*=w.damage[damage_type]
+                        elif ammo.damage.has_key(damage_type):
+                            attacker_damage[damage_type]*=ammo.damage[damage_type]
+                        else:
+                            attacker_damage[damage_type]=0
+                        
+                        #defense calculations
+                        attacker_damage[damage_type]*=defender.get_protection_multiplier(damage_type)
+                        attacker_damage[damage_type]=max(attacker_damage[damage_type]-defender.get_absorption(damage_type),0)
+                    
+                        damage+=attacker_damage[damage_type]
+                    else:
+                        attacker_damage[damage_type]=0   
     
     
                 

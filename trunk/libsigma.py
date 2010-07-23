@@ -5,6 +5,7 @@ import time
 import math
 import random
 import os.path
+import copy
 from string import Template
 
 import task
@@ -175,15 +176,50 @@ def offer_item(item, from_character, to_character):
     insert_task(to_character.name + '_transfer_warning', tx.warning, 30, 1)
 
 
-def transfer_item(item, from_collection, to_collection):
-    if item in from_collection:
-        to_collection.append(item)
-        from_collection.remove(item)
-        return True
-    else:
+def transfer_item(item, from_collection, to_collection,amount=None, individual=False):
+    
+    if item not in from_collection:
         return False
-
-
+    
+    if not item.stackable:
+            to_collection.append(item)
+            from_collection.remove(item)
+            return True
+              
+    else:
+        amount = item.quantity if not amount else amount
+        if not individual:
+            for t in to_collection:
+                if t.name == item.name and t.stackable:     #NEED TO CHECK FOR ALL UNIQUE IDENTIFIERS! For now, Name is sufficient
+                    if t.quantity+amount <= t.max_quantity:
+                        t.quantity+=amount
+                        item.quantity-=amount
+                        if item.quantity == 0:
+                            from_collection.remove(item)
+                        return True
+                    else: 
+                        o_amount=amount
+                        t.quantity=int(t.max_quantity)   
+                        while amount > t.max_quantity:
+                            amount-=t.max_quantity
+                            new_item = copy.copy(item)
+                            new_item.quantity=amount
+                            to_collection.append(new_item)
+                       
+                        item.quantity-=o_amount
+                        if item.quantity == 0:
+                            from_collection.remove(item)
+                       
+                        return True
+        new_item=copy.copy(item)
+        new_item.quantity=amount
+        item.quantity-=amount
+        if item.quantity == 0:
+            from_collection.remove(item)
+        
+        to_collection.append(new_item)
+        
+            
 def transfer_money(amount, origin, destination):
     to_transfer = min(origin.money, amount)
     origin.money -= to_transfer

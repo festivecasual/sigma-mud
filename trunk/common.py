@@ -268,6 +268,14 @@ QUARREL=2
 
 ammo_match_val= (ARROW,QUARREL)
 ammo_match_txt= ("arrow", "quarrel")
+
+ammo_required_weapons=(LONGBOW,CROSSBOW)
+#projectile_weapons=(LIGHT_THROWN,HEAVY_THROWN) for future development??
+
+ammo_weapon_type={}
+ammo_weapon_type[ARROW]=LONGBOW
+ammo_weapon_type[QUARREL]=CROSSBOW
+
 #Combat Ranges. Difference between the integers is significant. Represents distance.
 NOT_IN_COMBAT=0
 MELEE_RANGE=1
@@ -397,9 +405,9 @@ balance_multiplier[-5] =.8
 balance_multiplier[-4] =.9
 balance_multiplier[-3] =.9
 balance_multiplier[-2] =.9
-balance_multiplier[-1] = 1
-balance_multiplier[0]  = 1
-balance_multiplier[1] =  1
+balance_multiplier[-1] = 1.0
+balance_multiplier[0]  = 1.0
+balance_multiplier[1] =  1.0
 balance_multiplier[2] =  1.1 
 balance_multiplier[3] =  1.1
 balance_multiplier[4] =  1.1

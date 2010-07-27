@@ -41,3 +41,21 @@ def unhide(data):
         report(SELF | ROOM, "$actor $verb $direct, stepping out of a hiding place." , speaker, ("reveal", "reveals"), speaker)
         speaker.hidden=False
     return
+
+@handler(WALKING_PRIORITY)
+def assess(data):
+    speaker=data["speaker"]
+
+   
+    if speaker.combats:
+        for c in speaker.combats:
+            other_guy=c.combatant1.name if c.combatant1!=speaker else c.combatant2.name
+            if c.combat_state==COMBAT_STATE_INITIALIZING or c.combat_state==COMBAT_STATE_INITIALIZING:
+                speaker.send_line("You are in combat, but not yet engaged at a range with " + other_guy +".")
+                return
+            if c==speaker.engaged:           
+                speaker.send_line("You are engaged at " + val2txt(c.range,range_match_val,range_match_txt) + " with " + other_guy + ".")
+            else:
+                speaker.send_line(other_guy + " is at " + val2txt(c.range,range_match_val,range_match_txt) + " range with you.")
+    else:
+        speaker.send_line("You are not in combat!")

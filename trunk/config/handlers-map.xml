@@ -6,6 +6,8 @@
   <handler command="accept" function="accept" />
   <handler command="advance" function="advance"/>
   <handler command="allocate" function="allocate" />
+  <handler command="assess" function="assess"/>
+  <handler command="attack" function="engage"/>	
 	
   <handler command="cackle" function="emote" />
   <handler command="close" function="close"/>	
@@ -21,6 +23,8 @@
   <handler command="equip" function="equip"/>
   <handler command="exit" function="player_quit" />
   
+  <handler command="fight" function="engage"/>
+  
   <handler command="go" function="go" />
   <handler command="get" function="get" />
   <handler command="give" function="give" />
@@ -32,6 +36,8 @@
   <handler command="hide" function="hide"/>
   
   <handler command="inventory" function="inventory" />
+
+  <handler command="kill" function="engage"/>
 
   <handler command="look" function="look" />
   <handler command="laugh" function="emote" />

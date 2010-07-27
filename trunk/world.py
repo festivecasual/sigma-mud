@@ -446,7 +446,12 @@ class denizen(character):
         self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
 
         self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
-
+        self._epitaph = None
+        
+        epitaph = node.find('epitaph')
+        if epitaph != None:
+            self.epitaph=strip_whitespace(epitaph.text)
+        
         keywords = node.find('keywords')
         if keywords != None:
             self._keywords.extend(strip_whitespace(keywords.text).lower().split())
@@ -491,6 +496,13 @@ class denizen(character):
             self.add_stance(feats.stances[name])
             if str(active)=="true":
                 self.active_stance=feats.stances[name]
+
+    def handle_death(self):
+        del denizens[id(self)]
+        libsigma.report(libsigma.ROOM,self.epitaph,self)
+        self.location.characters.remove(self)
+        
+        pass
                
 class player(character):
     def __init__(self, s=None):
@@ -755,9 +767,17 @@ class combat(object):
         self.combatant1.combats.remove(self)
         self.combatant2.combats.remove(self)
         if self.combatant1.engaged==self:
-            self.combatant1.engaged=None
+            if self.combatant1.combats:
+                self.combatant1.engaged=self.combatant1.combats[0]
+                self.combatant1.engaged.in_range_set_action(self.combatant1)
+            else:
+                self.combatant1.engaged=None
         if self.combatant2.engaged==self:
-            self.combatant2.engaged=None
+            if self.combatant2.combats:
+                self.combatant2.engaged=self.combatant2.combats[0]
+                self.combatant2.engaged.in_range_set_action(self.combatant2)
+            else:
+                self.combatant2.engaged=None
         if victor==self.combatant1:
             for d in self.combatant1_discard:
                 if d.stackable==True:
@@ -791,43 +811,52 @@ class combat(object):
                                                 
     def queue_strikes(self):
         # section needs work. Defaults to attack, need to do more checks
-        c_1_range = self.combatant1_override_range if self.combatant1_override_range else self.combatant1.preferred_weapon_range
-        c_2_range = self.combatant2_override_range if self.combatant2_override_range else self.combatant2.preferred_weapon_range
         
         if self.combatant1_action == COMBAT_ACTION_ATTACKING and self.combatant2_action != COMBAT_ACTION_ATTACKING:  
-            self.strike_queue.append((self.combatant1,self.combatant2,self.combatant1_action,c_1_range))
-            self.strike_queue.append((self.combatant2,self.combatant1,self.combatant2_action,c_2_range))
+            self.strike_queue.append((self.combatant1,self.combatant2))
+            self.strike_queue.append((self.combatant2,self.combatant1))
             return
         elif self.combatant2_action == COMBAT_ACTION_ATTACKING and self.combatant1_action != COMBAT_ACTION_ATTACKING:
-            self.strike_queue.append((self.combatant2,self.combatant1,self.combatant2_action,c_2_range))
-            self.strike_queue.append((self.combatant1,self.combatant2,self.combatant1_action,c_1_range))
+            self.strike_queue.append((self.combatant2,self.combatant1))
+            self.strike_queue.append((self.combatant1,self.combatant2))
             return
         else:    
             agil_diff=self.combatant1.stats["agility"] - self.combatant2.stats["agility"]
             percent_success=min(max(agil_diff*5 + 50, 20), 80)
             roll_for_first_strike=libsigma.d100()
             if roll_for_first_strike <= percent_success:
-                self.strike_queue.append((self.combatant1, self.combatant2,self.combatant1_action,c_1_range))
-                self.strike_queue.append((self.combatant2, self.combatant1,self.combatant2_action,c_2_range))
+                self.strike_queue.append((self.combatant1, self.combatant2))
+                self.strike_queue.append((self.combatant2, self.combatant1))
             else:
-                self.strike_queue.append((self.combatant2, self.combatant1,self.combatant2_action,c_2_range))
-                self.strike_queue.append((self.combatant1, self.combatant2,self.combatant1_action,c_1_range))
+                self.strike_queue.append((self.combatant2, self.combatant1))
+                self.strike_queue.append((self.combatant1, self.combatant2))
             # end section
-    def in_range_set_action(self):
+    def in_range_set_action(self,one_combatant=None):
         
         weapon_type1 = BARE_HAND if len(self.combatant1.equipped_weapon)==0 else self.combatant1.equipped_weapon[0].weapon_type
         weapon_type2 = BARE_HAND if len(self.combatant2.equipped_weapon)==0 else self.combatant2.equipped_weapon[0].weapon_type
         
-        if weapon_range[weapon_type1].has_key(self.range):
-            self.combatant1_action = COMBAT_ACTION_ATTACKING
-        else: 
-            self.combatant1_action = COMBAT_ACTION_IDLE
-    
-        if weapon_range[weapon_type2].has_key(self.range):
-            self.combatant2_action = COMBAT_ACTION_ATTACKING
-        else: 
-            self.combatant2_action = COMBAT_ACTION_IDLE
+        change1=True
+        change2=True
         
+        if one_combatant==self.combatant1:
+            change1=True
+            change2=False
+        elif one_combatant==self.combatant2:
+            change1=False
+            change2=True
+        if change1:    
+            if weapon_range[weapon_type1].has_key(self.range) and self.combatant1.engaged==self:
+                self.combatant1_action = COMBAT_ACTION_ATTACKING
+            elif self.combatant1_action not in (COMBAT_ACTION_WITHDRAWING, COMBAT_ACTION_ADVANCING): 
+                self.combatant1_action = COMBAT_ACTION_IDLE
+        
+        if change2:
+            if weapon_range[weapon_type2].has_key(self.range) and self.combatant2.engaged==self:
+                self.combatant2_action = COMBAT_ACTION_ATTACKING
+            elif self.combatant2_action not in (COMBAT_ACTION_WITHDRAWING, COMBAT_ACTION_ADVANCING): 
+                self.combatant2_action = COMBAT_ACTION_IDLE
+            
         return
 
     def get_discard(self,playr):

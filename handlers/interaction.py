@@ -130,7 +130,10 @@ def go(data):
     args = data["args"]
 
     direction = -1
-
+    if speaker.engaged:
+        speaker.send_line("You can't do that, you're currently in combat!") 
+        return
+    
     if "go".startswith(args[0]) and len(args) == 2:
         direction = txt2dir(args[1])
     elif len(args) == 1:
@@ -418,6 +421,8 @@ def equip(data):
                 speaker.active_stance=speaker.default_stance[item.weapon_type]
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("wield", "wields" ))
                 speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
+                for c in speaker.combats:
+                    c.in_range_set_action()
                 return
     speaker.send_line("You don't have anything like that in your inventory.")
     return
@@ -436,12 +441,15 @@ def unequip(data):
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("unequip", "unequips" ))
                 transfer_item(item,speaker.equipped_weapon,speaker.contents)
                 
+                    
                 for i2 in speaker.equipped_weapon:
                     if i2.ammo_type!=NOT_AMMO:
                         if ammo_weapon_type[i2.ammo_type]==item.weapon_type:
                             run_command(speaker, args[0] + " " + i2.name)
                 
                 if(item.weapon_type!=NOT_A_WEAPON):
+                    for c in speaker.combats:
+                        c.in_range_set_action(speaker)
                     speaker.active_stance=speaker.default_stance[BARE_HAND]
                     speaker.send_line("You are now using the " + speaker.active_stance.name.capitalize() + " stance.")
                 return
@@ -475,6 +483,22 @@ def engage(data):
             speaker.send_line("You can't attack that!")
             return
 
+    if speaker.engaged:
+        if speaker.engaged.combatant1==engagee or speaker.engaged.combatant2==engagee:
+            speaker.send_line("You are already engaged in combat with " + engagee.name + "!" )    
+        else:
+            for co in speaker.combats:
+                if  co.combatant1==engagee or co.combatant2==engagee:
+                    speaker.send_line("You turn your attention toward " + engagee.name + "!")
+                    report(ROOM, "$actor $verb " + pronoun_possessive[speaker.gender] + " attention toward $direct!", speaker, ("turn", "turns"), engagee)
+                    speaker.engaged=co
+                    for co2 in speaker.combats:
+                        co2.in_range_set_action()
+                    return
+            speaker.send_line("You are too busy to fight anything else!")
+            
+        return
+    
     c = world.combat(speaker,engagee)
     world.combats.append(c)
     speaker.combats.append(c)

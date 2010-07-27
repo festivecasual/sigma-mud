@@ -60,7 +60,15 @@ def task_execute():  # moves all combats through states through its lifecycle
                 c.combat_state = COMBAT_STATE_INTERMISSION
                 break
             
-            striker, defender, striker_state,striker_preferred_range = c.strike_queue[0]
+            striker, defender = c.strike_queue[0]
+            
+            striker_state=c.combatant1_action if striker==c.combatant1 else c.combatant2_action
+            
+            if striker==c.combatant1:
+                striker_preferred_range = c.combatant1_override_range if c.combatant1_override_range else c.combatant1.preferred_weapon_range
+            else:
+                striker_preferred_range = c.combatant2_override_range if c.combatant2_override_range else c.combatant2.preferred_weapon_range
+
             ## roll for hit -- Agility
             if striker_state==COMBAT_ACTION_ATTACKING:
                 ammo=None

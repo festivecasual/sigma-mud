@@ -25,7 +25,9 @@ def task_execute():
             choices.extend(libsigma.open_exits(active_denizen.location))
 
             selection = random.choice(choices)
-
+            if active_denizen.engaged:
+                selection=None
+            
             if (selection != None):
                 if active_denizen.location.altmsg[selection]!=None:
                     libsigma.report(libsigma.ROOM, "$actor just went " + active_denizen.location.altmsg[selection] + ".", active_denizen )

@@ -190,7 +190,16 @@
       The penguin is roaming about, looking for attention from wherever
       it may come.  He also appears hungry, perhaps for a foot or an arm.
     </desc>
+    <stats level="2">
+      <stat name="strength" value="5" />
+    </stats>
+    
+    <protection type="puncture" amount=".05"/>
+    <protection type="impact" amount=".07"/>
+    <absorption type="slash" amount="3"/>
     <flag>killable</flag>
+    <epitaph>The killer penguin falls over, twitches a bit, then ceases all movement</epitaph>
+    
   </denizen>
   
     <placement item="shirt" target="insidetree" />

@@ -3,4 +3,19 @@
     <name>Default Room</name>
     <desc>You are in an empty room.</desc>
   </room>
+
+ <item id = "corpse">
+ <name>a corpse</name>
+ <keywords>corpse</keywords>
+ <short>a corpse lies here</short>
+ <desc>
+ The corpse appears very dead. 
+ </desc>
+
+ <flag>stationary</flag>
+ <flag>lootable</flag> 
+ </item>
+
+
+
 </area>

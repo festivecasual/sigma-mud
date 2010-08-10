@@ -43,6 +43,7 @@
   <handler command="laugh" function="emote" />
   <handler command="leave" function="go" />
   <handler command="logoff" function="player_quit" />
+  <handler command="loot" function="loot"/>
 
   <handler command="north" function="go" />
   <handler command="ne" function="go" />
@@ -58,6 +59,7 @@
   <handler command="remove" function="remove" />
   <handler command="refuse" function="accept" />
   <handler command="reject" function="accept" />
+  <handler command="retreat" function="retreat"/>
   
   <handler command="south" function="go" />
   <handler command="say" function="say" />
@@ -82,6 +84,7 @@
   <handler command="west" function="go" />
   <handler command="wave" function="emote" />
   <handler command="wear" function="wear" />
+  <handler command="wealth" function="wealth"/>
   <handler command="wink" function="emote" />
   <handler command="wield" function="equip"/>	
   <handler command="withdraw" function="withdraw"/>

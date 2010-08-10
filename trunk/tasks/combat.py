@@ -5,7 +5,7 @@ from common import *
 
 # Proper name of task
 name = 'Combat Manager'
-interval = 2
+interval = 1
 
 
 def task_init():
@@ -13,7 +13,27 @@ def task_init():
 
 
 def task_execute():  # moves all combats through states through its lifecycle
-    for c in world.combats:
+    for c in world.combats[:]:
+        
+        if c.combatant1_action==COMBAT_ACTION_RETREATING:
+            retreat=True
+            for co in c.combatant1.combats:
+                if not co.is_retreat_successful(c.combatant1):
+                    c.combatant1.send_line("You try to retreat, but cannot get away from " + (co.combatant1.name if co.combatant1!=c.combatant1 else c.combatant2.name) + "!")
+                    retreat=False
+            if retreat:
+                c.retreat(c.combatant1)
+                continue
+        if c.combatant2_action==COMBAT_ACTION_RETREATING:
+            retreat=True
+            for co in c.combatant2.combats:
+                if not co.is_retreat_successful(c.combatant2):
+                    c.combatant2.send_line("You try to retreat, but cannot get away from " + (co.combatant1.name if co.combatant1!=c.combatant1 else c.combatant2.name) + "!")
+                    retreat=False
+            if retreat:
+                c.retreat(c.combatant2)
+                continue
+                
         if c.combat_state==COMBAT_STATE_INITIALIZING:  # Initializing is defined as a combat that has just begun.
             c.combatant1.engaged = c
             c.combatant1.send_combat_status()

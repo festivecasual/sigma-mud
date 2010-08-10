@@ -1,7 +1,8 @@
 import sys
 import feats
 import libsigma
-import feats
+import random
+import pickle
 from common import *
 
 
@@ -197,7 +198,7 @@ class item(entity):
         self._desc = wordwrap(strip_whitespace(required_child(node, 'desc').text))
         self._short = wordwrap(strip_whitespace(required_child(node, 'short').text))
         self._short_multiple = ''
-
+        self.flags=[]
         keywords = node.find('keywords')
         if keywords != None:
             self._keywords.extend(strip_whitespace(keywords.text).lower().split())
@@ -247,6 +248,10 @@ class item(entity):
         if a != None:
             a_t=required_attribute(a,'type')
             self.ammo_type=libsigma.txt2val(a_t,ammo_match_txt,ammo_match_val)
+        
+        for flag in node.findall('flag'):
+            self.flags.append(strip_whitespace(flag.text))
+            
     @property
     def short(self):
         if not self.stackable or self.quantity==1:
@@ -496,10 +501,20 @@ class denizen(character):
             self.add_stance(feats.stances[name])
             if str(active)=="true":
                 self.active_stance=feats.stances[name]
-
+        
+        m = node.find('money')
+        if m!= None:
+            min_money=int(required_attribute(m,'min'))
+            max_money=int(required_attribute(m,'max'))
+            self.money=random.randint(min_money,max_money)
+    
+            
     def handle_death(self):
         del denizens[id(self)]
         libsigma.report(libsigma.ROOM,self.epitaph,self)
+        corpse=pickle.loads(items_source[CORPSE_REFERENCE])
+        self.location.contents.append(corpse) 
+        libsigma.transfer_money(self.money,self,corpse)
         self.location.characters.remove(self)
         
         pass
@@ -756,6 +771,9 @@ class combat(object):
 
         self.combatant1_discard=[]
         self.combatant2_discard=[]
+        
+        self.combatant1_retreat_direction=None
+        self.combatant2_retreat_direction=None
 
         self.strike_queue = []
 
@@ -861,6 +879,47 @@ class combat(object):
 
     def get_discard(self,playr):
         return self.combatant1_discard if self.combatant1==playr else self.combatant2_discard
+    
+    def set_retreat(self,coward,direction):
+        if coward==self.combatant1:
+            self.combatant1_action=COMBAT_ACTION_RETREATING
+            self.combatant1_retreat_direction=direction
+        else:
+            self.combatant2_action=COMBAT_ACTION_RETREATING
+            self.combatant2_retreat_direction=direction
+    
+    def is_retreat_successful(self,coward):
+        adversary_agility=self.combatant1.stats["agility"] if coward!=self.combatant1 else self.combatant2.stats["agility"]
+        return libsigma.roll_for_success(coward.stats["agility"],adversary_agility,30,100,2,65)
+    
+    
+    
+    
+    def retreat(self,coward):
+        for co in coward.combats[:]: 
+            combats.remove(co)
+            co.combatant1.combats.remove(co)
+            co.combatant2.combats.remove(co)
+            if co.combatant1.engaged==co:
+                if co.combatant1.combats and co.combatant1 != coward:
+                    co.combatant1.engaged=co.combatant1.combats[0]
+                    co.combatant1.engaged.in_range_set_action(co.combatant1)
+                else:
+                    co.combatant1.engaged=None
+            
+            if co.combatant2.engaged==co:
+                if co.combatant2.combats and co.combatant2 != coward:
+                    co.combatant2.engaged=co.combatant2.combats[0]
+                    co.combatant2.engaged.in_range_set_action(co.combatant2)
+                else:
+                    co.combatant2.engaged=None
+        choices=[]
+        choices.extend(libsigma.open_exits(coward.location))
+        selection = random.choice(choices)
+        libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb to turn tail and run away!", coward,("manage", "manages"))
+        libsigma.run_command(coward, "go " + libsigma.dir2txt(selection))
+        
+        
         
 class duration(object):
     def __init__(self):

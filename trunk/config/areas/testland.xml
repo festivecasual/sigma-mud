@@ -197,8 +197,9 @@
     <protection type="puncture" amount=".05"/>
     <protection type="impact" amount=".07"/>
     <absorption type="slash" amount="3"/>
+    <money min="2" max="6"/>
     <flag>killable</flag>
-    <epitaph>The killer penguin falls over, twitches a bit, then ceases all movement</epitaph>
+    <epitaph>The killer penguin falls over, twitches a bit, then ceases all movement.</epitaph>
     
   </denizen>
   

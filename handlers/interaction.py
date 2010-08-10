@@ -172,6 +172,10 @@ def get(data):
     result = source.ItemInRoom(speaker.location)
 
     if result.CompleteMatch():
+        if 'stationary' in result[0].flags:
+            speaker.send_line("You can't pick that up!")
+            return
+        
         transfer_item(result[0], speaker.location.contents, speaker.contents)
         report(SELF | ROOM, "$actor $verb $direct.", speaker, ("pick up", "picks up"), result[0])
     else:
@@ -587,6 +591,24 @@ def withdraw(data):
         
     speaker.send_line("You will attempt to withdraw from " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
    
+@handler(WALKING_PRIORITY)
+def retreat(data):
+    speaker=data["speaker"]
+    args=data["args"]
+    direction=None
+    if not speaker.engaged:
+        speaker.send_line("But you're not in combat!")
+        return
+    if len(args)>2:
+        speaker.send_line("I don't understand.")
+        return
+    if len(args)==2:
+        direction = txt2dir(args[1])
+        if not (direction in speaker.location.exits):
+            direction=None
+    speaker.engaged.set_retreat(speaker,direction)
+    speaker.send_line("You will attempt to retreat at your next opportunity")
+        
 @handler()
 def count(data):
     speaker = data["speaker"]
@@ -617,3 +639,30 @@ def search(data):
 @handler(WALKING_PRIORITY)
 def reveal(data):
     pass
+
+@handler(WALKING_PRIORITY)
+def loot(data):
+    speaker = data["speaker"]
+    args = data["args"]
+
+    if len(args) == 1:
+        speaker.send_line(args[0].title() + " what?")
+        return
+    
+    source = Sentence(args)
+    result = source.ItemInRoom(speaker.location)
+
+    if result.CompleteMatch():
+        if 'lootable' in result[0].flags:
+            item_looted=result[0]
+            speaker.send_line("You loot " + item_looted.name + "..." )
+            if item_looted.money:                
+                speaker.send_line("...and you find " + str(item_looted.money) +  " " +  options["currency"] + "s!")
+                transfer_money(item_looted.money,item_looted,speaker)
+            else:
+                speaker.send_line("...and find nothing special.")
+            speaker.location.contents.remove(item_looted)
+            del world.items[id(item_looted)]
+            return
+        else:
+            speaker.send_line("You can't loot that!")

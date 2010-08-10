@@ -152,7 +152,7 @@
 <balance>
 
 <HitIncreasePercent>70</HitIncreasePercent>
-<HitIncreaseAmount>5</HitIncreaseAmount>
+<HitIncreaseAmount>1</HitIncreaseAmount>
 
 <MissIncreasePercent>30</MissIncreasePercent>
 

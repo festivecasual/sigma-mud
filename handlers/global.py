@@ -127,3 +127,11 @@ def stance(data):
         
 
     return
+
+@handler()
+def wealth(data):
+    speaker=data["speaker"]
+    if not speaker.money:
+        speaker.send_line("You are carrying no money.")
+    else:
+        speaker.send_line("You currently have " + str(speaker.money) + " " + options["currency"] +"s.")

@@ -5,7 +5,7 @@ from common import *
 
 # Proper name of task
 name = 'Combat Manager'
-interval = 1
+interval = 2
 
 
 def task_init():
@@ -35,42 +35,15 @@ def task_execute():  # moves all combats through states through its lifecycle
                 continue
                 
         if c.combat_state==COMBAT_STATE_INITIALIZING:  # Initializing is defined as a combat that has just begun.
-            c.combatant1.engaged = c
-            c.combatant1.send_combat_status()
-            c.combatant2.send_combat_status()
+            c.engage_combatants()                                  
             c.combat_state = COMBAT_STATE_ENGAGING
-
-            libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb advancing toward $direct!",c.combatant1,("are","is"),c.combatant2)
-            if not c.combatant2.engaged:
-                libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb $direct for the attack!",c.combatant2,("ready","readies"),c.combatant2)
-                c.combatant2.engaged = c
-
-        elif c.combat_state == COMBAT_STATE_ENGAGING:
-            if c.combatant1.preferred_weapon_range==c.combatant2.preferred_weapon_range:
-                c.range=c.combatant1.preferred_weapon_range
-            else:
-                #set up chance to make it to desired range according to combatant1
-                #will have to be rewritten when bonsuses come on...
-                #this is a real simple implementation anyway
-                agil_diff=c.combatant1.stats["agility"] - c.combatant2.stats["agility"]
-                range_request_diff=c.combatant1.preferred_weapon_range - c.combatant2.preferred_weapon_range
-                percent_success=min(max(4*agil_diff+10*range_request_diff + 50, 5), 95)
-                roll_for_range=libsigma.d100()
-                # libsigma.report(libsigma.SELF|libsigma.ROOM, "Roll was: " + str(roll_for_range) + " and threshold for success for $actor was: " + str(percent_success),c.combatant1 )
-                if roll_for_range  <= percent_success:
-                    c.range=c.combatant1.preferred_weapon_range
-                else:
-                    c.range=c.combatant2.preferred_weapon_range
-
+            
+        elif c.combat_state == COMBAT_STATE_ENGAGING:            
+            c.range=c.evaluate_range()            
             libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor and $direct clash into combat at " + libsigma.val2txt(c.range,range_match_val,range_match_txt) +" range!",c.combatant1,None,c.combatant2)
-            c.combatant1.send_combat_status()
-            c.combatant2.send_combat_status()
-            
-
+            c.send_combat_statuses()
             c.in_range_set_action()
-            
             c.queue_strikes()
-
             c.combat_state=COMBAT_STATE_FIGHTING
             break
 
@@ -82,15 +55,12 @@ def task_execute():  # moves all combats through states through its lifecycle
             
             striker, defender = c.strike_queue[0]
             
-            striker_state=c.combatant1_action if striker==c.combatant1 else c.combatant2_action
+            striker_action=c.get_action(striker)
             
-            if striker==c.combatant1:
-                striker_preferred_range = c.combatant1_override_range if c.combatant1_override_range else c.combatant1.preferred_weapon_range
-            else:
-                striker_preferred_range = c.combatant2_override_range if c.combatant2_override_range else c.combatant2.preferred_weapon_range
-
+            striker_preferred_range=c.get_preferred_range(striker)
+            
             ## roll for hit -- Agility
-            if striker_state==COMBAT_ACTION_ATTACKING:
+            if striker_action==COMBAT_ACTION_ATTACKING:
                 ammo=None
                 can_strike=False
                 if not (striker.active_stance.weapon_type in ammo_required_weapons):
@@ -144,14 +114,14 @@ def task_execute():  # moves all combats through states through its lifecycle
                 else:
                         libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
                     
-            elif striker_state==COMBAT_ACTION_IDLE:
+            elif striker_action==COMBAT_ACTION_IDLE:
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
                 if type(striker)==world.denizen:
                     if striker.preferred_weapon_range < c.range:
                         libsigma.run_command(striker, "advance")
                     else:
                         libsigma.run_command(striker, "withdraw")
-            elif striker_state==COMBAT_ACTION_ADVANCING:
+            elif striker_action==COMBAT_ACTION_ADVANCING:
                 agil_diff=striker.stats["agility"] - defender.stats["agility"]
                 range_request_diff=striker_preferred_range - c.range
                 percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
@@ -167,7 +137,7 @@ def task_execute():  # moves all combats through states through its lifecycle
                     c.churn+=1
                     libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to close into a closer range with $direct, but cannot!",striker,("try", "tries"), defender)
                 
-            elif striker_state==COMBAT_ACTION_WITHDRAWING:
+            elif striker_action==COMBAT_ACTION_WITHDRAWING:
                 agil_diff=striker.stats["agility"] - defender.stats["agility"]
                 range_request_diff= c.range-striker_preferred_range
                 percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)

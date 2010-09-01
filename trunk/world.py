@@ -758,6 +758,17 @@ class combat(object):
     def __init__(self, combatant1, combatant2):
         # combatant1 is assumed the aggressor. He is assumed to be
         # engaged initially in this combat, as s/he instigated it
+        self.combatants=[]
+        
+        self.combatants.append(combatant1)
+        self.combatants.append(combatant2)
+        
+        self.actions=[None,None]
+        self.override_ranges=[None,None]
+        self.discard={}
+        self.retreat_direction=[None,None]
+        
+        
         self.combatant1 = combatant1
         self.combatant2 = combatant2
 
@@ -779,6 +790,50 @@ class combat(object):
 
         self.combat_state = COMBAT_STATE_INITIALIZING
         self.range = NOT_IN_COMBAT
+        
+    def get_opponent(self,combatant):
+        for c in self.combatants:
+            if c !=combatant:
+                return c
+        return False
+    
+    def get_combatant1(self):
+        return self.combatant[0]
+    
+    def get_combatant2(self):
+        return self.combatant[1]
+
+    def send_combat_statuses(self):
+        for c in self.combatants:
+            c.send_combat_status()
+
+    def engage_combatants(self):
+        self.combatants[0].engaged=self
+        
+        libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb advancing toward $direct!",self.combatants[0],("are","is"),self.combatants[1])
+        self.send_combat_statuses()
+        if not self.combatants[1].engaged:
+            libsigma.report(libsigma.SELF|libsigma.ROOM, "$actor $verb for the attack!",self.combatants[0],("ready","readies"))
+            self.send_combat_statuses()
+            self.combatants[1].engaged = self
+    
+    def evaluate_range(self):
+            if self.combatants[0].preferred_weapon_range==self.combatants[1].preferred_weapon_range:
+                return self.combatants[0].prefferred_weapon_range
+            else:
+                #set up chance to make it to desired range according to combatant1
+                #will have to be rewritten when bonsuses come on...
+                #this is a real simple implementation anyway
+                agil_diff=self.combatants[0].stats["agility"] - self.combatants[1].stats["agility"]
+                range_request_diff=self.combatants[0].preferred_weapon_range - self.combatants[1].preferred_weapon_range
+                percent_success=min(max(4*agil_diff+10*range_request_diff + 50, 5), 95)
+                roll_for_range=libsigma.d100()
+                # libsigma.report(libsigma.SELF|libsigma.ROOM, "Roll was: " + str(roll_for_range) + " and threshold for success for $actor was: " + str(percent_success),c.combatant1 )
+                if roll_for_range  <= percent_success:
+                    return self.combatants[0].preferred_weapon_range
+                else:
+                    return self.combatants[1].preferred_weapon_range
+       
 
     def release(self,victor):
         combats.remove(self)
@@ -850,36 +905,61 @@ class combat(object):
                 self.strike_queue.append((self.combatant1, self.combatant2))
             # end section
     def in_range_set_action(self,one_combatant=None):
-        
-        weapon_type1 = BARE_HAND if len(self.combatant1.equipped_weapon)==0 else self.combatant1.equipped_weapon[0].weapon_type
-        weapon_type2 = BARE_HAND if len(self.combatant2.equipped_weapon)==0 else self.combatant2.equipped_weapon[0].weapon_type
-        
-        change1=True
-        change2=True
-        
-        if one_combatant==self.combatant1:
-            change1=True
-            change2=False
-        elif one_combatant==self.combatant2:
-            change1=False
-            change2=True
-        if change1:    
-            if weapon_range[weapon_type1].has_key(self.range) and self.combatant1.engaged==self:
-                self.combatant1_action = COMBAT_ACTION_ATTACKING
-            elif self.combatant1_action not in (COMBAT_ACTION_WITHDRAWING, COMBAT_ACTION_ADVANCING): 
-                self.combatant1_action = COMBAT_ACTION_IDLE
-        
-        if change2:
-            if weapon_range[weapon_type2].has_key(self.range) and self.combatant2.engaged==self:
-                self.combatant2_action = COMBAT_ACTION_ATTACKING
-            elif self.combatant2_action not in (COMBAT_ACTION_WITHDRAWING, COMBAT_ACTION_ADVANCING): 
-                self.combatant2_action = COMBAT_ACTION_IDLE
+        weapon_type=[]
+        for c in self.combatants: 
+            weapon_type.append( BARE_HAND if len(c.equipped_weapon)==0 else c.equipped_weapon[0].weapon_type)
+              
+        do_change=[True,True]
+         
+        if one_combatant==self.combatants[0]:
+            do_change[0]=True
+            do_change[1]=False
+        elif one_combatant==self.combatants[1]:
+            do_change[0]=False
+            do_change[1]=True
+    
+        for x in range(len(self.combatants)):
+            if do_change[x]:
+                if weapon_range[weapon_type[x]].has_key(self.range) and self.combatants[x].engaged==self:
+                    self.set_action(self.combatants[x],COMBAT_ACTION_ATTACKING)
+                elif self.actions[x] not in (COMBAT_ACTION_WITHDRAWING,COMBAT_ACTION_ADVANCING):
+                    self.set_action(self.combatants[x],COMBAT_ACTION_IDLE)
             
         return
 
     def get_discard(self,playr):
         return self.combatant1_discard if self.combatant1==playr else self.combatant2_discard
     
+    def get_preferred_range(self,playr):
+        for x in range(len(self.combatants)):
+            if self.combatants[x]==playr:
+                if self.override_ranges[x]:
+                    return self.override_ranges[x]
+                else:
+                    return self.combatants[x].preferred_weapon_range
+            
+        log("COMBAT", "Call to get_action references an invalid player")
+        return -1    
+    def get_action(self,playr):
+        for x in range(len(self.combatants)):
+            if self.combatants[x]==playr:
+                return self.actions[x]
+    
+        log("COMBAT", "Call to get_action references an invalid player")
+        return -1
+    
+    def set_action(self,playr,action):
+        for x in range(len(self.combatants)):
+            if self.combatants[x]==playr:
+                self.actions[x]=action
+                return
+     
+    def set_override_range(self,playr,value):
+        for x in range(len(self.combatants)):
+            if self.combatants[x]==playr:
+                self.override_ranges[x]=value
+                return
+                       
     def set_retreat(self,coward,direction):
         if coward==self.combatant1:
             self.combatant1_action=COMBAT_ACTION_RETREATING

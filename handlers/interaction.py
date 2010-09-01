@@ -540,13 +540,9 @@ def advance(data):
     if pwr >= speaker.engaged.range:
         speaker.send_line("You can't advance, you are already at " + val2txt(speaker.engaged.range,range_match_val,range_match_txt) + " range with " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + "!" )
         return
-   
-    if speaker==speaker.engaged.combatant1:
-        speaker.engaged.combatant1_override_range=pwr
-        speaker.engaged.combatant1_action=COMBAT_ACTION_ADVANCING
-    elif speaker==speaker.engaged.combatant2:
-        speaker.engaged.combatant2_override_range=pwr
-        speaker.engaged.combatant2_action=COMBAT_ACTION_ADVANCING
+    
+    speaker.engaged.set_override_range(speaker,pwr)
+    speaker.engaged.set_action(speaker,COMBAT_ACTION_ADVANCING)  
         
     speaker.send_line("You will attempt to advance upon " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
    
@@ -582,12 +578,9 @@ def withdraw(data):
         speaker.send_line("You can't withdraw, you are already at " + val2txt(speaker.engaged.range,range_match_val,range_match_txt) + " range with " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + "!" )
         return
    
-    if speaker==speaker.engaged.combatant1:
-        speaker.engaged.combatant1_override_range=pwr
-        speaker.engaged.combatant1_action=COMBAT_ACTION_WITHDRAWING
-    elif speaker==speaker.engaged.combatant2:
-        speaker.engaged.combatant2_override_range=pwr
-        speaker.engaged.combatant2_action=COMBAT_ACTION_WITHDRAWING
+    speaker.engaged.set_override_range(speaker,pwr)
+    speaker.engaged.set_action(speaker,COMBAT_ACTION_WITHDRAWING)
+   
         
     speaker.send_line("You will attempt to withdraw from " + (speaker.engaged.combatant1.name if speaker.engaged.combatant1 != speaker else speaker.engaged.combatant2.name) + " at the next opportunity.")
    

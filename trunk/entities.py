@@ -3,6 +3,7 @@ import uuid
 
 import libsigma
 import feats
+from durations import Wait
 from common import *
 
 
@@ -418,6 +419,6 @@ class Player(Character):
         return False
 
     def add_wait(self, p, d):
-        self.waits.append(wait(p,d))
+        self.waits.append(Wait(p,d))
         self.send_line("[This action adds a %d second wait]" % d)
         return

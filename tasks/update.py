@@ -1,6 +1,6 @@
 import asyncore
 
-import world
+from world import World
 from common import *
 
 
@@ -16,8 +16,9 @@ def task_init():
 
 # Defines the code to be run at each execution period.
 def task_execute():
-    if len(world.players) > 0:
-        log("STATUS", str(len(asyncore.socket_map) - 1) + " active connection(s), " + str(len(world.players)) + " login(s)")
+    w = World()
+    if len(w.players) > 0:
+        log("STATUS", "%d active connection(s) + %d login(s)" % (len(asyncore.socket_map) - 1, len(w.players)))
 
 
 # Defines the code to be run upon shutdown of the server.

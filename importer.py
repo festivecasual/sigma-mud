@@ -1,11 +1,12 @@
-import pickle
 import os.path
 from xml.etree import ElementTree
 
 import handler
-import world
 import creation
 import feats
+from calendar import Calendar
+from world import World, Room, Door, Populator, Placement
+from entities import Item, Denizen
 from common import *
 
 
@@ -15,6 +16,8 @@ def process_xml():
         server_xml = ElementTree.parse(server_path).getroot()
     except:
         log("FATAL", "Unable to open and parse server.xml: %s" % server_path, exit_code=1)
+
+    w = World()
 
     for option in server_xml.findall('option'):
         name = required_attribute(option, 'name')
@@ -27,7 +30,7 @@ def process_xml():
 
     for s in server_xml.findall('stance'):
         file = required_attribute(s, 'file')
-        log("STANCE", "Processing stances at %s" % (file))
+        log("STANCE", "Processing stances at %s" % file)
         try:
             stance_path=os.path.join(directories["xml_root"], file)
             stance_xml= ElementTree.parse(stance_path).getroot()
@@ -57,19 +60,9 @@ def process_xml():
             calendar_xml = ElementTree.parse(calendar_path).getroot()
         except:
             log("FATAL", "Unable to parse calendar file", exit_code=1)
-        world.calendars.append(world.calendar(calendar_xml, name))
+
+        w.calendars.append(Calendar(calendar_xml, name))
         server_xml.remove(calendar)
-              
-    for cclass in server_xml.findall('class'):
-        file = required_attribute(cclass, 'file')
-        log("CLASS", "Processing class definition at %s" % file)
-        try:
-            cclass_path = os.path.join(directories["xml_root"], file)
-            cclass_xml = ElementTree.parse(cclass_path).getroot()
-        except:
-            log("FATAL", "Unable to parse class definition", exit_code=1)
-        process_class(cclass_xml)
-        server_xml.remove(cclass)
 
     for handlers in server_xml.findall('handlers'):
         file = required_attribute(handlers, 'file')
@@ -87,32 +80,34 @@ def process_xml():
 
 
 def process_area(area_xml, area_name):
+    w = World()
+
     for room in area_xml.findall('room'):
         id = required_attribute(room, 'id')
         ref = '%s:%s' % (area_name, id)
-        world.rooms[ref] = world.room(ref, room)
+        w.rooms[ref] = Room(ref, room)
         area_xml.remove(room)
 
     for denizen in area_xml.findall('denizen'):
         id = required_attribute(denizen, 'id')
         ref = '%s:%s' % (area_name, id)
-        world.denizens_source[ref] = pickle.dumps(world.denizen(denizen))
+        w.denizens_source[ref] = denizen
         area_xml.remove(denizen)
 
     for item in area_xml.findall('item'):
         id = required_attribute(item, 'id')
         ref = '%s:%s' % (area_name, id)
-        world.items_source[ref] = pickle.dumps(world.item(item))
+        w.items_source[ref] = item
         area_xml.remove(item)
 
     for door in area_xml.findall('door'):
-        world.doors.append(world.door(door, area_name, len(world.doors)))
+        w.doors.append(Door(door, area_name))
         area_xml.remove(door)
 
     for populator in area_xml.findall('populator'):
         denizen = required_attribute(populator, 'denizen')
         target = required_attribute(populator, 'target')
-        world.populators.append(world.populator(populator, area_name, denizen, target))
+        w.populators.append(Populator(populator, area_name, denizen, target))
         area_xml.remove(populator)
 
     for placement in area_xml.findall('placement'):
@@ -120,7 +115,7 @@ def process_area(area_xml, area_name):
         target = required_attribute(placement, 'target')
         q = placement.get('quantity')
         quantity = 1 if not q else q
-        world.placements.append(world.placement(placement, area_name, item, target, quantity))
+        w.placements.append(Placement(placement, area_name, item, target, quantity))
         area_xml.remove(placement)
 
     for child in area_xml.getchildren():
@@ -143,15 +138,10 @@ def process_handlers(handlers_xml):
         handler.specials[special_type] = rewrite.encode('ascii')
 
 
-def process_class(class_xml):
-    for pclass_xml in class_xml.findall('class'):
-        new_class = creation.character_class(pclass_xml)
-        creation.classes[new_class.name] = new_class
-        
 def process_stance(stance_xml):
     for instance in stance_xml.findall('stance'):
-        new_stance=feats.stance(instance)
-        log ('STANCE', 'Added new stance [%s]' %new_stance.name)
+        new_stance = feats.Stance(instance)
+        log('STANCE', 'Added new stance [%s]' % new_stance.name)
         feats.stances[new_stance.name]=new_stance
         if new_stance.default:
             feats.default_stances.append(new_stance)

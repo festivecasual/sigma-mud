@@ -1,0 +1,171 @@
+<area>
+  <room id="room1">
+    <name>Unit Test -- Room One</name>
+    <desc>
+      Unit test area 01
+    </desc>
+    <exit dir="e" target="room2" />
+    <exit dir="d" target="room4" />
+    <focus name="sewer">
+      You find yourself standing on a sewer access plate.  Hmm...
+    </focus>
+  </room>
+
+  <room id="room2">
+    <name>Unit Test -- Room Two</name>
+    <desc>
+      Unit test area 02
+    </desc>
+    <exit dir="w" target="room1" />
+    <exit dir="e" target="room3" />
+    <exit dir="enter" target="room5" />
+  </room>
+
+  <room id="room3">
+    <name>Unit Test -- Room Three</name>
+    <desc>
+      Unit test area 03
+    </desc>
+    <exit dir="w" target="room2" />
+    <exit dir="n" target="room7" />
+  </room>
+
+  <room id="room4">
+    <name>Unit Test -- Room Four</name>
+    <desc>
+      Unit test area 04
+    </desc>
+    <exit dir="u" target="room1" />
+  </room>
+
+  <room id="room5">
+    <name>Unit Test -- Room Five</name>
+    <desc>
+      Unit test area 05
+    </desc>
+    <exit dir="enter" target="room6" />
+    <exit dir="leave" target="room2" />
+  </room>
+
+  <room id="room6">
+    <name>Unit Test -- Room Six</name>
+    <desc>
+      Unit test area 06
+    </desc>
+    <exit dir="leave" target="room5" />
+  </room>
+
+  <room id="room7">
+    <name>Unit Test -- Room Seven</name>
+    <desc>
+      Unit test area 07
+    </desc>
+    <exit dir="s" target="room3" />
+  </room>
+
+  <door>
+    <exit room="room1" dir="d" />
+    <exit room="room4" dir="u" />
+  </door>
+
+  <denizen id="melville">
+    <name>Melville</name>
+    <keywords>melville nerd engineer</keywords>
+    <short>Melville the Engineer stands before you, wheezing.</short>
+    <desc>
+      Melville shifts from foot to foot, muttering something about fantasy card
+      games.  He carries a clipboard and appears to be writing 'ok' or 'FAIL'
+      depending on what happens in the room.
+    </desc>
+  </denizen>
+  <populator denizen="melville" target="room3" />
+
+  <item id="protractor">
+    <name>an Exacto-brand protractor</name>
+    <keywords>protractor exacto</keywords>
+    <short>An Exacto-brand protractor lies here.</short>
+    <desc>
+      The protractor is a one-trick pony.  Have an angle to measure?  Crudely
+      and shakily written on the back in magic marker is the name "Melville."
+    </desc>
+  </item>
+  <placement item="protractor" target="room2" />
+
+  <item id="ruler">
+    <name>a generic ruler</name>
+    <keywords>ruler</keywords>
+    <short>a ruler lies here</short>
+    <desc>
+      The ruler is very generic.  A piece of masking tape identifies it as
+      belonging to "Melville."
+    </desc>
+  </item>
+  <placement item="ruler" target="room2" />
+
+  <item id="statue">
+    <name>the statue</name>
+    <keywords>statue tiger</keywords>
+    <flag>stationary</flag>
+    <short>A statue of a tiger stands here.</short>
+    <desc>
+      The statue is a proud bronze image of a hunting tiger.  A Katy Tiger.
+    </desc>
+  </item>
+  <placement item="statue" target="room6" />
+
+  <item id="stick">
+    <name>a stick</name>
+    <keywords>stick</keywords>
+    <short>A big stick lies here.</short>
+    <desc>
+      If you walk softly, it might be good to carry this stick.
+    </desc>
+    <weapon type="spear" />
+  </item>
+  <placement item="stick" target="room7" />
+
+  <item id="bow">
+    <name>a small bow</name>
+    <keywords>bow</keywords>
+    <short>A small bow lies here.</short>
+    <desc>
+      But it's over now, go on and take a bow.
+    </desc>
+    <weapon type="bow" />
+  </item>
+  <placement item="bow" target="room7" />
+
+  <item id="arrow">
+    <name>an arrow</name>
+    <keywords>arrows</keywords>
+    <short>A wooden arrow lies here.</short>
+    <short_multiple>Some wooden arrows lie here.</short_multiple>
+    <desc>
+      The arrows look well-made.  They definitely work better with a bow.
+    </desc>
+    <ammo type="arrow" />
+    <stackable max="99" />
+  </item>
+  <placement item="arrow" target="room7" quantity="30" />
+
+  <item id="boots">
+    <name>a pair of boots</name>
+    <keywords>boots</keywords>
+    <short>A pair of boots sits here.</short>
+    <desc>
+      They appear to be made for walking.
+    </desc>
+    <wearable position="feet" />
+  </item>
+  <placement item="boots" target="room7" />
+
+  <item id="token">
+    <name>a token</name>
+    <keywords>token</keywords>
+    <short>A token sits here.</short>
+    <desc>
+      The token does nothing useful.
+    </desc>
+  </item>
+  <placement item="token" target="room7" />
+</area>

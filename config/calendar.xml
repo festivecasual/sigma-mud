@@ -1,44 +1,39 @@
-<calendar>	 
+<calendar>
 <!--When defining holidays, ensure that they come after the month is defined !-->
 <!--IG day length should be readily divisible by 24 in this version of calendar !-->
-	 <IGDayLengthInHours>
-	 12
-	 </IGDayLengthInHours>
-	 
-	 <month name="Ravrentym" days="24"/>
-	 <month name="Domina" days="25"/>
-	 <month name="Saliste" days="25"/>
-	 <month name="Abbentym" days="24"/>
-	 <month name="Kobban" days="26"/>
-	 <month name="Larasten" days="25"/>
-	 <month name="Noctentym" days="24"/>
-	 <month name="Ozdanis" days="26"/>
-	 <month name="Dynast"  days="28"/>
-	
-	
+     <IGDayLengthInHours>
+     12
+     </IGDayLengthInHours>
+
+     <month name="Ravrentym" days="24"/>
+     <month name="Domina" days="25"/>
+     <month name="Saliste" days="25"/>
+     <month name="Abbentym" days="24"/>
+     <month name="Kobban" days="26"/>
+     <month name="Larasten" days="25"/>
+     <month name="Noctentym" days="24"/>
+     <month name="Ozdanis" days="26"/>
+     <month name="Dynast"  days="28"/>
+
      <day>Sunsday</day>
      <day>Moonsday</day>
      <day>Eclipseday</day>
-     <day>Zenithday </day>   
+     <day>Zenithday </day>
      <day>Obscuresday</day>
      <day>Aurorasday</day>
      <day>Starsday</day>
-  
-	 
-	 
-	 <holiday name="Feast of New Year" month="Ravrentym" month_day = "1"/>
-	 <holiday name="Eventide Crossday" month="Ravrentym" month_day = "13"/>
-	 <holiday name="Feast of Everspring" month="Saliste" month_day = "5"/>
-	 <holiday name="Training Day" month="Kobban" month_day = "26"/>
-	 <holiday name="Dyansty's End" month="Dynast" month_day = "27"/>
-	 <holiday name="Dynasty's Rise" month="Dynast" month_day = "28"/> 
-	
-	 
-	 <WatershedEvent
-	 title="Founding of the City of Ravren"
-	 date="1980/06/01"
-	 dayofweek="Moonsday"
-	 />
-	 <!--Currently not taking dayofweek into account will upon next code drop!-->
-	 
+
+     <holiday name="Feast of New Year" month="Ravrentym" month_day = "1"/>
+     <holiday name="Eventide Crossday" month="Ravrentym" month_day = "13"/>
+     <holiday name="Feast of Everspring" month="Saliste" month_day = "5"/>
+     <holiday name="Training Day" month="Kobban" month_day = "26"/>
+     <holiday name="Dyansty's End" month="Dynast" month_day = "27"/>
+     <holiday name="Dynasty's Rise" month="Dynast" month_day = "28"/>
+
+     <WatershedEvent
+     title="Founding of the City of Ravren"
+     date="1980/06/01"
+     dayofweek="Moonsday"
+     />
+     <!--Currently not taking dayofweek into account will upon next code drop!-->
 </calendar>

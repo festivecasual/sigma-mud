@@ -11,69 +11,69 @@
     <exit dir="ne" target="ravren:second" />
     <exit dir="w" target="icecavern" />
   </room>
-  
+
   <room id="icecavern">
-  	<name>Testland, Ice Cavern</name>
-  	<desc>
-  	It's cold, and its windy, which adds to the wind chill factor. 
-  	The wind seems to be coming from the northwest.	
-  	</desc>
-  	 <exit dir="e" target="bonfire" />
-  	 <exit dir="nw" target="windtunnel" />
-  	 <exit dir="s"  target="bigtree" />
+    <name>Testland, Ice Cavern</name>
+    <desc>
+    It's cold, and its windy, which adds to the wind chill factor.
+    The wind seems to be coming from the northwest.
+    </desc>
+     <exit dir="e" target="bonfire" />
+     <exit dir="nw" target="windtunnel" />
+     <exit dir="s"  target="bigtree" />
   </room>
-  
+
   <room id="windtunnel">
-  	<name>Testland, Wind Tunnel</name>
-  	<desc>
-  	You suddenly find yourself next to a huge vortex of wind and leaves!	
-  	</desc>
-  	<focus name="vortex">
+    <name>Testland, Wind Tunnel</name>
+    <desc>
+    You suddenly find yourself next to a huge vortex of wind and leaves!
+    </desc>
+    <focus name="vortex">
      Its a tornado, Dorothy.
     </focus>
-  	 <exit dir="se" target="icecavern" />
+     <exit dir="se" target="icecavern" />
   </room>
-  
+
   <room id="bigtree">
-  	<name>Testland, Ancient Oak Tree</name>
-  	<desc>
-  	A grand, ancient oak tree stands here, as it has done for centuries.	
-  	</desc>
-  	<focus name="tree">
-     Its big. Very big. Oh, and at the base of the tree you see a 
+    <name>Testland, Ancient Oak Tree</name>
+    <desc>
+    A grand, ancient oak tree stands here, as it has done for centuries.
+    </desc>
+    <focus name="tree">
+     Its big. Very big. Oh, and at the base of the tree you see a
      bronze door that leads inside (try OPEN ENTER!).
     </focus>
-  	 <exit dir="n" target="icecavern" />
-  	 <exit dir="enter" target="insidetree" />
+     <exit dir="n" target="icecavern" />
+     <exit dir="enter" target="insidetree" />
   </room>
-  
+
   <room id="insidetree">
-  	<name>Testland, Inside Oak, Foyer </name>
-  	<desc>
-  	The great tree is hollowed out, and the inside reveals
-  	that many generations of elves have lived here, making
-  	cookies for children everywhere. There also appears be
-  	a great bronze door.
-  	</desc>
-  	<focus name="door">
-  	It probably leads outside, if you LEAVE, assuming its 
-  	open
-  	</focus>
-  	<exit dir="leave" target="bigtree"/>	
-  	<exit dir="up" target = "armory"/>
+    <name>Testland, Inside Oak, Foyer </name>
+    <desc>
+    The great tree is hollowed out, and the inside reveals
+    that many generations of elves have lived here, making
+    cookies for children everywhere. There also appears be
+    a great bronze door.
+    </desc>
+    <focus name="door">
+    It probably leads outside, if you LEAVE, assuming its
+    open
+    </focus>
+    <exit dir="leave" target="bigtree"/>
+    <exit dir="up" target = "armory"/>
   </room>
 
   <room id="armory">
-  	<name>Testland, Inside Oak, Armory </name>
-  	<desc>
-	An array of weapons and other utensils of death make
-	their home here. If you had to guess, you would think
-	that this is the demo room for the developers to test
-	combat.
-  	</desc>
-  	
-  	<exit dir="up" target="training_room"/>
-  	<exit dir="down" target="insidetree"/>	
+    <name>Testland, Inside Oak, Armory </name>
+    <desc>
+    An array of weapons and other utensils of death make
+    their home here. If you had to guess, you would think
+    that this is the demo room for the developers to test
+    combat.
+    </desc>
+
+    <exit dir="up" target="training_room"/>
+    <exit dir="down" target="insidetree"/>
   </room>
 
   <room id="training_room">
@@ -81,107 +81,114 @@
   <desc>
   The walls in this room are padded, and slightly bloodstained.
   There appears to be a bucket filled with blood, sinew and teeth,
-  and the remnants of someone's attempt at repairing a broken 
+  and the remnants of someone's attempt at repairing a broken
   limb. All this proves quite impressive for the top of an oak tree.
   </desc>
   <exit dir="down" target="armory"/>
   </room>
-  
+
   <door>
   <exit room="bigtree" dir="enter"/>
   <exit room="insidetree" dir="leave"/>
   </door>
-  
+
     <item id="shirt">
     <name>a puffy blue polo shirt</name>
     <keywords>shirt polo</keywords>
-    <worn>torso</worn>
     <short>A puffy blue polo shirt is here.</short>
-    <protection type="slash" amount=".12"/>
-    <absorption type="puncture" amount= "4"/>
     <desc>
       The shirt looks only slightly worn and exceedingly puffy, but otherwise is in good condition.
     </desc>
+    <wearable position="torso">
+        <protection type="slash" amount=".12"/>
+        <absorption type="puncture" amount= "4"/>
+    </wearable>
   </item>
-  
-  	<item id ="longsword">
-  	<name> a gleaming longsword</name>
-  	<keywords>longsword</keywords>
-  	<short>a gleaming longsword is here.</short>
-  	<weapon type="sword"/>
-  	<damage type="puncture" multiplier =".15"/>
-  	<damage type="slash" multiplier= ".70"/>
-  	<damage type="impact" multiplier=".15"/>
-	<desc>
-	The longsword gleams from a fresh polish.
-	</desc>  	
-  	</item>
-  
-  	<item id ="razor">
-  	<name> Occam's razor</name>
-  	<keywords>razor</keywords>
-  	<short>Occam's razor lies here.</short>
-  	<weapon type="knife"/>
-  	<damage type="puncture" multiplier=".1"/>
-  	<damage type="slash" multiplier =".9"/>
-	<desc>
-	 You think it may be an axiom that governs the chances of a complex
-	 theory over a simpler one, but its probably just a good weapon
-	 for giving an adversary an extremely close shave.
-	</desc>
-	</item>
-	
-	<item id="spear">
-	<name> a wooden spear</name>
-	<keywords>spear</keywords>
-	<short>a wooden spear lies here.</short>
-	<weapon type="spear"/>
-  	<damage type="puncture" multiplier="1"/>
-  	<desc>
-  	A simple wooden spear with a pointed tip. Not much for ornamentation
-  	but certainly enough to skewer an adversary at quite a distance.
-  	</desc>	
-  	</item>
-  	
-  	<item id="claymore">
-	<name> an ordinary claymore</name>
-	<keywords>claymore</keywords>
-	<short>an ordinary claymore lies here.</short>
-	<weapon type="greatsword"/>
-  	<damage type="puncture" multiplier=".3"/>
-  	<damage type="slash" multiplier="1.2"/>
-  	<desc>
-  	The claymore is ordinary, but massive. Taking too many strikes from this
-  	will hurt something fierce.
-  	</desc>	
-  	</item>
-  	
-  	<item id="longbow">
-  	<name>a simple longbow</name>
-  	<keywords>longbow</keywords>
-  	<short>a simple longbow lies here</short>
-  	<weapon type="bow"/>
-  	<accuracy multiplier=".7"/>
-  	<desc>
-  	The longbow is created out of a non-specific wood, and is tied together
-  	rather plainly.
-  	</desc>
-  	</item>
-  	
-  	<item id="arrow">
-  	<name>a crudely fashioned arrow</name>
-  	<keywords>arrows</keywords>
-  	<short>a crudely fashioned arrow lies here</short>
-  	<short_multiple>some crudely fashioned arrows lie here</short_multiple>
-  	<ammo type="arrow"/>
-  	<damage type= "puncture" multiplier="1.0"/>
-  	<stackable max="99"/>
-  	<desc>
-  	The arrow looks crudely fashioned.
-  	</desc>
-  	</item>
-  	
-  
+
+    <item id ="longsword">
+    <name> a gleaming longsword</name>
+    <keywords>longsword</keywords>
+    <short>a gleaming longsword is here.</short>
+    <weapon type="sword">
+      <damage type="puncture" multiplier =".15"/>
+      <damage type="slash" multiplier= ".70"/>
+      <damage type="impact" multiplier=".15"/>
+    </weapon>
+    <desc>
+    The longsword gleams from a fresh polish.
+    </desc>
+    </item>
+
+    <item id ="razor">
+    <name> Occam's razor</name>
+    <keywords>razor</keywords>
+    <short>Occam's razor lies here.</short>
+    <weapon type="knife">
+      <damage type="puncture" multiplier=".1"/>
+      <damage type="slash" multiplier =".9"/>
+    </weapon>
+    <desc>
+     You think it may be an axiom that governs the chances of a complex
+     theory over a simpler one, but its probably just a good weapon
+     for giving an adversary an extremely close shave.
+    </desc>
+    </item>
+
+    <item id="spear">
+    <name> a wooden spear</name>
+    <keywords>spear</keywords>
+    <short>a wooden spear lies here.</short>
+    <weapon type="spear">
+      <damage type="puncture" multiplier="1"/>
+    </weapon>
+    <desc>
+    A simple wooden spear with a pointed tip. Not much for ornamentation
+    but certainly enough to skewer an adversary at quite a distance.
+    </desc>
+    </item>
+
+    <item id="claymore">
+    <name> an ordinary claymore</name>
+    <keywords>claymore</keywords>
+    <short>an ordinary claymore lies here.</short>
+    <weapon type="greatsword">
+      <damage type="puncture" multiplier=".3"/>
+      <damage type="slash" multiplier="1.2"/>
+    </weapon>
+    <desc>
+    The claymore is ordinary, but massive. Taking too many strikes from this
+    will hurt something fierce.
+    </desc>
+    </item>
+
+    <item id="longbow">
+    <name>a simple longbow</name>
+    <keywords>longbow</keywords>
+    <short>a simple longbow lies here</short>
+    <weapon type="bow" wield="hands">
+      <accuracy multiplier=".7"/>
+    </weapon>
+    <desc>
+    The longbow is created out of a non-specific wood, and is tied together
+    rather plainly.
+    </desc>
+    </item>
+
+    <item id="arrow">
+    <name>a crudely fashioned arrow</name>
+    <keywords>arrows</keywords>
+    <short>a crudely fashioned arrow lies here</short>
+    <short_multiple>some crudely fashioned arrows lie here</short_multiple>
+    <ammo type="arrow">
+      <damage type= "puncture" multiplier="1.0"/>
+    </ammo>
+    <stackable max="99"/>
+    <desc>
+    The arrow looks crudely fashioned.
+    </desc>
+    </item>
+
+
    <denizen id="killer_penguin">
     <name>the killer penguin</name>
     <keywords>penguin</keywords>
@@ -193,16 +200,16 @@
     <stats level="2">
       <stat name="strength" value="5" />
     </stats>
-    
+
     <protection type="puncture" amount=".05"/>
     <protection type="impact" amount=".07"/>
     <absorption type="slash" amount="3"/>
     <money min="2" max="6"/>
     <flag>killable</flag>
     <epitaph>The killer penguin falls over, twitches a bit, then ceases all movement.</epitaph>
-    
+
   </denizen>
-  
+
     <placement item="shirt" target="insidetree" />
     <placement item="razor" target="armory" />
     <placement item="longsword" target="armory" />
@@ -214,15 +221,14 @@
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>
- 
+
  <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>
- 
+
  <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>
-  
+
   </area>
 
-  

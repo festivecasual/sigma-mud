@@ -9,13 +9,11 @@
  <keywords>corpse</keywords>
  <short>a corpse lies here</short>
  <desc>
- The corpse appears very dead. 
+ The corpse appears very dead.
  </desc>
 
  <flag>stationary</flag>
- <flag>lootable</flag> 
+ <flag>lootable</flag>
  </item>
-
-
 
 </area>

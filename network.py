@@ -4,10 +4,15 @@ import socket
 import sys
 import string
 
-import world, command, archive, libsigma
+import command
+import libsigma
+from archive import Archive
+from entities import Player
+from world import World
 from common import *
 
-class client_socket(asynchat.async_chat):
+
+class ClientSocket(asynchat.async_chat):
     def __init__(self, connection):
         asynchat.async_chat.__init__(self, connection)
 
@@ -17,7 +22,7 @@ class client_socket(asynchat.async_chat):
         self.set_terminator('\n')
 
         # Retains the player class tied to this socket.
-        self.parent = world.player(self)
+        self.parent = Player(self)
 
     def collect_incoming_data(self, data):
         for char in data:
@@ -35,15 +40,20 @@ class client_socket(asynchat.async_chat):
         command.accept_command(self.parent, data)
 
     def handle_close(self):
+        # Shunt output to parent (avoids recursion in simultaneous logouts)
+        self.parent.send = lambda s: None
+
         if self.parent.location:
             libsigma.report(libsigma.ROOM, "$actor has left the game.", self.parent)
             self.parent.location.characters.remove(self.parent)
 
-        if self.parent in world.players:
-            archive.player_save(self.parent)
-            world.players.remove(self.parent)
+        w = World()
+        if self.parent in w.players:
+            a = Archive()
+            a.save(self.parent)
+            w.players.remove(self.parent)
 
-        log("NETWORK", "Client at " + self.addr[0] + " closed connection")
+        log("NETWORK", "Client at %s closed connection" % self.addr[0])
         self.parent.socket = None
         self.close()
 
@@ -51,7 +61,7 @@ class client_socket(asynchat.async_chat):
         pass
 
 
-class server_socket(asyncore.dispatcher):
+class ServerSocket(asyncore.dispatcher):
     def __init__(self):
         asyncore.dispatcher.__init__(self)
 
@@ -67,4 +77,4 @@ class server_socket(asyncore.dispatcher):
     def handle_accept(self):
         accept_socket, address = self.accept()
         log("NETWORK", "Connection received from " + address[0])
-        client_socket(accept_socket)
+        ClientSocket(accept_socket)

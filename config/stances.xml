@@ -1,281 +1,227 @@
 <stances>
 
-<stance>
-
-<name>brawling</name>
-
-<default>true</default>
-
-<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
-
-<weapontype>bare handed</weapontype>
-
-<balance>
-
-<HitIncreasePercent>35</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>60</MissIncreasePercent>
-
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>25</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-<damages>
-
-<damage type="impact" multiplier=".9"/>
-<damage type="puncture" multiplier=".1"/>
-
-</damages>
-
-
-</stance>
 
 <stance>
+    <name>brawling</name>
+    <desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+    <default />
 
-<name>jiujitsu</name>
+    <weapontype>bare handed</weapontype>
 
-<default>false</default>
+    <balance>
+        <HitIncreasePercent>35</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
 
-<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+        <MissIncreasePercent>60</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
 
-<weapontype>bare handed</weapontype>
+        <HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
 
-<balance>
+        <DodgeIncreasePercent>25</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
 
-<HitIncreasePercent>70</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
 
-<MissIncreasePercent>30</MissIncreasePercent>
-
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>35</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>55</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-<damages>
-
-</damages>
-
-</stance>
-
-<stance>
-
-<name>butcher</name>
-
-<default>false</default>
-
-<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
-
-<weapontype>knife</weapontype>
-
-<balance>
-
-<HitIncreasePercent>50</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>50</MissIncreasePercent>
-
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>25</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-</stance>
-
-<stance>
-<name>doppelsoldner</name>
-
-<default>false</default>
-
-<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
-
-<weapontype>greatsword</weapontype>
-
-<balance>
-
-<HitIncreasePercent>70</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>70</MissIncreasePercent>
-
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>15</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>15</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-
-</stance>
-
-<stance>
-<name>jiujitsu</name>
-
-<default>false</default>
-
-<desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
-
-<weapontype>bare handed</weapontype>
-
-<balance>
-
-<HitIncreasePercent>70</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>30</MissIncreasePercent>
-
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>35</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>55</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-<damages>
-
-</damages>
-
-</stance>
-
-<stance>
-
-<name>penguin-fu</name>
-<default>false</default>
-<desc>A deadly martial art-form taught only on the shores of Antarctica</desc>
-<weapontype>bare handed</weapontype>
-
-<balance>
-
-<HitIncreasePercent>40</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>70</MissIncreasePercent>
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>25</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-<damages>
-
-<damage type="puncture" multiplier=".5"/>
-<damage type="impact" multiplier=".5"/>
-
-</damages>
-
-</stance>
-<stance>
-<name>lancer</name>
-<default>false</default>
-<desc>Basic stance for pole-arm weapons, focusing on piercing the enemy's skin</desc>
-<weapontype>spear</weapontype>
-
-<balance>
-
-<HitIncreasePercent>40</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
-
-<MissIncreasePercent>70</MissIncreasePercent>
-<MissIncreaseAmount>-1</MissIncreaseAmount>
-
-<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
-
-<DodgeIncreasePercent>25</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
-
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
-
-</balance>
-
-<damages>
-
-<damage type="puncture" multiplier="1.0"/>
-
-
-</damages>
-
+    <damages>
+        <damage type="impact" multiplier=".9"/>
+        <damage type="puncture" multiplier=".1"/>
+    </damages>
 </stance>
 
 
 <stance>
-<name>yeoman</name>
-<default>false</default>
-<desc>Basic stance for longbows</desc>
-<weapontype>bow</weapontype>
+    <name>jiujitsu</name>
+    <desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
 
-<balance>
+    <weapontype>bare handed</weapontype>
 
-<HitIncreasePercent>40</HitIncreasePercent>
-<HitIncreaseAmount>1</HitIncreaseAmount>
+    <balance>
+        <HitIncreasePercent>70</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
 
-<MissIncreasePercent>70</MissIncreasePercent>
-<MissIncreaseAmount>-1</MissIncreaseAmount>
+        <MissIncreasePercent>30</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
 
-<HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
-<HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+        <HitReceivedIncreasePercent>35</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
 
-<DodgeIncreasePercent>25</DodgeIncreasePercent>
-<DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+        <DodgeIncreasePercent>55</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
 
-<CriticalChanceModifier>1.5</CriticalChanceModifier>
-<CriticalAmountModifier>2</CriticalAmountModifier>
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
 
-</balance>
-
-<damages>
-
-<damage type="puncture" multiplier="1.0"/>
-
-
-</damages>
-
+    <damages></damages>
 </stance>
+
+
+<stance>
+    <name>butcher</name>
+    <desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+
+    <weapontype>knife</weapontype>
+
+    <balance>
+        <HitIncreasePercent>50</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>50</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>25</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+</stance>
+
+
+<stance>
+    <name>doppelsoldner</name>
+    <desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+
+    <weapontype>greatsword</weapontype>
+
+    <balance>
+        <HitIncreasePercent>70</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>70</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>15</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>15</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+</stance>
+
+
+<stance>
+    <name>jiujitsu</name>
+    <desc>A bare handed stance, using ones instincts and brute strength, regardless of training</desc>
+
+    <weapontype>bare handed</weapontype>
+
+    <balance>
+        <HitIncreasePercent>70</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>30</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>35</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>55</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+
+    <damages></damages>
+</stance>
+
+
+<stance>
+    <name>penguin-fu</name>
+    <desc>A deadly martial art-form taught only on the shores of Antarctica</desc>
+
+    <weapontype>bare handed</weapontype>
+
+    <balance>
+        <HitIncreasePercent>40</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>70</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>25</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+
+    <damages>
+        <damage type="puncture" multiplier=".5"/>
+        <damage type="impact" multiplier=".5"/>
+    </damages>
+</stance>
+
+
+<stance>
+    <name>lancer</name>
+    <desc>Basic stance for pole-arm weapons, focusing on piercing the enemy's skin</desc>
+
+    <weapontype>spear</weapontype>
+
+    <balance>
+        <HitIncreasePercent>40</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>70</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>25</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+
+    <damages>
+        <damage type="puncture" multiplier="1.0"/>
+    </damages>
+</stance>
+
+
+<stance>
+    <name>yeoman</name>
+    <desc>Basic stance for bows</desc>
+
+    <weapontype>bow</weapontype>
+
+    <balance>
+        <HitIncreasePercent>40</HitIncreasePercent>
+        <HitIncreaseAmount>1</HitIncreaseAmount>
+
+        <MissIncreasePercent>70</MissIncreasePercent>
+        <MissIncreaseAmount>-1</MissIncreaseAmount>
+
+        <HitReceivedIncreasePercent>25</HitReceivedIncreasePercent>
+        <HitReceivedIncreaseAmount>-1</HitReceivedIncreaseAmount>
+
+        <DodgeIncreasePercent>25</DodgeIncreasePercent>
+        <DodgeIncreaseAmount>1</DodgeIncreaseAmount>
+
+        <CriticalChanceModifier>1.5</CriticalChanceModifier>
+        <CriticalAmountModifier>2</CriticalAmountModifier>
+    </balance>
+
+    <damages>
+        <damage type="puncture" multiplier="1.0"/>
+    </damages>
+</stance>
+
 
 </stances>

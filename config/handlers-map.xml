@@ -7,10 +7,10 @@
   <handler command="advance" function="advance"/>
   <handler command="allocate" function="allocate" />
   <handler command="assess" function="assess"/>
-  <handler command="attack" function="engage"/>	
-	
+  <handler command="attack" function="engage"/>
+
   <handler command="cackle" function="emote" />
-  <handler command="close" function="close"/>	
+  <handler command="close" function="close"/>
   <handler command="count" function="count"/>
 
   <handler command="down" function="go" />
@@ -22,19 +22,19 @@
   <handler command="engage" function="engage"/>
   <handler command="equip" function="equip"/>
   <handler command="exit" function="player_quit" />
-  
+
   <handler command="fight" function="engage"/>
-  
+
   <handler command="go" function="go" />
   <handler command="get" function="get" />
   <handler command="give" function="give" />
   <handler command="grab" function="get" />
   <handler command="grin" function="emote" />
-  
+
   <handler command="health" function="health"/>
   <handler command="hp" function="health"/>
   <handler command="hide" function="hide"/>
-  
+
   <handler command="inventory" function="inventory" />
 
   <handler command="kill" function="engage"/>
@@ -53,14 +53,16 @@
 
   <handler command="open" function="open" />
   <handler command="offer" function="give" />
-  	
+
+  <handler command="ponder" function="emote" />
+
   <handler command="quit" function="player_quit" />
 
   <handler command="remove" function="remove" />
   <handler command="refuse" function="accept" />
   <handler command="reject" function="accept" />
   <handler command="retreat" function="retreat"/>
-  
+
   <handler command="south" function="go" />
   <handler command="say" function="say" />
   <handler command="save" function="player_save" />
@@ -75,8 +77,8 @@
   <handler command="sw" function="go" />
 
   <handler command="take" function="get" />
-  <handler command="time" function="time" />	
-			
+  <handler command="time" function="time" />
+
   <handler command="up" function="go" />
   <handler command="unequip" function="unequip"/>
   <handler command="unhide" function="unhide"/>
@@ -86,10 +88,10 @@
   <handler command="wear" function="wear" />
   <handler command="wealth" function="wealth"/>
   <handler command="wink" function="emote" />
-  <handler command="wield" function="equip"/>	
+  <handler command="wield" function="equip"/>
   <handler command="withdraw" function="withdraw"/>
   <handler command="yell" function="yell" />
 
-  <handler command="gmgetstance" function="gmgetstance"/>
+  <handler command="gm" function="gm"/>
 
 </handlers>

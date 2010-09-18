@@ -1,15 +1,14 @@
 import asyncore
 import sys
-import pickle
 
-import archive
 import command
 import handler
-import persona
 import importer
 import network
 import task
-import world
+from world import World
+from entities import Player
+from archive import Archive
 from common import *
 
 
@@ -17,13 +16,10 @@ def main():
     log("SYSTEM", "Startup in progress")
 
     log("SYSTEM", "Initializing database")
-    archive.initialize()
+    Archive()
 
     log("MODULES", "Inspecting task modules")
     task.load_tasks()
-
-    log("MODULES", "Inspecting persona modules")
-    persona.load_personas()
 
     log("MODULES", "Inspecting handler modules")
     handler.load_handlers()
@@ -31,17 +27,19 @@ def main():
     log("XML", "Processing server.xml")
     importer.process_xml()
 
-    log("WORLD", "Resolving location linkages")
-    world.resolve_links()
+    w = World()
+
+    log("WORLD", "Resolving exits")
+    w.resolve_exits()
 
     log("WORLD", "Resolving populator objects")
-    world.resolve_populators()
+    w.resolve_populators()
 
     log("WORLD", "Resolving placement objects")
-    world.resolve_placements()
+    w.resolve_placements()
 
     log("NETWORK", "Initializing master socket")
-    listener = network.server_socket()
+    listener = network.ServerSocket()
 
     log("TASK", "Initializing task modules")
     task.init_tasks()
@@ -68,92 +66,75 @@ def main():
     log("SYSTEM", "Shutdown complete")
 
 
+def run_tests():
+    from test import TestbedServer
+    import unittest
+
+    server = TestbedServer()
+    server.clear_archive()
+    server.start()
+
+    tests = unittest.defaultTestLoader.discover('tests', pattern='test_*.py')
+    runner = unittest.TextTestRunner(verbosity=3, buffer=True)
+    runner.run(tests)
+    server.stop()
+
+
 def players():
     log("SCRIPT", "Booting core server functionality")
-    archive.initialize()
+    a = Archive()
     handler.load_handlers()
     importer.process_xml()
     log("SCRIPT", "Finished loading core functionality")
-    log("SCRIPT", "Retreiving player information from database")
-    player_file = open(options["players_db"], "rb")
-    player_db = pickle.load(player_file)
-    player_file.close()
-    players = len(player_db)
-    log("SCRIPT", "Loaded %s player%s from database" % (
-        players, '' if players == 1 else 's'))
 
+    log("SCRIPT", "Retreiving player information from database")
+    players = a.list()
+    log("SCRIPT", "Loaded %d player%s from database" % (len(players), '' if len(players) == 1 else 's'))
     print
+
     i = 0
-    names = player_db.keys()
+    names = players.keys()
     names.sort()
     for p in names:
-        i = i + 1
+        i += 1
         print '%d: %s' % (i, p)
     print
+
     n = raw_input('Load player index (blank to cancel): ')
+    name = None
     try:
         n = int(n)
         if n < 1 or n > len(names):
             print 'Cancelled.'
             sys.exit(0)
         name = names[n - 1]
-        player = archive.player_load(name)
     except (ValueError, IndexError):
         sys.exit(1)
-    if not player:
-        choice = ''
-        raw_input('Player could not be loaded properly.  Delete? (Y/N): ')
+
+    player = Player()
+    if not a.load(name, player):
+        choice = raw_input('Player could not be loaded properly.  Delete? (Y/N): ')
         if choice.upper() == 'Y':
-            del player_db[name]
+            a.delete(name)
         sys.exit(0)
 
-    (
-        p_password,
-        p_contents,
-        p_worn,
-        p_equipped,
-        p_stats,
-        p_points,
-        p_gender,
-        p_race,
-        p_HP,
-        ) = player
-
     print
-    print name
-    print p_gender, p_race
-    for stat, value in p_stats.items():
+    print player.name
+    print player.gender, player.race
+    for stat, value in player.stats.items():
         print ' %s: %d' % (stat, value)
     print
     action = raw_input('Action ([p]assword, [d]elete), [c]ancel): ')
     if action == '':
         sys.exit(0)
     elif 'password'.startswith(action.lower()):
-        p_password = encrypt_password(raw_input('New password: '))
-        player = (
-            p_password,
-            p_contents,
-            p_worn,
-            p_equipped,
-            p_stats,
-            p_points,
-            p_gender,
-            p_race,
-            p_HP,
-            )
-
-        player_db[name] = pickle.dumps(player)
-        player_file = open(options["players_db"], "wb")
-        pickle.dump(player_db, player_file)
-        player_file.close()
+        player.password = encrypt_password(raw_input('New password: '))
+        a.save(player)
         print 'Password written.'
     elif 'delete'.startswith(action.lower()):
         confirm = raw_input('Really delete? (Y/N): ')
         if confirm.upper() == 'Y':
-            del player_db[name]
-            player_file = open(options["players_db"], "wb")
-            pickle.dump(player_db, player_file)
-            player_file.close()
+            a.delete(name)
             print 'Deletion complete.'
         else:
             print 'Deletion cancelled.'
@@ -164,5 +145,7 @@ def players():
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
         main()
+    elif sys.argv[1] == 'test':
+        run_tests()
     elif sys.argv[1] == 'players':
         players()

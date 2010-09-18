@@ -1,188 +1,187 @@
 <races>
+    <race name = "Human">
+        <skin color="Black"/>
+        <skin color="Bronzed"/>
+        <skin color="Brown"/>
+        <skin color="Pale"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
 
-	<race name = "Human">
-		<skin color="Black"/>
-		<skin color="Bronzed"/>
-		<skin color="Brown"/>
-		<skin color="Pale"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Bleached"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 3/>
-		<stat name ="Intelligence" value = 3/>
-		<stat name ="Agility" value = 3/>
-		<stat name ="Discipline" value = 3/>
-		<stat name ="Charisma" value = 3/>
-	</race>
-	<race name = "Elf">
-		<skin color="Black"/>
-		<skin color="Brown"/>
-		<skin color="Dark"/>
-		<skin color="Pale"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Bleached"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 2/>
-		<stat name ="Intelligence" value = 3/>
-		<stat name ="Agility" value = 4/>
-		<stat name ="Discipline" value = 4/>
-		<stat name ="Charisma" value = 2/>
-	</race>
-	<race name = "Dwarf">
-		<skin color="Black"/>
-		<skin color="Bronzed"/>
-		<skin color="Brown"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 4/>
-		<stat name ="Intelligence" value = 3/>
-		<stat name ="Agility" value = 3/>
-		<stat name ="Discipline" value = 4/>
-		<stat name ="Charisma" value = 1/>
-	</race>
-	<race name = "Orc">
-		<skin color="Black"/>
-		<skin color="Green"/>
-		<skin color="Brown"/>
-		<skin color="Red"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Bleached"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 5/>
-		<stat name ="Intelligence" value = 2/>
-		<stat name ="Agility" value = 2/>
-		<stat name ="Discipline" value = 3/>
-		<stat name ="Charisma" value = 3/>
-	</race>
-	<race name = "Wyvernfolk">
-		<skin color="Black"/>
-		<skin color="Bronzed"/>
-		<skin color="Brown"/>
-		<skin color="Pale"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		<skin color="Scaly"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Bleached"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 2/>
-		<stat name ="Intelligence" value = 4/>
-		<stat name ="Agility" value = 5/>
-		<stat name ="Discipline" value = 2/>
-		<stat name ="Charisma" value = 2/>
-	</race>
-	<race name = "Forktongue">
-		<skin color="Black"/>
-		<skin color="Bronzed"/>
-		<skin color="Brown"/>
-		<skin color="Pale"/>
-		<skin color="Tanned"/>
-	    <skin color="White"/>
-		
-		<hair color="Auburn"/>
-		<hair color="Black"/>
-		<hair color="Bleached"/>
-		<hair color="Blonde"/>
-		<hair color="Brown"/>
-		<hair color="Brunette"/>
-		<hair color="Red"/>
-		<hair color="Silver"/>
-		
-		<!--hair style="Balding"/>
-		<hair style="Bald" />
-		<hair style="Dreads"/>
-		<hair style="Ponytail"/>
-		<hair style="Straight"/>
-		<hair style="Wavy"/>
-		<hair style="Curly"/--!>
-		
-		<stat name ="Strength" value = 1/>
-		<stat name ="Intelligence" value = 4/>
-		<stat name ="Agility" value = 2/>
-		<stat name ="Discipline" value = 4/>
-		<stat name ="Charisma" value = 4/>
-	</race>
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Bleached"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 3/>
+        <stat name ="Intelligence" value = 3/>
+        <stat name ="Agility" value = 3/>
+        <stat name ="Discipline" value = 3/>
+        <stat name ="Charisma" value = 3/>
+    </race>
+    <race name = "Elf">
+        <skin color="Black"/>
+        <skin color="Brown"/>
+        <skin color="Dark"/>
+        <skin color="Pale"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
+
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Bleached"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 2/>
+        <stat name ="Intelligence" value = 3/>
+        <stat name ="Agility" value = 4/>
+        <stat name ="Discipline" value = 4/>
+        <stat name ="Charisma" value = 2/>
+    </race>
+    <race name = "Dwarf">
+        <skin color="Black"/>
+        <skin color="Bronzed"/>
+        <skin color="Brown"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
+
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 4/>
+        <stat name ="Intelligence" value = 3/>
+        <stat name ="Agility" value = 3/>
+        <stat name ="Discipline" value = 4/>
+        <stat name ="Charisma" value = 1/>
+    </race>
+    <race name = "Orc">
+        <skin color="Black"/>
+        <skin color="Green"/>
+        <skin color="Brown"/>
+        <skin color="Red"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
+
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Bleached"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 5/>
+        <stat name ="Intelligence" value = 2/>
+        <stat name ="Agility" value = 2/>
+        <stat name ="Discipline" value = 3/>
+        <stat name ="Charisma" value = 3/>
+    </race>
+    <race name = "Wyvernfolk">
+        <skin color="Black"/>
+        <skin color="Bronzed"/>
+        <skin color="Brown"/>
+        <skin color="Pale"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
+        <skin color="Scaly"/>
+
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Bleached"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 2/>
+        <stat name ="Intelligence" value = 4/>
+        <stat name ="Agility" value = 5/>
+        <stat name ="Discipline" value = 2/>
+        <stat name ="Charisma" value = 2/>
+    </race>
+    <race name = "Forktongue">
+        <skin color="Black"/>
+        <skin color="Bronzed"/>
+        <skin color="Brown"/>
+        <skin color="Pale"/>
+        <skin color="Tanned"/>
+        <skin color="White"/>
+
+        <hair color="Auburn"/>
+        <hair color="Black"/>
+        <hair color="Bleached"/>
+        <hair color="Blonde"/>
+        <hair color="Brown"/>
+        <hair color="Brunette"/>
+        <hair color="Red"/>
+        <hair color="Silver"/>
+
+        <!--hair style="Balding"/>
+        <hair style="Bald" />
+        <hair style="Dreads"/>
+        <hair style="Ponytail"/>
+        <hair style="Straight"/>
+        <hair style="Wavy"/>
+        <hair style="Curly"/--!>
+
+        <stat name ="Strength" value = 1/>
+        <stat name ="Intelligence" value = 4/>
+        <stat name ="Agility" value = 2/>
+        <stat name ="Discipline" value = 4/>
+        <stat name ="Charisma" value = 4/>
+    </race>
 </races>

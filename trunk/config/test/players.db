@@ -1,0 +1,18 @@
+(dp1
+S'Fritz'
+p2
+S"(S'[\\xaaa\\xe4\\xc9\\xb9??\\x06\\x82%\\x0bl\\xf83\\x1b~\\xe6\\x8f\\xd8'\np1\n(lp2\n(lp3\n(lp4\n(dp5\nS'discipline'\np6\nI3\nsS'agility'\np7\nI7\nsS'strength'\np8\nI4\nsS'intelligence'\np9\nI3\nsS'charisma'\np10\nI3\nsS'perception'\np11\nI3\nsI0\nS'Male'\np12\nS'Elf'\np13\nI18\n(lp14\nS'brawling'\np15\naS'jiujitsu'\np16\naS'lancer'\np17\na(dp18\nS'bare handed'\np19\ng16\nsS'spear'\np20\ng17\nsg16\nt."
+p3
+sS'Honeydew'
+p4
+S"(S'[\\xaaa\\xe4\\xc9\\xb9??\\x06\\x82%\\x0bl\\xf83\\x1b~\\xe6\\x8f\\xd8'\np1\n(lp2\n(lp3\n(lp4\n(dp5\nS'discipline'\np6\nI3\nsS'agility'\np7\nI3\nsS'strength'\np8\nI3\nsS'intelligence'\np9\nI3\nsS'charisma'\np10\nI3\nsS'perception'\np11\nI3\nsI5\nS'Male'\np12\nS'Human'\np13\nI18\n(lp14\nS'brawling'\np15\naS'lancer'\np16\na(dp17\nS'bare handed'\np18\ng15\nsS'spear'\np19\ng16\nsg15\nt."
+p5
+sS'Mango'
+p6
+S"(S'[\\xaaa\\xe4\\xc9\\xb9??\\x06\\x82%\\x0bl\\xf83\\x1b~\\xe6\\x8f\\xd8'\np1\n(lp2\n(lp3\n(lp4\n(dp5\nS'discipline'\np6\nI3\nsS'agility'\np7\nI3\nsS'strength'\np8\nI3\nsS'intelligence'\np9\nI3\nsS'charisma'\np10\nI3\nsS'perception'\np11\nI3\nsI5\nS'Male'\np12\nS'Human'\np13\nI18\n(lp14\nS'brawling'\np15\na(dp16\nS'bare handed'\np17\ng15\nsg15\nt."
+p7
+sS'First'
+p8
+S"(S'MuG\\xa1\\xd2x|r\\xf0\\xe9\\x85\\xd8\\xb5\\x19B\\x95\\xe4\\xaaaA'\np1\n(lp2\n(lp3\n(lp4\n(dp5\nS'discipline'\np6\nI3\nsS'agility'\np7\nI3\nsS'strength'\np8\nI3\nsS'intelligence'\np9\nI3\nsS'charisma'\np10\nI3\nsS'perception'\np11\nI3\nsI5\nS'Male'\np12\nS'Human'\np13\nI18\n(lp14\nS'brawling'\np15\na(dp16\nS'bare handed'\np17\ng15\nsg15\nt."
+p9
+s.

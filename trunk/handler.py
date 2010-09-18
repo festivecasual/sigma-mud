@@ -1,7 +1,7 @@
-import glob
 import sys
 import os.path
 import imp
+from glob import glob
 
 import libsigma
 from common import *
@@ -10,15 +10,15 @@ from common import *
 functions = {}
 mappings = []
 specials = {
-    "apostrophe" : None,
-    "comma" : None,
-    "colon" : None,
-    "period" : None
-    }
+        "apostrophe" : None,
+        "comma" : None,
+        "colon" : None,
+        "period" : None
+        }
 
 
 def load_handlers():
-    handler_modules = glob.glob(os.path.join(directories["handlers_root"], "*.py"))
+    handler_modules = glob(os.path.join(directories["handlers_root"], "*.py"))
     for handler_file in handler_modules:
         n = len(functions)
         source = os.path.basename(handler_file)

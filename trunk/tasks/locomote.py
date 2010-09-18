@@ -1,7 +1,7 @@
 import random
 
-import world
 import libsigma
+from world import World
 from common import *
 
 
@@ -17,9 +17,10 @@ def task_init():
 
 # Defines the code to be run at each execution period.
 def task_execute():
-    for current in world.populators:
-        if world.denizens.has_key(id(current.instance)) and 'mobile' in current.flags:
-            active_denizen = world.denizens[id(current.instance)]
+    w = World()
+    for current in w.populators:
+        if w.denizens.has_key(current.instance) and 'mobile' in current.flags:
+            active_denizen = w.denizens[current.instance]
 
             choices = [None]
             choices.extend(libsigma.open_exits(active_denizen.location))
@@ -27,7 +28,7 @@ def task_execute():
             selection = random.choice(choices)
             if active_denizen.engaged:
                 selection=None
-            
+
             if (selection != None):
                 if active_denizen.location.altmsg[selection]!=None:
                     libsigma.report(libsigma.ROOM, "$actor just went " + active_denizen.location.altmsg[selection] + ".", active_denizen )

@@ -1,5 +1,5 @@
-import world
 import libsigma
+from world import World
 from common import *
 
 
@@ -15,7 +15,8 @@ def task_init():
 
 # Defines the code to be run at each execution period.
 def task_execute():
-    for p in world.players:
+    w = World()
+    for p in w.players:
         if p.state >= STATE_PLAYING:
             p.HP += 3
 

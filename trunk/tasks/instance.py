@@ -1,6 +1,5 @@
-import pickle
-
-import world
+from world import World
+from entities import Denizen, Item
 import libsigma
 from common import *
 
@@ -17,19 +16,21 @@ def task_init():
 
 # Defines the code to be run at each execution period.
 def task_execute():
-    for current in world.populators:
-        if not world.denizens.has_key(id(current.instance)):
-            current.instance = pickle.loads(current.denizen)
+    w = World()
+    for current in w.populators:
+        if not w.denizens.has_key(current.instance):
+            denizen = Denizen(current.denizen)
+            current.instance = denizen.id
+            w.denizens[denizen.id] = denizen
+            libsigma.enter_room(denizen, current.target)
 
-            world.denizens[id(current.instance)] = current.instance
-            libsigma.enter_room(current.instance, current.target)
-
-    for current in world.placements:
-        if not id(current.instance) in [id(i) for i in current.target.contents]:
-            current.instance = pickle.loads(current.item)
-            current.instance.quantity=current.quantity
-            world.items[id(current.instance)] = current.instance
-            current.target.contents.append(current.instance)
+    for current in w.placements:
+        if not current.instance in [i.id for i in current.target.contents]:
+            item = Item(current.item)
+            item.quantity = current.quantity
+            current.instance = item.id
+            w.items[item.id] = item
+            current.target.contents.append(item)
 
 
 # Defines the code to be run upon shutdown of the server.

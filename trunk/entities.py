@@ -79,7 +79,7 @@ class Item(Entity):
         ammo = node.find('ammo')
         if ammo != None:
             self.ammo = Ammo(ammo)
-
+        
     @property
     def short(self):
         if not self.stackable or self.quantity==1:
@@ -88,8 +88,8 @@ class Item(Entity):
             return self._short_multiple
 
     def set_quantity(self, val):
-        self._quantity = max(0, val)
-        if val > self.max_quantity:
+        self._quantity = max(0, int(val))
+        if self._quantity > self.max_quantity:
             self._quantity = self.max_quantity
 
     quantity = property(lambda self: self._quantity, set_quantity)

@@ -21,9 +21,53 @@ def statistics(data):
         speaker.send_line(stat.capitalize()+ ": " + str(speaker.stats[stat]) )
     if speaker.points_to_allocate > 0:
         speaker.send_line("\r\nPoints not yet allocated: " + str(speaker.points_to_allocate))
-    return
+    
+    #for outputting bonuses.
+    for b in speaker.bonuses:
+        b_string=""
+        if b.operator=="+":
+            b_string+="+" if b.value >=0 else "-"
+            b_string+=str(int(b.value))
 
-
+        elif b.operator=="*":
+            b_string+="+" if b.value >=1.0 else "-"
+            b_string+=str(int(abs(1.0-b.value)*100))
+            b_string+="%"
+            
+        b_string+= " bonus to " + b.stat.capitalize() + " "
+        if ALL_CONTEXT not in b.context:
+            multiple_contexts_flag=False
+            default_context_flag=False
+            for c in b.context:
+                if contexts.has_key(c):
+                    b_string+=" and " if multiple_contexts_flag else ""
+                    b_string+=contexts[c]
+                    multiple_contexts_flag=True
+                else:
+                    default_context_flag=True
+            
+            if default_context_flag and not multiple_contexts_flag:
+                b_string+="in certain situations"
+            if default_context_flag and multiple_contexts_flag:
+                b_string+=" and in certain other situations"
+        
+        if b.bonus_duration != INFINITE:
+            secs_remaining=b.remaining_time()
+            if secs_remaining<30:
+                b_string+=" for " + str(secs_remaining) + (" seconds" if secs_remaining !=1 else " second")
+            elif secs_remaining < 60:
+                b_string+=" for less than a minute"
+            elif secs_remaining < 120:
+                b_string+=" for less than two minutes"
+            elif secs_remaining < 1800:
+                b_string+=" for less than half an hour"
+            elif secs_remaining < 3600:
+                b_string+=" for less than a hour"
+            elif secs_remaining >=3600:
+                b_string+=" for at least an hour"
+        b_string+="."
+        speaker.send_line("")    
+        speaker.send_line(b_string)
 @handler()
 def health(data):
     speaker = data["speaker"]

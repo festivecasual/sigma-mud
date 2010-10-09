@@ -368,6 +368,9 @@ def wear(data):
                     return
                 report(SELF | ROOM, "$actor $verb on %s." % item.name, speaker, ("put","puts"))
                 transfer_item(item, speaker.contents,speaker.worn_items)
+                speaker.reference_bonuses(item.wearable.bonuses,'auto')
+                
+                
                 return
 
     speaker.send_line("You don't have anything like that in your inventory.")
@@ -385,6 +388,7 @@ def remove(data): #TODO: does not take into account capacity of the character ye
             if keyword.startswith(args[1]):
                 report(SELF | ROOM, "$actor $verb " + item.name + ".", speaker, ("remove", "removes" ))
                 transfer_item(item,speaker.worn_items,speaker.contents)
+                speaker.dereference_bonuses(item.id)
                 return
 
     speaker.send_line("You're not wearing anything like that.       ")

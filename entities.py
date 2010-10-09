@@ -3,7 +3,8 @@ import uuid
 
 import libsigma
 import feats
-from durations import Wait
+from durations import Wait,Bonus
+from world import World
 from common import *
 
 
@@ -74,7 +75,7 @@ class Item(Entity):
 
         wearable = node.find('wearable')
         if wearable != None:
-            self.wearable = Wearable(wearable)
+            self.wearable = Wearable(wearable,self.id)
 
         ammo = node.find('ammo')
         if ammo != None:
@@ -119,10 +120,11 @@ class Weapon(object):
 
 
 class Wearable(object):
-    def __init__(self, node):
+    def __init__(self, node,id):
         self.protection = {}
         self.absorption = {}
-
+        self.bonuses=[]
+        
         self.worn_position = required_attribute(node, 'position')
         if self.worn_position not in worn_positions:
             log("FATAL", "Unknown worn position: '%s'" % self.worn_position, exit_code=1)
@@ -141,7 +143,30 @@ class Wearable(object):
             absorption_value = required_attribute(a, 'amount', int)
             self.absorption[absorption_type] = absorption_value
 
-
+        for b in node.findall('bonus'):
+            stat = required_attribute(b,'stat')
+            if stat not in stats:
+                log("FATAL", "Unknown stat '%s'" % stat, exit_code=1)
+            value= required_attribute(b,'value', cast=float)
+            condition=required_attribute(b,'condition')
+            if condition not in conditions:
+                log("FATAL", "Unknown condition '%s'" % condition, exit_code=1)
+            contexts=[]
+            operator=required_attribute(b,'operator')
+            if operator not in bonus_operators:
+                log("FATAL", "Unknown operator '%s'" % condition, exit_code=1)
+            duration=INFINITE
+            d = b.get('duration',None)
+            if d!=None:
+                try:
+                    duration=int(d)
+                except ValueError:
+                    log("FATAL", "Expecting integer for duration value")
+            
+            for c in b.findall('context'):
+                contexts.append(required_attribute(c,'type'))
+            self.bonuses.append(Bonus(stat,value,operator,contexts, id,'worn',duration,condition))
+          
 class Ammo(object):
     def __init__(self, node):
         self.damage = {}
@@ -177,7 +202,8 @@ class Character(Entity):
         self.stances=[]
         self.waits=[]
         self.flags=[]
-
+        self.bonuses=[]
+        
         self.equipped_weapon=[]
         self.equipped_shield=None
         self._skin_protection={}
@@ -271,7 +297,18 @@ class Character(Entity):
     def has_waits(self, prior=HIGHEST_PRIORITY):
         return False
 
-
+    def reference_bonuses(self,bonuses,condition):
+        for b in bonuses:
+            if b.condition==condition:
+                self.bonuses.append(b)
+                b.start_bonus_timer()
+    
+    def dereference_bonuses(self,id):
+        for b in self.bonuses[:]:
+            if b.source==id:
+                self.bonuses.remove(b)
+                
+                
 class Denizen(Character):
     def __init__(self, node):
         super(Denizen, self).__init__()
@@ -352,7 +389,8 @@ class Denizen(Character):
             return super(Denizen, self).epitaph
 
     def handle_death(self):
-        del denizens[self.id]
+        w = World()
+        del w.denizens[self.id]
         libsigma.report(libsigma.ROOM, self.epitaph, self)
         #corpse=pickle.loads(items_source[CORPSE_REFERENCE])
         #self.location.contents.append(corpse)

@@ -157,6 +157,9 @@ CORPSE_REFERENCE='system:corpse'
 # Infinity Value
 INFINITE = -999
 
+# Operators
+bonus_operators = ('*','+')
+
 
 # Directions
 DIR_NORTH = 0
@@ -223,6 +226,21 @@ dir_match_dir = (
 DOOR_OPEN = 0
 DOOR_CLOSED = 1
 DOOR_LOCKED = 2
+
+conditions=("auto","activate")
+
+# context and descriptions
+
+ALL_CONTEXT="all"
+
+contexts={
+    "all": "in all cases",
+    "combat": "for all combat actions" ,     
+    "dodging": "when dodging",      
+    "retreating": "when attempting to retreat"      
+          
+          
+    }
 
 
 # Weapons

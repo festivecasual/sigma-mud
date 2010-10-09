@@ -74,6 +74,18 @@
 
     <exit dir="up" target="training_room"/>
     <exit dir="down" target="insidetree"/>
+    <exit dir="leave" target="branch"/>
+  </room>
+
+  <room id="branch">
+    <name>Testland, Branch of Oak </name>
+    <desc>
+    Out on the branch, several trinkets of renown lie here.
+    This area seems as if it is a place for the non-weapon
+    related items that an adventurer could test.
+    </desc>
+
+    <exit dir="enter" target="armory"/>
   </room>
 
   <room id="training_room">
@@ -188,6 +200,20 @@
     </desc>
     </item>
 
+	<item id="ringofpower">
+	<name>a shining gold ring</name>
+	<keywords>ring</keywords>
+	<short>a shining gold ring lies here</short>
+	<desc>
+	The ring shines with a mystical power.
+	</desc>
+	<wearable position="fingers">
+		<bonus stat="agility" value="3" operator="+" condition="auto">
+		  <context type = "dodging"/>
+		  <context type = "retreating"/>
+		</bonus>  
+	</wearable>
+	</item>
 
    <denizen id="killer_penguin">
     <name>the killer penguin</name>
@@ -218,6 +244,7 @@
     <placement item="arrow" target="armory" quantity="10"/>
     <placement item="arrow" target="training_room" quantity="1"/>
     <placement item="longbow" target="armory" />
+ 	<placement item="ringofpower" target="branch" />
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>

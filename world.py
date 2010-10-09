@@ -182,3 +182,4 @@ class Door(object):
 
     def is_locked(self):
         return self.status == DOOR_LOCKED
+

@@ -338,10 +338,10 @@ stats=("strength","intelligence","discipline","agility","charisma","perception")
 # Gender handling
 GENDER_NEUTRAL='Neutral'
 genders=(GENDER_NEUTRAL,'Male','Female')
-pronoun_reflexive=dict.fromkeys(genders, ('itself','himself','herself'))
-pronoun_subject=dict.fromkeys(genders, ('it','he','she'))
-pronoun_object=dict.fromkeys(genders, ('it','him','her'))
-pronoun_possessive=dict.fromkeys(genders, ('its','his','her'))
+pronoun_reflexive=dict(zip(genders, ('itself','himself','herself')))
+pronoun_subject=dict(zip(genders, ('it','he','she')))
+pronoun_object=dict(zip(genders, ('it','him','her')))
+pronoun_possessive=dict(zip(genders, ('its','his','her')))
 
 
 # Race handling

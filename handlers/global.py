@@ -50,7 +50,9 @@ def statistics(data):
                 b_string+="in certain situations"
             if default_context_flag and multiple_contexts_flag:
                 b_string+=" and in certain other situations"
-        
+        else:
+            b_string+=contexts[ALL_CONTEXT]
+            
         if b.bonus_duration != INFINITE:
             secs_remaining=b.remaining_time()
             if secs_remaining<30:

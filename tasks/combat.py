@@ -58,7 +58,7 @@ def task_execute():  # moves all combats through states through its lifecycle
             striker, defender = c.strike_queue[0]
 
             striker_action=c.get_action(striker)
-
+            defender_action=c.get_action(defender)
             striker_preferred_range=c.get_preferred_range(striker)
 
             ## roll for hit -- Agility
@@ -116,7 +116,7 @@ def task_execute():  # moves all combats through states through its lifecycle
                 else:
                         libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
 
-            elif striker_action==COMBAT_ACTION_IDLE:
+            elif striker_action==COMBAT_ACTION_IDLE: 
                 libsigma.report(libsigma.SELF | libsigma.ROOM,"$actor $verb at $direct, unable to attack!", striker, ("glare", "glares"), defender)
                 if type(striker)==entities.Denizen:
                     if striker.preferred_weapon_range < c.range:
@@ -124,36 +124,50 @@ def task_execute():  # moves all combats through states through its lifecycle
                     else:
                         libsigma.run_command(striker, "withdraw")
             elif striker_action==COMBAT_ACTION_ADVANCING:
-                agil_diff=striker.stats["agility"] - defender.stats["agility"]
-                range_request_diff=striker_preferred_range - c.range
-                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
-                roll_for_range=libsigma.d100()
-
-                if roll_for_range  <= percent_success:
-                    c.range=striker_preferred_range
-                    c.churn=0
-                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb into " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("close", "closes"), defender)
+                if striker_action==defender_action:
+                    c.range=c.evaluate_range()
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor and $direct $verb into " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range!",striker,("close", "close"), defender)
                     c.in_range_set_action()
                     c.strike_queue=[]
+                    c.churn=0
                 else:
-                    c.churn+=1
-                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to close into a closer range with $direct, but cannot!",striker,("try", "tries"), defender)
+                    agil_diff=striker.stats["agility"] - defender.stats["agility"]
+                    range_request_diff=striker_preferred_range - c.range
+                    percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
+                    roll_for_range=libsigma.d100()
+    
+                    if roll_for_range  <= percent_success:
+                        c.range=striker_preferred_range
+                        c.churn=0
+                        libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb into " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("close", "closes"), defender)
+                        c.in_range_set_action()
+                        c.strike_queue=[]
+                    else:
+                        c.churn+=1
+                        libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to close into a closer range with $direct, but cannot!",striker,("try", "tries"), defender)
 
             elif striker_action==COMBAT_ACTION_WITHDRAWING:
-                agil_diff=striker.stats["agility"] - defender.stats["agility"]
-                range_request_diff= c.range-striker_preferred_range
-                percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
-                roll_for_range=libsigma.d100()
-
-                if roll_for_range  <= percent_success:
-                    c.range=striker_preferred_range
-                    c.churn=0
-                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("withdraw", "withdraws"), defender)
+                if striker_action==defender_action:
+                    c.range=c.evaluate_range()
+                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor and $direct $verb into " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range!",striker,("drop", "drop"), defender)
                     c.in_range_set_action()
                     c.strike_queue=[]
+                    c.churn=0
                 else:
-                    c.churn+=1
-                    libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to withdraw to a further range with $direct, but cannot!",striker,("try", "tries"), defender)
+                    agil_diff=striker.stats["agility"] - defender.stats["agility"]
+                    range_request_diff= c.range-striker_preferred_range
+                    percent_success=min(max(4*agil_diff+10*range_request_diff + 50 + (20*c.churn), 5), 95)
+                    roll_for_range=libsigma.d100()
+            
+                    if roll_for_range  <= percent_success:
+                        c.range=striker_preferred_range
+                        c.churn=0
+                        libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to " + libsigma.val2txt(c.range, range_match_val, range_match_txt) + " range with $direct!",striker,("withdraw", "withdraws"), defender)
+                        c.in_range_set_action()
+                        c.strike_queue=[]
+                    else:
+                        c.churn+=1
+                        libsigma.report(libsigma.SELF| libsigma.ROOM, "$actor $verb to withdraw to a further range with $direct, but cannot!",striker,("try", "tries"), defender)
 
             striker.send_combat_status()
             defender.send_combat_status()

@@ -214,6 +214,23 @@
 		</bonus>  
 	</wearable>
 	</item>
+	
+	<item id="monocle">
+	<name>a gaudy looking monocle</name>
+	<keywords>monocle</keywords>
+	<short>a monocle sits here</short>
+	<desc>
+	Looking through the glass of the monocle, you notice everything seems much clearer.
+	Things that would ordinarily be obscured seem to stand out
+	</desc>
+	<wearable position="head">
+		<bonus stat="perception" value="17" operator="+" condition="auto" duration="35">
+		  <context type = "all"/>
+		</bonus>  
+	</wearable>
+	
+	
+	</item>
 
    <denizen id="killer_penguin">
     <name>the killer penguin</name>
@@ -245,6 +262,7 @@
     <placement item="arrow" target="training_room" quantity="1"/>
     <placement item="longbow" target="armory" />
  	<placement item="ringofpower" target="branch" />
+ 	<placement item="monocle" target="branch" />
   <populator denizen="killer_penguin" target="training_room">
     <flag>mobile</flag>
   </populator>

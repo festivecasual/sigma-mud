@@ -68,21 +68,22 @@ class Combat(object):
             self.combatants[1].engaged = self
 
     def evaluate_range(self):
-            if self.combatants[0].preferred_weapon_range==self.combatants[1].preferred_weapon_range:
-                return self.combatants[0].preferred_weapon_range
+            #if self.combatants[0].preferred_weapon_range==self.combatants[1].preferred_weapon_range:
+            if self.get_preferred_range(self.combatants[0]) == self.get_preferred_range(self.combatants[1]):
+                return self.get_preferred_range(self.combatants[0])
             else:
                 #set up chance to make it to desired range according to combatant1
                 #TODO: Will have to be rewritten when bonsuses come on...
                 #this is a real simple implementation anyway
                 agil_diff=self.combatants[0].stats["agility"] - self.combatants[1].stats["agility"]
-                range_request_diff=self.combatants[0].preferred_weapon_range - self.combatants[1].preferred_weapon_range
+                range_request_diff= self.get_preferred_range(self.combatants[0]) -  self.get_preferred_range(self.combatants[1])
                 percent_success=min(max(4*agil_diff+10*range_request_diff + 50, 5), 95)
                 roll_for_range=libsigma.d100()
                 # libsigma.report(libsigma.SELF|libsigma.ROOM, "Roll was: " + str(roll_for_range) + " and threshold for success for $actor was: " + str(percent_success),c.combatant1 )
                 if roll_for_range  <= percent_success:
-                    return self.combatants[0].preferred_weapon_range
+                    return  self.get_preferred_range(self.combatants[0])
                 else:
-                    return self.combatants[1].preferred_weapon_range
+                    return  self.get_preferred_range(self.combatants[1])
 
     def release(self,victor):
         w = World()
@@ -144,7 +145,7 @@ class Combat(object):
             weapon_type.append('bare handed' if not c.equipped_weapon else c.equipped_weapon[0].weapon.weapon_type)
 
         do_change=[True,True]
-
+        old_actions=[self.get_action(self.combatants[0]),self.get_action(self.combatants[1])]
         if one_combatant==self.combatants[0]:
             do_change[0]=True
             do_change[1]=False
@@ -156,8 +157,15 @@ class Combat(object):
             if do_change[x]:
                 if weapon_range[weapon_type[x]].has_key(self.range) and self.combatants[x].engaged==self:
                     self.set_action(self.combatants[x],COMBAT_ACTION_ATTACKING)
+                    if old_actions[x]!=self.actions[x]:
+                        self.combatants[x].send_line("You are set to attack!")
+                        #self.combatants[x].send_combat_status()
+                elif (self.actions[x] == COMBAT_ACTION_ADVANCING or self.actions[x]==COMBAT_ACTION_WITHDRAWING) and self.get_preferred_range(self.combatants[x])==self.range:
+                    self.combatants[x].send_line("You can't attack from this range!")
+                    self.set_action(self.combatants[x],COMBAT_ACTION_IDLE)
                 elif self.actions[x] not in (COMBAT_ACTION_WITHDRAWING,COMBAT_ACTION_ADVANCING):
                     self.set_action(self.combatants[x],COMBAT_ACTION_IDLE)
+                    
 
         return
 

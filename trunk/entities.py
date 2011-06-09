@@ -202,7 +202,7 @@ class Character(Entity):
         self.stances=[]
         self.waits=[]
         self.flags=[]
-        self.bonuses=[]
+        self._bonuses=[]
         
         self.equipped_weapon=[]
         self.equipped_shield=None
@@ -267,6 +267,32 @@ class Character(Entity):
 
     balance = property(lambda self: self._balance, change_balance)
 
+    def get_effective_all_context(self):
+        ret_val={}
+        for stat in stats:
+            ret_val[stat]=self.effective_stat(stat,ALL_CONTEXT)
+        return ret_val
+   
+    @property
+    def bonuses(self):   
+        for b in self._bonuses[:]:
+            if b.duration_expired():
+                self._bonuses.remove(b)
+            else:
+                yield b
+        
+    def effective_stat(self,stat,contexts):
+        if stat not in stats:
+            log("STAT CHECK", "Bad stat requested from %s" % self.id)
+            return stat
+        value_of_stat=self.stats[stat]
+        for b in self.bonuses:
+            for bc in b.context:
+                if (bc in contexts or bc==ALL_CONTEXT) and b.stat==stat:
+                    value_of_stat=b.apply_bonus(value_of_stat)
+                    break   
+        return int(value_of_stat)
+        
     def can_equip(self, w_type):
         return w_type in [s.weapon_type for s in self.stances]
 
@@ -300,13 +326,16 @@ class Character(Entity):
     def reference_bonuses(self,bonuses,condition):
         for b in bonuses:
             if b.condition==condition:
-                self.bonuses.append(b)
+                if b.operator=="*":
+                    self._bonuses.insert(0,b)
+                elif b.operator=="+":
+                    self._bonuses.append(b)
                 b.start_bonus_timer()
     
     def dereference_bonuses(self,id):
-        for b in self.bonuses[:]:
+        for b in self._bonuses[:]:
             if b.source==id:
-                self.bonuses.remove(b)
+                self._bonuses.remove(b)
                 
                 
 class Denizen(Character):

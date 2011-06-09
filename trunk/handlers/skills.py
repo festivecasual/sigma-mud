@@ -17,7 +17,7 @@ def hide(data):
         speaker.send_line("You look around for a moment, and find a hiding place.")
         for c in speaker.location.characters:
             if(c!=speaker):
-                if(roll_for_success(c.stats["perception"],speaker.stats["charisma"]*.25 + speaker.stats["agility"]*.75, 0, 100,4,50)):
+                if(roll_for_success(c.effective_stat("perception",["all"]),speaker.stats["charisma"]*.25 + speaker.stats["agility"]*.75, 0, 100,4,50)):
                     c.send_line("You glance at " + speaker.name + " finding a hiding spot.")
         speaker.hidden=True
         speaker.add_wait(hide.priority,5)

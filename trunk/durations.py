@@ -47,7 +47,7 @@ class Bonus(Duration):
     def start_bonus_timer(self):
         self.set_duration(self.bonus_duration)
     
-    def calculate_bonus(self,stat_value):
+    def apply_bonus(self,stat_value):
         if self.operator=="+":
             return stat_value+self.value
         elif self.operator=="*":

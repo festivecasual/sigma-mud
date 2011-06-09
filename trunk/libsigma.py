@@ -372,6 +372,7 @@ def d100():
 
 
 def roll_for_success(score_1,score_2, minimum_success, maximum_success, delta_multiplier,skew):
+    log("ROLLTEST", str(score_1) + " vs. " + str(score_2))
     return d100() < min(max((score_1-score_2) * delta_multiplier + skew, minimum_success), maximum_success)
 
 

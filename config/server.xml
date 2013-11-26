@@ -12,5 +12,9 @@
 
     <calendar name="Ravren Standard" file="calendar.xml" />
 
+    <spells name="healing" file="spells/healing.xml"/>
+    <spells name="buffs" file="spells/buffs.xml"/>
+
+
     <handlers file="handlers-map.xml" />
 </server>

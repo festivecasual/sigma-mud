@@ -1,0 +1,16 @@
+<spells package="heal">
+	<spell class="Heal">
+		<name>Minor Healing</name>
+		<desc>A simple healing spell which heals minor ailments.</desc>
+
+		<difficulty>0</difficulty>
+		<cost>3</cost>
+		<abbreviation>mh</abbreviation>
+		<abbreviation>heal1</abbreviation>
+		<area>room</area>
+		<speed>instant</speed>
+		<type>uncontested</type>
+		<function>heal</function>
+		<cooldown>5</cooldown>
+	</spell>
+</spells>

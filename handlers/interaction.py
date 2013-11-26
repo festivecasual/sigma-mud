@@ -369,8 +369,8 @@ def wear(data):
                 report(SELF | ROOM, "$actor $verb on %s." % item.name, speaker, ("put","puts"))
                 transfer_item(item, speaker.contents,speaker.worn_items)
                 speaker.reference_bonuses(item.wearable.bonuses,'auto')
-                
-                
+
+
                 return
 
     speaker.send_line("You don't have anything like that in your inventory.")

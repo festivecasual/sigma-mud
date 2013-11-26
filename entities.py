@@ -197,10 +197,15 @@ class Character(Entity):
         self._HP=0
         self._XP=0
         self.hidden=False
+        self._MP=0
+        self.spell_chanting=None
+        self.spell_chanting_complete=False
 
         self.offers=[]
         self.stances=[]
+        self.spells=[]
         self.waits=[]
+        self.cooldowns=[]
         self.flags=[]
         self._bonuses=[]
         
@@ -243,6 +248,10 @@ class Character(Entity):
     @property
     def max_HP(self):
         return 4*self.stats["strength"] + 2*self.stats["discipline"]
+    
+    @property
+    def max_MP(self):
+        return 4*self.stats["intelligence"] + 2*self.stats["discipline"]
 
     @property
     def epitaph(self):
@@ -253,6 +262,7 @@ class Character(Entity):
         if self._HP == 0:
             self.handle_death()
 
+
     HP = property(lambda self: self._HP, set_HP)
 
     def set_XP(self, val):
@@ -260,6 +270,11 @@ class Character(Entity):
         self.check_level()
 
     XP = property(lambda self: self._XP, set_XP)
+
+    def set_MP(self,val):
+        self._MP = min(max(0,val),self.max_MP)
+    
+    MP = property(lambda self:self._MP,set_MP)
 
     def change_balance(self, val):
         self._balance = min(max(val, MIN_BALANCE), MAX_BALANCE)
@@ -323,6 +338,9 @@ class Character(Entity):
     def has_waits(self, prior=HIGHEST_PRIORITY):
         return False
 
+    def has_cooldowns(self,categories=None):
+        return False
+
     def reference_bonuses(self,bonuses,condition):
         for b in bonuses:
             if b.condition==condition:
@@ -336,8 +354,22 @@ class Character(Entity):
         for b in self._bonuses[:]:
             if b.source==id:
                 self._bonuses.remove(b)
-                
-                
+    
+    def has_spell(self,spell_abbreviation):
+        for spell in self.spells:
+            if spell_abbreviation in spell.abbreviation:
+                return spell
+        return False
+
+    def can_cast_spell(self,spell,target):
+    #A check here would be good to override this check. But for now, all we'll do is ask the spell
+    #if the requirements are met
+        return spell.requirements_met(self,target)
+
+    def finish_chanting(self):
+        self.spell_chanting_complete=True
+        self.send_line("You are finished preparing " + self.spell_chanting.name + ".")
+
 class Denizen(Character):
     def __init__(self, node):
         super(Denizen, self).__init__()
@@ -426,7 +458,6 @@ class Denizen(Character):
         #libsigma.transfer_money(self.money,self,corpse)
         self.location.characters.remove(self)
 
-
 class Player(Character):
     def __init__(self, s=None):
         super(Player, self).__init__()
@@ -478,6 +509,12 @@ class Player(Character):
 
     def handle_death(self):
         pass
+
+    def has_cooldowns(self,categories=[]):
+        for c in self.cooldowns:
+            if (not c.duration_expired() and set(c.categories).intersection(categories) !=[]):
+                return c.remaining_time()
+        return False
 
     def has_waits(self,prior=HIGHEST_PRIORITY):
         for w in self.waits:

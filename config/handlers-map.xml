@@ -10,6 +10,10 @@
   <handler command="attack" function="engage"/>
 
   <handler command="cackle" function="emote" />
+  
+  <handler command="cast" function="cast"/>
+  <handler command="chant" function="chant"/>
+  
   <handler command="close" function="close"/>
   <handler command="count" function="count"/>
 
@@ -72,6 +76,7 @@
   <handler command="smile" function="emote" />
   <handler command="southeast" function="go" />
   <handler command="southwest" function="go" />
+  <handler command="spell" function="spell" />
   <handler command="stats" function="statistics" />
   <handler command="stance" function="stance"/>
   <handler command="sw" function="go" />

@@ -5,6 +5,7 @@ import handler
 import creation
 import feats
 from calendar import Calendar
+from magic import Spell
 from world import World, Room, Door, Populator, Placement
 from entities import Item, Denizen
 from common import *
@@ -75,6 +76,27 @@ def process_xml():
         process_handlers(handlers_xml)
         server_xml.remove(handlers)
 
+    for spells in server_xml.findall('spells'):
+        file = required_attribute(spells, 'file')
+        log("MAGIC", "Processing spells mapping at %s" % file)
+        try:
+            spell_path = os.path.join(directories["xml_root"], file)
+            spells_xml = ElementTree.parse(spell_path).getroot()
+            spells_package=required_attribute(spells_xml,'package')
+            spells_package=spells_package.split('.')
+        except:
+            log("FATAL", "Unable to parse spell file: %s" % file, exit_code=1)
+        for spell in spells_xml.findall('spell'):
+            m = __import__(SPELL_PACKAGE + '.' + spells_package[0])
+            classname = required_attribute(spell,'class')
+            for package in spells_package:
+                m=getattr(m,package)
+            spell_class=getattr(m, classname)
+            new_spell=spell_class(spell)
+            feats.spells[new_spell.name]=new_spell
+            log("MAGIC","Added spell [%s] to game" % new_spell.name)
+        server_xml.remove(spells)
+    
     for child in server_xml.getchildren():
         log("ERROR", "Ignoring unknown tag <%s> in server.xml" % child.tag, problem=True)
 
@@ -145,3 +167,4 @@ def process_stance(stance_xml):
         feats.stances[new_stance.name]=new_stance
         if new_stance.default:
             feats.default_stances.append(new_stance)
+

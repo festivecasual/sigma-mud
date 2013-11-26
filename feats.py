@@ -4,7 +4,7 @@ import libsigma
 
 stances={}
 default_stances=[]
-
+spells={}
 
 class Stance(object):
     def __init__(self, node):

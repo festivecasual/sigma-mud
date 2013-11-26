@@ -1,0 +1,16 @@
+<spells package="buffs">
+	<spell class="Adrenaline">
+		<name>Adrenaline</name>
+		<desc>A spell that slightly increases the caster's agility and strength, at the expense of other attributes.</desc>
+
+		<difficulty>0</difficulty>
+		<cost>7</cost>
+		<abbreviation>adrenaline</abbreviation>
+		<abbreviation>adr</abbreviation>
+		<area>room</area>
+		<speed>instant</speed>
+		<type>uncontested</type>
+		<function>heal</function>
+		<cooldown>5</cooldown>
+	</spell>
+</spells>

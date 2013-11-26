@@ -24,6 +24,15 @@ class Wait(Duration):
         self.duration_in_secs=d
         self.priority=p
 
+class Cooldown(Duration):
+    def __init__(self,categories,duration):
+        super(Cooldown,self).__init__()
+        self.duration_in_secs=duration
+        if not isinstance(categories,list):
+            self.categories=[]
+            log('ALERT','Bad Cooldown created, cooldown will be created with no categories.')
+        self.categories=categories
+
 class Bonus(Duration):
     def __init__(self, stat,value,operator,context,source,type,d,condition):
         super(Bonus,self).__init__()

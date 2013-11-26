@@ -235,11 +235,18 @@ ALL_CONTEXT="all"
 
 contexts={
     "all": "in all cases",
-    "combat": "for all combat actions" ,     
+    "combat": "for all combat actions" ,
     "dodging": "when dodging",      
-    "retreating": "when attempting to retreat"      
-          
-          
+    "retreating": "when attempting to retreat",
+
+
+
+    "casting": "when casting a spell",
+    "chanting": "when casting an incantation",
+    "healing_spell": "when casting a healing spell",
+    "offensive_spell": "when casting an offensive spell",
+
+
     }
 
 
@@ -413,6 +420,17 @@ balance_multiplier[10]  = 1.3
 balance_multiplier[11]  = 1.5
 
 
+#Spell Types
+
+SPELL_TYPE_UNCONTESTED=0
+SPELL_TYPE_COMBAT=1
+SPELL_TYPE_CONTESTED=2
+
+#Spell Speeds
+SPELL_SPEED_INSTANT=0
+SPELL_SPEED_INCANTATION=1
+
+
 # Prompts (and default values)
 prompts = {
     STATE_INIT : "\r\n\r\nWelcome to the Sigma Environment v. 0.0.1!\r\n\r\n",
@@ -440,9 +458,12 @@ options = {
     }
 
 
+SPELL_PACKAGE="spells"
+
 # Defines system directories for items that are searched dynamically
 directories = {
     "xml_root" : os.path.join(options["root_dir"], "config"),  # XML root directory and location of server.xml
     "tasks_root" : os.path.join(options["root_dir"], "tasks"),  # Root directory for task modules
     "handlers_root" : os.path.join(options["root_dir"], "handlers"),  # Root directory for handler modules
+    "spells_root": os.path.join(options["root_dir"], SPELL_PACKAGE) #Root directory for spell modules
     }

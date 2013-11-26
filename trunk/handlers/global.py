@@ -74,6 +74,7 @@ def statistics(data):
 def health(data):
     speaker = data["speaker"]
     speaker.send_line("HP: " + str(speaker.HP) + "/" + str(speaker.max_HP))
+    speaker.send_line("MP: " + str(speaker.MP) + "/" + str(speaker.max_MP))
     # more stuff about status affects to come
 
 
@@ -191,3 +192,15 @@ def wealth(data):
         speaker.send_line("You are carrying no money.")
     else:
         speaker.send_line("You currently have " + str(speaker.money) + " " + options["currency"] +"s.")
+
+
+@handler()
+def spell(data):
+    speaker=data["speaker"]
+    if speaker.spells==[]:
+        speaker.send_line("You don't know any spells!")
+        return
+    speaker.send_line("You know the following spells:")
+    for spell in speaker.spells:
+        speaker.send_line(spell.name + str(spell.abbreviation))
+    

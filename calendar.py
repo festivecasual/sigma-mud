@@ -1,6 +1,7 @@
 import datetime
 
 from common import *
+from functools import reduce
 
 
 class Calendar(object):
@@ -46,7 +47,7 @@ class Calendar(object):
             holiday_mday = required_attribute(holiday, 'month_day')
             holiday_month = required_attribute(holiday, 'month')
 
-            if self.holidays.has_key(holiday_name):
+            if holiday_name in self.holidays:
                 log("FATAL", "Duplicate holiday name found.  Holiday names must be unique.", exit_code=1)
 
             try:
@@ -54,7 +55,7 @@ class Calendar(object):
             except ValueError:
                 log("FATAL", "month_day property must be an integer", exit_code=1)
 
-            if not self.months.has_key(holiday_month):
+            if holiday_month not in self.months:
                 holiday_compliance = False
             elif holiday_mday > self.months[holiday_month] or holiday_mday < 1:
                 holiday_compliance = False

@@ -23,7 +23,7 @@ def process_xml():
     for option in server_xml.findall('option'):
         name = required_attribute(option, 'name')
         value = required_attribute(option, 'value')
-        if not options.has_key(name):
+        if name not in options:
             log("FATAL", "<option> tag sets unknown option %s" % name, exit_code=1)
         options[name] = value
         log("CONFIG", "Option [%s] set to '%s'" % (name, value))
@@ -148,7 +148,7 @@ def process_handlers(handlers_xml):
     for handler_item in handlers_xml.findall('handler'):
         command = required_attribute(handler_item, 'command')
         function = required_attribute(handler_item, 'function')
-        if not handler.functions.has_key(function):
+        if function not in handler.functions:
             log('FATAL', 'Handler maps non-existent function <%s> to command <%s>' % (function, command), exit_code=1)
         handler.mappings.append((command, handler.functions[function]))
 

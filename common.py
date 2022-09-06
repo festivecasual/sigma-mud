@@ -8,11 +8,11 @@ import sys
 def log(label, text, trivial=False, problem=False, exit_code=None):
     if options["verbose"] == "silent":
         if problem or exit_code:
-            print text
+            print (text)
     elif not (trivial and (options["verbose"] == "no")):
         if exit_code or problem:
             label = '-  ' + label
-        print "%-10s | %s" % (label, text)
+        print ("%-10s | %s" % (label, text))
     if exit_code != None:
         sys.exit(exit_code)
 
@@ -100,7 +100,7 @@ def singleton(cls):
 
 
 whitespace = ["\t", "\n", "\f", "\r", "\v", "  "]
-password_characters = string.letters + string.digits + '!@#$%^&*()-_=+[]\{}|;:?/.,<>~'
+password_characters = string.ascii_letters + string.digits + '!@#$%^&*()-_=+[]\{}|;:?/.,<>~'
 
 
 def valid_name(name):

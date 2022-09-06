@@ -315,22 +315,22 @@ class Character(Entity):
         if stance.name in [s.name for s in self.stances]:
             return False
 
-        if not self.default_stance.has_key(stance.weapon_type):
+        if stance.weapon_type not in self.default_stance:
             self.default_stance[stance.weapon_type] = stance
 
         self.stances.append(stance)
         return True
 
     def get_protection_multiplier(self, damage_type):
-        protection_value = sum([w.wearable.protection[damage_type] for w in self.worn_items if w.wearable.protection.has_key(damage_type)])
-        if protection_value == 0 and self._skin_protection.has_key(damage_type):
+        protection_value = sum([w.wearable.protection[damage_type] for w in self.worn_items if damage_type in w.wearable.protection])
+        if protection_value == 0 and damage_type in self._skin_protection:
             return 1.0 - self._skin_protection[damage_type]
         else:
             return 1.0 - protection_value
 
     def get_absorption(self, damage_type):
-        absorption_value = sum([w.wearable.absorption[damage_type] for w in self.worn_items if w.wearable.absorption.has_key(damage_type)])
-        if absorption_value == 0 and self._skin_absorption.has_key(damage_type):
+        absorption_value = sum([w.wearable.absorption[damage_type] for w in self.worn_items if damage_type in w.wearable.absorption])
+        if absorption_value == 0 and damage_type in self._skin_absorption:
             return self._skin_absorption[damage_type]
         else:
             return absorption_value

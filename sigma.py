@@ -90,22 +90,20 @@ def players():
     log("SCRIPT", "Retreiving player information from database")
     players = a.list()
     log("SCRIPT", "Loaded %d player%s from database" % (len(players), '' if len(players) == 1 else 's'))
-    print
-
-    i = 0
     names = players.keys()
     names.sort()
+    i=0
     for p in names:
         i += 1
-        print '%d: %s' % (i, p)
-    print
+        print ('%d: %s' % (i, p))
+
 
     n = raw_input('Load player index (blank to cancel): ')
     name = None
     try:
         n = int(n)
         if n < 1 or n > len(names):
-            print 'Cancelled.'
+            print ('Cancelled.')
             sys.exit(0)
         name = names[n - 1]
     except (ValueError, IndexError):
@@ -118,28 +116,28 @@ def players():
             a.delete(name)
         sys.exit(0)
 
-    print
-    print player.name
-    print player.gender, player.race
+
+    print (player.name)
+    print (player.gender, player.race)
     for stat, value in player.stats.items():
-        print ' %s: %d' % (stat, value)
-    print
+        print (' %s: %d' % (stat, value))
+
     action = raw_input('Action ([p]assword, [d]elete), [c]ancel): ')
     if action == '':
         sys.exit(0)
     elif 'password'.startswith(action.lower()):
         player.password = encrypt_password(raw_input('New password: '))
         a.save(player)
-        print 'Password written.'
+        print ('Password written.')
     elif 'delete'.startswith(action.lower()):
         confirm = raw_input('Really delete? (Y/N): ')
         if confirm.upper() == 'Y':
             a.delete(name)
-            print 'Deletion complete.'
+            print ('Deletion complete.')
         else:
-            print 'Deletion cancelled.'
+            print ('Deletion cancelled.')
     else:
-        print 'Cancelled.'
+        print ('Cancelled.')
 
 
 if __name__ == "__main__":

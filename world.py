@@ -26,9 +26,9 @@ class World(object):
                 if not r.exits[i]:
                     continue
 
-                if self.rooms.has_key(r.exits[i]):
+                if r.exits[i] in self.rooms:
                     r.exits[i] = self.rooms[r.exits[i]]
-                elif self.rooms.has_key(r.area + ":" + r.exits[i]):
+                elif r.area + ":" + r.exits[i] in self.rooms:
                     r.exits[i] = self.rooms[r.area + ":" + r.exits[i]]
                 else:
                     log("ERROR", "Unresolved room exit linkage: %s (%s)" % (r.exits[i], r.location), problem=True)
@@ -36,32 +36,32 @@ class World(object):
 
     def resolve_populators(self):
         for p in self.populators:
-            if self.denizens_source.has_key(p.denizen):
+            if p.denizen in self.denizens_source:
                 p.denizen = self.denizens_source[p.denizen]
-            elif self.denizens_source.has_key(p.area + ":" + p.denizen):
+            elif p.area + ":" + p.denizen in self.denizens_source:
                 p.denizen = self.denizens_source[p.area + ":" + p.denizen]
             else:
                 log("ERROR", "Unresolved denizen reference: " + p.denizen, problem=True)
 
-            if self.rooms.has_key(p.target):
+            if p.target in self.rooms:
                 p.target = self.rooms[p.target]
-            elif self.rooms.has_key(p.area + ":" + p.target):
+            elif p.area + ":" + p.target in self.rooms:
                 p.target = self.rooms[p.area + ":" + p.target]
             else:
                 log("ERROR", "Unresolved target room reference: " + p.target, problem=True)
 
     def resolve_placements(self):
         for p in self.placements:
-            if self.items_source.has_key(p.item):
+            if p.item in self.items_source:
                 p.item = self.items_source[p.item]
-            elif self.items_source.has_key(p.area + ":" + p.item):
+            elif p.area + ":" + p.item in self.items_source:
                 p.item = self.items_source[p.area + ":" + p.item]
             else:
                 log("ERROR", "Unresolved item reference: " + p.item, problem=True)
 
-            if self.rooms.has_key(p.target):
+            if p.target in self.rooms:
                 p.target = self.rooms[p.target]
-            elif self.rooms.has_key(p.area + ":" + p.target):
+            elif p.area + ":" + p.target in self.rooms:
                 p.target = self.rooms[p.area + ":" + p.target]
             else:
                 log("ERROR", "Unresolved target room reference: " + p.target, problem=True)
@@ -168,7 +168,7 @@ class Door(object):
                 room_id = '%s:%s' % (area_name, exit_room)
 
             w = World()
-            if not w.rooms.has_key(room_id):
+            if room_id not in w.rooms:
                 log("FATAL", "Invalid room value in door tag", exit_code=1)
             elif w.rooms[room_id].exits[libsigma.txt2dir(exit_dir)] == None:
                 log("FATAL", "Invalid dir value in door tag", exit_code=1)

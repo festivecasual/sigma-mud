@@ -30,7 +30,7 @@ def gm_getstance(data):
     args=data["args"]
     if len(args)<2:
         return
-    if feats.stances.has_key(args[1]):
+    if args[1] in feats.stances:
         speaker.add_stance(feats.stances[args[1]])
         speaker.send_line("Ok.")
     else:

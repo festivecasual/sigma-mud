@@ -498,7 +498,8 @@ class Player(Character):
             self.send_prompt()
 
     def send(self, s=""):
-        self.socket.push(s)
+        b = bytes(s, encoding='ascii')
+        self.socket.push(b)
 
     def send_line(self, s="", breaks=1):
         self.send(s)

@@ -1,8 +1,11 @@
 import time
 import hashlib
+import os
 import os.path
 import string
 import sys
+
+
 
 
 def log(label, text, trivial=False, problem=False, exit_code=None):
@@ -25,8 +28,15 @@ def date_time_string():
     return time.strftime("%Y/%m/%d %H:%M:%S")
 
 
-def encrypt_password(password):
-    return hashlib.sha1(password).digest()
+def encrypt_password(password, salt=None):
+    salt = salt or os.urandom(SALT_BITS)
+    return salt + hashlib.pbkdf2_hmac(HASH_FUNCTION, bytes(password, HASH_ENCODING), salt, HASH_ITERATIONS)
+
+
+def check_password(plaintext, passtext):
+    salt = passtext[0:SALT_BITS]
+    passtext = passtext[SALT_BITS:]
+    return encrypt_password(plaintext, salt)[SALT_BITS:] == passtext
 
 
 def strip_whitespace(text):
@@ -106,9 +116,9 @@ password_characters = string.ascii_letters + string.digits + '!@#$%^&*()-_=+[]\{
 def valid_name(name):
     if len(name) < 3:
         return False
-    elif name[0] not in string.uppercase:
+    elif name[0] not in string.ascii_uppercase:
         return False
-    elif name != filter(lambda c: c in string.letters, name):
+    elif any(letter not in string.ascii_letters for letter in name):
         return False
     else:
         return True
@@ -117,11 +127,17 @@ def valid_name(name):
 def valid_password(password):
     if len(password) < 5:
         return False
-    elif password != filter(lambda c: c in password_characters, password):
+    elif any(character not in password_characters for character in password):
         return False
     else:
         return True
 
+
+#Hash Constants
+SALT_BITS = 128
+HASH_ITERATIONS = 310000
+HASH_FUNCTION = 'sha256'
+HASH_ENCODING = 'utf-8'
 
 # Connection states
 STATE_NULL = 0

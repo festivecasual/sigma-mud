@@ -1,4 +1,4 @@
-import cPickle as pickle
+import _pickle as pickle
 import os.path
 
 import feats
@@ -20,7 +20,7 @@ class Archive(object):
         try:
             with open(self.path, "rb") as player_file:
                 player_db = pickle.load(player_file)
-                if player_db.has_key(name):
+                if name in player_db:
                     proto = pickle.loads(player_db[name])
                     apply_proto(player, name, proto)
                     return True
@@ -61,7 +61,7 @@ class Archive(object):
         try:
             with open(self.path, "rb") as player_file:
                 player_db = pickle.load(player_file)
-                return player_db.has_key(name)
+                return name in player_db
         except IOError:
             log("LOAD", "Could not open player database", problem=True)
             return False
@@ -84,7 +84,7 @@ class Archive(object):
             log("SAVE", "Could not load player database from file", problem=True)
             return False
 
-        if player_db.has_key(name):
+        if name in player_db:
             del player_db[name]
 
         try:
@@ -103,14 +103,14 @@ def apply_proto(player, name, proto):
                 ) = proto[:9]
 
         for s in proto[9]:
-            if feats.stances.has_key(s):
+            if s in feats.stances:
                 if not feats.stances[s].default:  # Handled by character class constructor
                     player.stances.append(feats.stances[s])
             else:
                 log("WARNING", "Could not load stance %s for <%s>" % (s, player.name), problem=True)
 
         for val in weapon_types:
-            if proto[10].has_key(val):
+            if val in proto[10]:
                 player.default_stance[val]=feats.stances[proto[10][val]]
 
         player.active_stance=feats.stances[proto[11]]

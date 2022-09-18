@@ -18,7 +18,7 @@ def task_init():
 def task_execute():
     w = World()
     for current in w.populators:
-        if not w.denizens.has_key(current.instance):
+        if current.instance not in w.denizens:
             denizen = Denizen(current.denizen)
             current.instance = denizen.id
             w.denizens[denizen.id] = denizen

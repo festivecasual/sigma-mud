@@ -23,7 +23,7 @@ def process_xml():
     for option in server_xml.findall('option'):
         name = required_attribute(option, 'name')
         value = required_attribute(option, 'value')
-        if not options.has_key(name):
+        if name not in options:
             log("FATAL", "<option> tag sets unknown option %s" % name, exit_code=1)
         options[name] = value
         log("CONFIG", "Option [%s] set to '%s'" % (name, value))
@@ -97,7 +97,7 @@ def process_xml():
             log("MAGIC","Added spell [%s] to game" % new_spell.name)
         server_xml.remove(spells)
     
-    for child in server_xml.getchildren():
+    for child in server_xml:
         log("ERROR", "Ignoring unknown tag <%s> in server.xml" % child.tag, problem=True)
 
 
@@ -140,7 +140,7 @@ def process_area(area_xml, area_name):
         w.placements.append(Placement(placement, area_name, item, target, quantity))
         area_xml.remove(placement)
 
-    for child in area_xml.getchildren():
+    for child in area_xml:
         log('ERROR', 'Ignoring unknown tag <%s> in area file [%s]' % (child.tag, area_name), problem=True)
 
 
@@ -148,7 +148,7 @@ def process_handlers(handlers_xml):
     for handler_item in handlers_xml.findall('handler'):
         command = required_attribute(handler_item, 'command')
         function = required_attribute(handler_item, 'function')
-        if not handler.functions.has_key(function):
+        if function not in handler.functions:
             log('FATAL', 'Handler maps non-existent function <%s> to command <%s>' % (function, command), exit_code=1)
         handler.mappings.append((command, handler.functions[function]))
 

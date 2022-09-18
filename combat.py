@@ -155,7 +155,7 @@ class Combat(object):
 
         for x in range(len(self.combatants)):
             if do_change[x]:
-                if weapon_range[weapon_type[x]].has_key(self.range) and self.combatants[x].engaged==self:
+                if self.range in weapon_range[weapon_type[x]] and self.combatants[x].engaged==self:
                     self.set_action(self.combatants[x],COMBAT_ACTION_ATTACKING)
                     if old_actions[x]!=self.actions[x]:
                         self.combatants[x].send_line("You are set to attack!")

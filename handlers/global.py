@@ -39,7 +39,7 @@ def statistics(data):
             multiple_contexts_flag=False
             default_context_flag=False
             for c in b.context:
-                if contexts.has_key(c):
+                if c in contexts:
                     b_string+=" and " if multiple_contexts_flag else ""
                     b_string+=contexts[c]
                     multiple_contexts_flag=True

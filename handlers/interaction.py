@@ -43,7 +43,7 @@ def emote(data):
         speaker.send_line(out)
         return
 
-    elif emote_mappings.has_key(mapped):
+    elif mapped in emote_mappings:
         nodirect, direct, verbs = emote_mappings[mapped]
 
         if len(args) > 1:

@@ -19,7 +19,7 @@ def task_init():
 def task_execute():
     w = World()
     for current in w.populators:
-        if w.denizens.has_key(current.instance) and 'mobile' in current.flags:
+        if current.instance in w.denizens and 'mobile' in current.flags:
             active_denizen = w.denizens[current.instance]
 
             choices = [None]

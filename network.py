@@ -18,17 +18,18 @@ class ClientSocket(asynchat.async_chat):
 
         # Holds all pending text (awaiting a newline from client).
         self.buffer = ''
-
+        self.use_encoding = True
         self.set_terminator('\n')
 
         # Retains the player class tied to this socket.
         self.parent = Player(self)
 
     def collect_incoming_data(self, data):
-        for char in data:
+        for char in data.decode(self.encoding):
             if char == '\b' and len(self.buffer) > 0:
                 self.buffer = self.buffer[:-1]
-            elif char == '\b' or char == '\r': pass
+            elif char == '\b' or char == '\r':
+                pass
             elif char in string.printable:
                 self.buffer += char
                 if self.parent.state == STATE_PASSWORD:

@@ -191,7 +191,7 @@ def calculate_damage(attacker, defender, combat_range, ammo):
     attacker_damage={}
     if  attacker.active_stance.weapon_type=='bare handed':
         for damage_type in damage_types:
-            if attacker.active_stance.damage.has_key(damage_type):
+            if damage_type in attacker.active_stance.damage:
                 attacker_damage[damage_type]=attacker.stats["strength"]
                 attacker_damage[damage_type]*=weapon_damage_multiplier['bare handed']
                 attacker_damage[damage_type]*=weapon_range['bare handed'][combat_range]
@@ -206,14 +206,14 @@ def calculate_damage(attacker, defender, combat_range, ammo):
     else:
         for w in attacker.equipped_weapon:
             for damage_type in damage_types:
-                if w.weapon.damage.has_key(damage_type) or ammo:
+                if damage_type in w.weapon.damage or ammo:
                     attacker_damage[damage_type]=attacker.stats["strength"]
                     attacker_damage[damage_type]*=weapon_damage_multiplier[w.weapon.weapon_type]
                     attacker_damage[damage_type]*=weapon_range[w.weapon.weapon_type][combat_range]
 
                     if not ammo:
                         attacker_damage[damage_type]*=w.weapon.damage[damage_type]
-                    elif ammo.ammo.damage.has_key(damage_type):
+                    elif damage_type in ammo.ammo.damage:
                         attacker_damage[damage_type]*=ammo.ammo.damage[damage_type]
                     else:
                         attacker_damage[damage_type]=0

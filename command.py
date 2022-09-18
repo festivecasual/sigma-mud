@@ -72,9 +72,7 @@ def process_commands():
                     speaker.send_line("I do not know that name.", 2)
 
         elif speaker.state == STATE_PASSWORD:
-            password = encrypt_password(message)
-
-            if password == speaker.password:
+            if check_password(message, speaker.password):
                 # Do a dupe check to ensure no double logins
                 # before entering STATE_PLAYING
                 w = World()

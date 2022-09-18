@@ -36,7 +36,7 @@ def encrypt_password(password, salt=None):
 def check_password(plaintext, passtext):
     salt = passtext[0:SALT_BITS]
     passtext = passtext[SALT_BITS:]
-    return encrypt_password(plaintext, salt)[SALT_BITS:] == passtext
+    return passtext and encrypt_password(plaintext, salt)[SALT_BITS:] == passtext
 
 
 def strip_whitespace(text):
